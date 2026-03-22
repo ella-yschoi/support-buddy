@@ -1,6 +1,7 @@
 """Streamlit Web UI for Support Buddy."""
 
 import json
+import tempfile
 from pathlib import Path
 
 import streamlit as st
@@ -14,11 +15,14 @@ from src.integrations.email.parser import EmailParser
 
 st.set_page_config(page_title="Support Buddy", page_icon="🎧", layout="wide")
 
+# Use a fixed temp directory so ChromaDB persists across Streamlit reruns
+_CHROMA_DIR = str(Path(tempfile.gettempdir()) / "support_buddy_chroma")
+
 
 @st.cache_resource
 def get_engine():
-    engine = KnowledgeEngine()
-    if KNOWLEDGE_DIR.is_dir():
+    engine = KnowledgeEngine(persist_dir=_CHROMA_DIR)
+    if KNOWLEDGE_DIR.is_dir() and engine.doc_count() == 0:
         engine.ingest_directory(KNOWLEDGE_DIR)
     return engine
 
