@@ -8,6 +8,7 @@ import pytest
 
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
+from src.core.i18n import Language
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import InquiryCategory
 
@@ -112,3 +113,57 @@ class TestLogPipeline:
         for code in error_codes:
             results = engine_with_data.search(code, top_k=3, category="error_code")
             assert len(results) > 0, f"Error code {code} not found in knowledge base"
+
+
+class TestKoreanInquiryPipeline:
+    """Test Korean inquiry classification through the full pipeline."""
+
+    KOREAN_INQUIRIES = [
+        ("파일이 아침부터 동기화가 안 됩니다", InquiryCategory.SYNC),
+        ("공유 폴더에 접근이 안 됩니다", InquiryCategory.PERMISSION),
+        ("대시보드가 매우 느립니다", InquiryCategory.PERFORMANCE),
+        ("웹훅 엔드포인트에 이벤트가 수신되지 않습니다", InquiryCategory.API),
+        ("팀원을 추가하려는데 계정 업그레이드가 필요한가요?", InquiryCategory.ACCOUNT),
+        ("자동 백업 기능은 어떻게 설정하나요?", InquiryCategory.FEATURE),
+    ]
+
+    @pytest.mark.parametrize("inquiry,expected_category", KOREAN_INQUIRIES)
+    def test_korean_classifies_correctly(
+        self, analyzer: InquiryAnalyzer, inquiry: str, expected_category: InquiryCategory
+    ):
+        result = analyzer.classify(inquiry)
+        assert result.category == expected_category, (
+            f"Expected {expected_category.value} for: '{inquiry}', "
+            f"got {result.category.value}"
+        )
+
+    @pytest.mark.parametrize("inquiry,expected_category", KOREAN_INQUIRIES)
+    def test_korean_returns_korean_checklist(
+        self, analyzer: InquiryAnalyzer, inquiry: str, expected_category: InquiryCategory
+    ):
+        result = analyzer.classify(inquiry)
+        assert any("확인" in item for item in result.checklist), (
+            f"Expected Korean checklist for: '{inquiry}'"
+        )
+
+    @pytest.mark.parametrize("inquiry,expected_category", KOREAN_INQUIRIES)
+    def test_korean_returns_korean_summary(
+        self, analyzer: InquiryAnalyzer, inquiry: str, expected_category: InquiryCategory
+    ):
+        result = analyzer.classify(inquiry)
+        # Korean summaries contain Korean prefix characters
+        assert any(
+            prefix in result.summary
+            for prefix in ["동기화", "접근", "성능", "API", "계정", "기능", "미분류"]
+        ), f"Expected Korean summary for: '{inquiry}', got: '{result.summary}'"
+
+    def test_korean_log_summary(self, engine_with_data: KnowledgeEngine):
+        log_file = Path(__file__).parent.parent.parent / "data" / "sample_logs" / "sync_error.json"
+        raw_logs = log_file.read_text()
+
+        parser = LogParser()
+        events = parser.parse(raw_logs)
+        summary = parser.generate_text_summary(events, lang=Language.KO)
+
+        assert "로그 요약" in summary
+        assert "오류 발견" in summary
