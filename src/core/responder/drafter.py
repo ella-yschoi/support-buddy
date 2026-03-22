@@ -7,7 +7,8 @@ from typing import Any
 
 from src.config import MODEL_STANDARD
 from src.core.ai.client import AIClient
-from src.core.ai.prompts import RESPONSE_DRAFT_PROMPT
+from src.core.ai.prompts import RESPONSE_DRAFT_PROMPT, language_instruction
+from src.core.i18n import Language, detect_language
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import DraftResponse, InquiryResult, SearchResult
 
@@ -20,21 +21,31 @@ class ResponseDrafter:
         # Response drafting is complex — always use Sonnet
         self._ai_client = AIClient(knowledge_engine, api_key=api_key, model=MODEL_STANDARD)
 
-    def draft(self, inquiry_text: str, analysis: InquiryResult) -> DraftResponse:
+    def draft(
+        self,
+        inquiry_text: str,
+        analysis: InquiryResult,
+        lang: Language | None = None,
+    ) -> DraftResponse:
         """Generate a response draft based on inquiry and analysis results."""
+        if lang is None:
+            lang = detect_language(inquiry_text)
+
         # Build context for Claude
-        context = self._build_context(inquiry_text, analysis)
+        context = self._build_context(inquiry_text, analysis, lang)
 
         try:
             raw = self._ai_client._run_with_tools(
-                system_prompt=RESPONSE_DRAFT_PROMPT,
+                system_prompt=RESPONSE_DRAFT_PROMPT + language_instruction(lang),
                 user_message=context,
             )
             return self._build_response(raw, analysis)
         except Exception:
-            return self._fallback_response(inquiry_text, analysis)
+            return self._fallback_response(inquiry_text, analysis, lang)
 
-    def _build_context(self, inquiry_text: str, analysis: InquiryResult) -> str:
+    def _build_context(
+        self, inquiry_text: str, analysis: InquiryResult, lang: Language = Language.EN
+    ) -> str:
         """Build the prompt context from inquiry + analysis."""
         articles_text = ""
         if analysis.relevant_articles:
@@ -91,31 +102,31 @@ class ResponseDrafter:
         )
 
     def _fallback_response(
-        self, inquiry_text: str, analysis: InquiryResult
+        self,
+        inquiry_text: str,
+        analysis: InquiryResult,
+        lang: Language = Language.EN,
     ) -> DraftResponse:
         """Generate a basic response without AI."""
         checklist = "\n".join(f"  {i}. {c}" for i, c in enumerate(analysis.checklist, 1))
+        fb = _FALLBACK_TEMPLATES[lang]
 
         body = (
-            f"Thank you for reaching out to CloudSync Support.\n\n"
-            f"I understand you're experiencing an issue related to "
-            f"{analysis.category.value}. I'd like to help resolve this for you.\n\n"
-            f"To investigate further, could you please check the following:\n"
+            f"{fb['greeting']}\n\n"
+            f"{fb['understand'].format(category=analysis.category.value)} "
+            f"{fb['help']}\n\n"
+            f"{fb['check']}\n"
             f"{checklist}\n\n"
         )
 
         if analysis.follow_up_questions:
             questions = "\n".join(f"  - {q}" for q in analysis.follow_up_questions[:3])
             body += (
-                f"Additionally, it would help if you could provide:\n"
+                f"{fb['additionally']}\n"
                 f"{questions}\n\n"
             )
 
-        body += (
-            "Please don't hesitate to reply with any additional information, "
-            "and I'll work to get this resolved for you as quickly as possible.\n\n"
-            "Best regards,\nCloudSync Support Team"
-        )
+        body += f"{fb['closing']}\n\n{fb['sign_off']}"
 
         return DraftResponse(
             body=body,
@@ -123,8 +134,38 @@ class ResponseDrafter:
             confidence=0.4,
             needs_escalation=analysis.confidence < 0.6,
             suggested_internal_note=(
-                f"Auto-generated fallback response (AI unavailable). "
+                f"{fb['internal_note_prefix']} "
                 f"Category: {analysis.category.value}, "
                 f"Severity: {analysis.severity.value}."
             ),
         )
+
+
+_FALLBACK_TEMPLATES: dict[Language, dict[str, str]] = {
+    Language.EN: {
+        "greeting": "Thank you for reaching out to CloudSync Support.",
+        "understand": "I understand you're experiencing an issue related to {category}.",
+        "help": "I'd like to help resolve this for you.",
+        "check": "To investigate further, could you please check the following:",
+        "additionally": "Additionally, it would help if you could provide:",
+        "closing": (
+            "Please don't hesitate to reply with any additional information, "
+            "and I'll work to get this resolved for you as quickly as possible."
+        ),
+        "sign_off": "Best regards,\nCloudSync Support Team",
+        "internal_note_prefix": "Auto-generated fallback response (AI unavailable).",
+    },
+    Language.KO: {
+        "greeting": "CloudSync 지원팀에 문의해 주셔서 감사합니다.",
+        "understand": "{category} 관련 문제를 겪고 계시는 것으로 파악됩니다.",
+        "help": "문제 해결을 도와드리겠습니다.",
+        "check": "문제를 조사하기 위해 다음 사항을 확인해 주시겠어요:",
+        "additionally": "추가로 다음 정보를 제공해 주시면 도움이 됩니다:",
+        "closing": (
+            "추가 정보가 있으시면 언제든지 회신해 주세요. "
+            "가능한 한 빠르게 문제를 해결해 드리겠습니다."
+        ),
+        "sign_off": "감사합니다,\nCloudSync 지원팀",
+        "internal_note_prefix": "자동 생성된 폴백 응답 (AI 사용 불가).",
+    },
+}
