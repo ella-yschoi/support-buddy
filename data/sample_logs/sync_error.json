@@ -1,0 +1,14 @@
+[
+  {"timestamp": "2024-01-15T10:00:00Z", "level": "INFO", "message": "Sync session started", "service": "sync-engine", "user_id": "user-123", "session_id": "sess-abc"},
+  {"timestamp": "2024-01-15T10:00:01Z", "level": "INFO", "message": "Indexing local changes: 150 files detected", "service": "sync-engine", "session_id": "sess-abc"},
+  {"timestamp": "2024-01-15T10:00:05Z", "level": "INFO", "message": "Uploading 12 modified files", "service": "sync-engine", "session_id": "sess-abc"},
+  {"timestamp": "2024-01-15T10:00:10Z", "level": "INFO", "message": "Upload complete: report_q4.xlsx (2.3MB, 4.8s)", "service": "sync-engine", "duration_ms": 4800},
+  {"timestamp": "2024-01-15T10:00:15Z", "level": "WARN", "message": "Slow upload detected: presentation_final.pptx (850MB, 25.3s)", "service": "sync-engine", "duration_ms": 25300},
+  {"timestamp": "2024-01-15T10:00:42Z", "level": "ERROR", "message": "Upload failed: SYNC-002 - Storage quota exceeded for user-123", "service": "sync-engine", "error_code": "SYNC-002", "file": "video_recording.mp4"},
+  {"timestamp": "2024-01-15T10:00:43Z", "level": "WARN", "message": "Retry 1/3 for video_recording.mp4", "service": "sync-engine"},
+  {"timestamp": "2024-01-15T10:00:55Z", "level": "ERROR", "message": "Upload failed: SYNC-002 - Storage quota exceeded for user-123", "service": "sync-engine", "error_code": "SYNC-002", "file": "video_recording.mp4"},
+  {"timestamp": "2024-01-15T10:00:56Z", "level": "WARN", "message": "Retry 2/3 for video_recording.mp4", "service": "sync-engine"},
+  {"timestamp": "2024-01-15T10:01:08Z", "level": "ERROR", "message": "Upload failed: SYNC-002 - Storage quota exceeded for user-123", "service": "sync-engine", "error_code": "SYNC-002", "file": "video_recording.mp4"},
+  {"timestamp": "2024-01-15T10:01:09Z", "level": "ERROR", "message": "Max retries exceeded for video_recording.mp4. Marking as failed.", "service": "sync-engine", "error_code": "SYNC-002"},
+  {"timestamp": "2024-01-15T10:01:10Z", "level": "INFO", "message": "Sync session completed with errors: 11/12 files uploaded successfully", "service": "sync-engine", "session_id": "sess-abc", "success": 11, "failed": 1}
+]
