@@ -2,6 +2,20 @@
 
 from __future__ import annotations
 
+from src.core.i18n import Language
+
+
+def language_instruction(lang: Language) -> str:
+    """Return a prompt suffix instructing Claude to respond in the given language."""
+    if lang == Language.KO:
+        return (
+            "\n\nIMPORTANT: The customer's inquiry is in Korean. "
+            "You MUST respond entirely in Korean (한국어). "
+            "All checklist items, follow-up questions, summaries, "
+            "and response text must be in Korean."
+        )
+    return ""
+
 INQUIRY_ANALYSIS_PROMPT = """You are an expert Technical Support Engineer for CloudSync, a cloud-based file synchronization and collaboration platform.
 
 Your job is to analyze customer inquiries and help TSEs (Technical Support Engineers) respond effectively.

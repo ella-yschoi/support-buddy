@@ -6,6 +6,7 @@ from typing import Any
 
 from src.core.ai.client import AIClient
 from src.core.analyzer.inquiry import InquiryAnalyzer
+from src.core.i18n import Language, detect_language
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import InquiryCategory, InquiryResult, Severity
 
@@ -21,15 +22,19 @@ class AIInquiryAnalyzer:
         self._ai_client = AIClient(knowledge_engine, api_key=api_key)
         self._fallback = InquiryAnalyzer(knowledge_engine)
 
-    def analyze(self, inquiry_text: str) -> InquiryResult:
+    def analyze(
+        self, inquiry_text: str, lang: Language | None = None
+    ) -> InquiryResult:
         """Analyze inquiry with Claude AI, falling back to keyword-based on failure."""
+        if lang is None:
+            lang = detect_language(inquiry_text)
         try:
-            raw = self._ai_client.analyze_inquiry(inquiry_text)
+            raw = self._ai_client.analyze_inquiry(inquiry_text, lang=lang)
             if raw.get("parse_error"):
-                return self._fallback.classify(inquiry_text)
+                return self._fallback.classify(inquiry_text, lang=lang)
             return self._build_result(raw, inquiry_text)
         except Exception:
-            return self._fallback.classify(inquiry_text)
+            return self._fallback.classify(inquiry_text, lang=lang)
 
     def _build_result(self, raw: dict[str, Any], inquiry_text: str) -> InquiryResult:
         """Convert Claude's JSON response into an InquiryResult."""

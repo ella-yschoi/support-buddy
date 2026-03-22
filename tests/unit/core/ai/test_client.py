@@ -9,7 +9,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from src.core.ai.client import AIClient
+from src.core.ai.prompts import language_instruction
 from src.core.ai.tools import ALL_TOOLS
+from src.core.i18n import Language
 from src.core.knowledge.engine import KnowledgeEngine
 
 
@@ -98,3 +100,14 @@ class TestAIClient:
         client = AIClient(knowledge_engine, api_key="test-key")
         result = client._parse_json_response("no json here")
         assert result["parse_error"] is True
+
+
+class TestLanguageInstruction:
+    def test_korean_returns_instruction(self):
+        result = language_instruction(Language.KO)
+        assert "Korean" in result
+        assert "한국어" in result
+
+    def test_english_returns_empty(self):
+        result = language_instruction(Language.EN)
+        assert result == ""
