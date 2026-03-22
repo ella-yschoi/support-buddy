@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from src.core.analyzer.log_parser import LogParser
+from src.core.i18n import Language
 from src.core.models import LogEvent
 
 
@@ -74,3 +75,33 @@ class TestLogParser:
     def test_detect_format_text(self, sample_text_logs: str):
         parser = LogParser()
         assert parser.detect_format(sample_text_logs) == "text"
+
+
+class TestLogParserKorean:
+    def test_generate_summary_korean_labels(self, sample_json_logs: str):
+        parser = LogParser()
+        events = parser.parse(sample_json_logs)
+        summary = parser.generate_text_summary(events, lang=Language.KO)
+
+        assert "로그 요약" in summary
+        assert "시간 범위" in summary
+        assert "레벨" in summary
+
+    def test_generate_summary_korean_errors(self, sample_json_logs: str):
+        parser = LogParser()
+        events = parser.parse(sample_json_logs)
+        summary = parser.generate_text_summary(events, lang=Language.KO)
+
+        assert "오류 발견" in summary
+
+    def test_generate_summary_korean_empty(self):
+        parser = LogParser()
+        summary = parser.generate_text_summary([], lang=Language.KO)
+        assert "요약할 로그 이벤트가 없습니다" in summary
+
+    def test_generate_summary_english_default(self, sample_json_logs: str):
+        parser = LogParser()
+        events = parser.parse(sample_json_logs)
+        summary = parser.generate_text_summary(events)
+
+        assert "Log Summary" in summary
