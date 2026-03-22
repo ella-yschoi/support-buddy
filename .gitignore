@@ -1,0 +1,54 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing & Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Vector DB local data
+chroma_data/
+qdrant_data/
+*.db
+
+# Logs (sample logs for testing are OK, but not production logs)
+logs/
+*.log
+
+# agentic-dev-pipeline artifacts
+.agentic-dev-pipeline/
+
+# Node (if frontend added later)
+node_modules/
+.next/
