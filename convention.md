@@ -62,6 +62,12 @@ from src.core.knowledge.engine import KnowledgeEngine
 - **Commit messages:** imperative mood, max 72 chars for subject line
   - Format: `<type>: <subject>` (e.g., `feat: add log parser for JSON format`)
   - Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
+- **Commit granularity:** 하나의 커밋은 하나의 논리적 단위로 구성한다
+  - 모듈/컴포넌트 단위로 커밋을 분리 (e.g., knowledge engine, analyzer, log parser 각각 별도 커밋)
+  - 각 커밋에는 해당 기능의 구현 코드 + 관련 테스트 + 관련 데이터를 함께 포함
+  - 인프라/설정 변경(pyproject.toml, config, 공통 모델 등)은 기능 커밋과 분리하여 먼저 커밋
+  - 하나의 커밋이 여러 독립적인 기능을 포함하지 않도록 한다
+  - 커밋 body에 변경 사항을 bullet point로 요약
 - **PR:** one logical change per PR, include test plan
 
 ## Testing
