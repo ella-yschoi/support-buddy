@@ -14,6 +14,7 @@ from src.config import ANTHROPIC_API_KEY, KNOWLEDGE_DIR
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
 from src.core.knowledge.engine import KnowledgeEngine
+from src.core.models import InquiryResult
 
 app = typer.Typer(
     name="support-buddy",
@@ -38,17 +39,8 @@ def _get_engine(knowledge_dir: str | None = None) -> KnowledgeEngine:
     return _engine
 
 
-@app.command()
-def analyze(
-    inquiry: str = typer.Argument(..., help="Customer inquiry text to analyze"),
-    knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
-):
-    """Analyze a customer inquiry and get TSE guidance."""
-    engine = _get_engine(knowledge_dir)
-    analyzer = InquiryAnalyzer(engine)
-    result = analyzer.classify(inquiry)
-
-    # Header
+def _display_analysis(result: InquiryResult, title: str = "Inquiry Analysis") -> None:
+    """Display an InquiryResult with Rich formatting."""
     severity_color = {
         "low": "green", "medium": "yellow", "high": "red", "critical": "bold red"
     }.get(result.severity.value, "white")
@@ -59,23 +51,20 @@ def analyze(
         f"Category: [cyan]{result.category.value}[/cyan]  |  "
         f"Severity: [{severity_color}]{result.severity.value.upper()}[/{severity_color}]  |  "
         f"Confidence: {result.confidence:.0%}",
-        title="[bold blue]Inquiry Analysis[/bold blue]",
+        title=f"[bold blue]{title}[/bold blue]",
         border_style="blue",
     ))
 
-    # Checklist
     console.print()
     console.print("[bold]Checklist:[/bold]")
     for i, item in enumerate(result.checklist, 1):
         console.print(f"  {i}. {item}")
 
-    # Follow-up questions
     console.print()
     console.print("[bold]Suggested Follow-up Questions:[/bold]")
     for i, q in enumerate(result.follow_up_questions, 1):
         console.print(f"  {i}. {q}")
 
-    # Relevant articles
     if result.relevant_articles:
         console.print()
         table = Table(title="Relevant Knowledge Base Articles")
@@ -84,14 +73,9 @@ def analyze(
         table.add_column("Score", justify="right")
 
         for article in result.relevant_articles[:5]:
-            table.add_row(
-                article.title,
-                article.category,
-                f"{article.score:.2f}",
-            )
+            table.add_row(article.title, article.category, f"{article.score:.2f}")
         console.print(table)
 
-    # Escalation warning
     if result.confidence < 0.6:
         console.print()
         console.print(
@@ -100,48 +84,159 @@ def analyze(
 
 
 @app.command()
+def analyze(
+    inquiry: str = typer.Argument(..., help="Customer inquiry text to analyze"),
+    ai: bool = typer.Option(False, "--ai", help="Use Claude AI for enhanced analysis"),
+    knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
+):
+    """Analyze a customer inquiry and get TSE guidance."""
+    engine = _get_engine(knowledge_dir)
+
+    if ai:
+        if not ANTHROPIC_API_KEY:
+            console.print("[red]Error: ANTHROPIC_API_KEY not set. Use without --ai or set the key.[/red]")
+            raise typer.Exit(1)
+        from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
+        analyzer = AIInquiryAnalyzer(engine)
+        console.print("[dim]Using Claude AI for analysis...[/dim]")
+        result = analyzer.analyze(inquiry)
+        _display_analysis(result, title="AI-Powered Inquiry Analysis")
+    else:
+        analyzer = InquiryAnalyzer(engine)
+        result = analyzer.classify(inquiry)
+        _display_analysis(result)
+
+
+@app.command()
 def logs(
-    log_input: str = typer.Argument(
-        ..., help="Log content or path to a log file"
-    ),
+    log_input: str = typer.Argument(..., help="Log content or path to a log file"),
+    ai: bool = typer.Option(False, "--ai", help="Use Claude AI for enhanced log analysis"),
     threshold: int = typer.Option(5000, "--threshold", "-t", help="Slow operation threshold (ms)"),
     knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
 ):
     """Parse and analyze log data."""
-    # Check if input is a file path
     log_path = Path(log_input)
     if log_path.is_file():
         raw_logs = log_path.read_text(encoding="utf-8")
     else:
         raw_logs = log_input
 
-    parser = LogParser()
-    events = parser.parse(raw_logs)
+    if ai:
+        if not ANTHROPIC_API_KEY:
+            console.print("[red]Error: ANTHROPIC_API_KEY not set. Use without --ai or set the key.[/red]")
+            raise typer.Exit(1)
+        from src.core.analyzer.log_analyzer import AILogAnalyzer
+        engine = _get_engine(knowledge_dir)
+        ai_analyzer = AILogAnalyzer(engine)
+        console.print("[dim]Using Claude AI for log analysis...[/dim]")
+        insight = ai_analyzer.analyze(raw_logs)
 
-    if not events:
-        console.print("[yellow]No log events could be parsed from the input.[/yellow]")
+        console.print()
+        console.print(Panel(
+            f"[bold]Summary:[/bold]\n{insight.summary}\n\n"
+            f"[bold]Root Cause Hypothesis:[/bold]\n{insight.root_cause_hypothesis}",
+            title="[bold blue]AI Log Analysis[/bold blue]",
+            border_style="blue",
+        ))
+
+        if insight.anomalies:
+            console.print()
+            console.print("[bold]Anomalies Detected:[/bold]")
+            for a in insight.anomalies:
+                console.print(f"  - {a}")
+
+        if insight.errors:
+            console.print()
+            console.print(f"[bold]{len(insight.errors)} Error(s):[/bold]")
+            for e in insight.errors:
+                console.print(f"  [{e.timestamp}] {e.message}")
+
+        if insight.slow_operations:
+            console.print()
+            console.print(f"[bold]{len(insight.slow_operations)} Slow Operation(s):[/bold]")
+            for s in insight.slow_operations:
+                dur = s.metadata.get("duration_ms", "?")
+                console.print(f"  [{s.timestamp}] {s.message} ({dur}ms)")
+    else:
+        parser = LogParser()
+        events = parser.parse(raw_logs)
+
+        if not events:
+            console.print("[yellow]No log events could be parsed from the input.[/yellow]")
+            raise typer.Exit(1)
+
+        summary = parser.generate_text_summary(events)
+        console.print()
+        console.print(Panel(summary, title="[bold blue]Log Analysis[/bold blue]", border_style="blue"))
+
+        error_codes = parser.extract_error_codes(events)
+        if error_codes:
+            engine = _get_engine(knowledge_dir)
+            console.print()
+            console.print("[bold]Error Code Details:[/bold]")
+            for code in error_codes:
+                results = engine.search(code, top_k=1, category="error_code")
+                if results:
+                    console.print(f"\n  [cyan]{code}[/cyan]: {results[0].title}")
+                    console.print(f"  {results[0].content[:200]}...")
+                else:
+                    console.print(f"\n  [cyan]{code}[/cyan]: No documentation found")
+
+
+@app.command()
+def draft(
+    inquiry: str = typer.Argument(..., help="Customer inquiry text"),
+    knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
+):
+    """Generate a draft response for a customer inquiry (requires AI)."""
+    if not ANTHROPIC_API_KEY:
+        console.print("[red]Error: ANTHROPIC_API_KEY not set.[/red]")
         raise typer.Exit(1)
 
-    # Summary
-    summary = parser.generate_text_summary(events)
-    console.print()
-    console.print(Panel(summary, title="[bold blue]Log Analysis[/bold blue]", border_style="blue"))
+    engine = _get_engine(knowledge_dir)
 
-    # Error codes — look up in knowledge base
-    error_codes = parser.extract_error_codes(events)
-    if error_codes:
-        engine = _get_engine(knowledge_dir)
+    # First analyze
+    from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
+    from src.core.responder.drafter import ResponseDrafter
+
+    console.print("[dim]Analyzing inquiry...[/dim]")
+    analyzer = AIInquiryAnalyzer(engine)
+    analysis = analyzer.analyze(inquiry)
+
+    _display_analysis(analysis, title="Analysis")
+
+    # Then draft response
+    console.print()
+    console.print("[dim]Generating response draft...[/dim]")
+    drafter = ResponseDrafter(engine)
+    response = drafter.draft(inquiry, analysis)
+
+    # Display draft
+    escalation = "[bold red]YES — Escalation Recommended[/bold red]" if response.needs_escalation else "[green]No[/green]"
+
+    console.print()
+    console.print(Panel(
+        response.body,
+        title=f"[bold green]Draft Response[/bold green] (confidence: {response.confidence:.0%})",
+        border_style="green",
+    ))
+
+    console.print()
+    console.print(f"  Needs escalation: {escalation}")
+
+    if response.suggested_internal_note:
         console.print()
-        console.print("[bold]Error Code Details:[/bold]")
-        for code in error_codes:
-            results = engine.search(code, top_k=1, category="error_code")
-            if results:
-                console.print(f"\n  [cyan]{code}[/cyan]: {results[0].title}")
-                # Show first ~200 chars of content
-                content_preview = results[0].content[:200]
-                console.print(f"  {content_preview}...")
-            else:
-                console.print(f"\n  [cyan]{code}[/cyan]: No documentation found")
+        console.print(Panel(
+            response.suggested_internal_note,
+            title="[bold yellow]Internal Note (not sent to customer)[/bold yellow]",
+            border_style="yellow",
+        ))
+
+    if response.citations:
+        console.print()
+        console.print("[bold]Sources:[/bold]")
+        for c in response.citations:
+            console.print(f"  - {c.title} ({c.category})")
 
 
 @app.command()
