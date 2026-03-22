@@ -114,11 +114,11 @@ def analyze(
         from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
         analyzer = AIInquiryAnalyzer(engine)
         console.print(f"[dim]{t('using_ai_analysis', resolved_lang)}[/dim]")
-        result = analyzer.analyze(inquiry)
+        result = analyzer.analyze(inquiry, lang=resolved_lang)
         _display_analysis(result, title=t("ai_inquiry_analysis_title", resolved_lang), lang=resolved_lang)
     else:
         analyzer = InquiryAnalyzer(engine)
-        result = analyzer.classify(inquiry)
+        result = analyzer.classify(inquiry, lang=resolved_lang)
         _display_analysis(result, lang=resolved_lang)
 
 
@@ -146,7 +146,7 @@ def logs(
         engine = _get_engine(knowledge_dir, resolved_lang)
         ai_analyzer = AILogAnalyzer(engine)
         console.print(f"[dim]{t('using_ai_log_analysis', resolved_lang)}[/dim]")
-        insight = ai_analyzer.analyze(raw_logs)
+        insight = ai_analyzer.analyze(raw_logs, lang=resolved_lang)
 
         console.print()
         console.print(Panel(
@@ -182,7 +182,7 @@ def logs(
             console.print(f"[yellow]{t('no_log_events', resolved_lang)}[/yellow]")
             raise typer.Exit(1)
 
-        summary = parser.generate_text_summary(events)
+        summary = parser.generate_text_summary(events, lang=resolved_lang)
         console.print()
         console.print(Panel(summary, title=f"[bold blue]{t('log_analysis_title', resolved_lang)}[/bold blue]", border_style="blue"))
 
@@ -221,7 +221,7 @@ def draft(
 
     console.print(f"[dim]{t('analyzing_inquiry', resolved_lang)}[/dim]")
     analyzer = AIInquiryAnalyzer(engine)
-    analysis = analyzer.analyze(inquiry)
+    analysis = analyzer.analyze(inquiry, lang=resolved_lang)
 
     _display_analysis(analysis, title=t("inquiry_analysis_title", resolved_lang), lang=resolved_lang)
 
@@ -229,7 +229,7 @@ def draft(
     console.print()
     console.print(f"[dim]{t('generating_draft', resolved_lang)}[/dim]")
     drafter = ResponseDrafter(engine)
-    response = drafter.draft(inquiry, analysis)
+    response = drafter.draft(inquiry, analysis, lang=resolved_lang)
 
     # Display draft
     escalation_text = (
