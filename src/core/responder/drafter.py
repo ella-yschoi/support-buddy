@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from src.config import MODEL_STANDARD
 from src.core.ai.client import AIClient
 from src.core.ai.prompts import RESPONSE_DRAFT_PROMPT
 from src.core.knowledge.engine import KnowledgeEngine
@@ -12,11 +13,12 @@ from src.core.models import DraftResponse, InquiryResult, SearchResult
 
 
 class ResponseDrafter:
-    """Generate customer response drafts using Claude AI."""
+    """Generate customer response drafts using Claude AI (Sonnet)."""
 
     def __init__(self, knowledge_engine: KnowledgeEngine, api_key: str | None = None):
         self._knowledge = knowledge_engine
-        self._ai_client = AIClient(knowledge_engine, api_key=api_key)
+        # Response drafting is complex — always use Sonnet
+        self._ai_client = AIClient(knowledge_engine, api_key=api_key, model=MODEL_STANDARD)
 
     def draft(self, inquiry_text: str, analysis: InquiryResult) -> DraftResponse:
         """Generate a response draft based on inquiry and analysis results."""

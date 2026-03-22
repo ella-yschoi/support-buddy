@@ -7,7 +7,7 @@ from typing import Any
 
 import anthropic
 
-from src.config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
+from src.config import ANTHROPIC_API_KEY, MODEL_FAST, MODEL_STANDARD
 from src.core.ai.prompts import INQUIRY_ANALYSIS_PROMPT, LOG_ANALYSIS_PROMPT
 from src.core.ai.tools import ALL_TOOLS
 from src.core.exceptions import AIClientError
@@ -16,18 +16,28 @@ from src.core.models import SearchResult
 
 
 class AIClient:
-    """Wrapper around Claude API with tool use for knowledge base search."""
+    """Wrapper around Claude API with tool use for knowledge base search.
 
-    def __init__(self, knowledge_engine: KnowledgeEngine, api_key: str | None = None):
+    Uses two model tiers:
+    - FAST (Haiku): classification, simple tasks — cheap & quick
+    - STANDARD (Sonnet): complex analysis, log insights, response drafting
+    """
+
+    def __init__(
+        self,
+        knowledge_engine: KnowledgeEngine,
+        api_key: str | None = None,
+        model: str | None = None,
+    ):
         self._knowledge = knowledge_engine
         self._api_key = api_key or ANTHROPIC_API_KEY
         if not self._api_key:
             raise AIClientError("ANTHROPIC_API_KEY is not set")
         self._client = anthropic.Anthropic(api_key=self._api_key)
-        self._model = ANTHROPIC_MODEL
+        self._model_override = model  # If set, always use this model
 
     def analyze_inquiry(self, inquiry_text: str) -> dict[str, Any]:
-        """Analyze a customer inquiry using Claude with tool use."""
+        """Analyze a customer inquiry using Claude with tool use. (Haiku)"""
         return self._run_with_tools(
             system_prompt=INQUIRY_ANALYSIS_PROMPT,
             user_message=(
@@ -36,10 +46,11 @@ class AIClient:
                 f"follow_up_questions (array of strings), confidence (float 0-1).\n\n"
                 f"Customer inquiry:\n{inquiry_text}"
             ),
+            model=self._model_override or MODEL_FAST,
         )
 
     def analyze_logs(self, log_summary: str) -> dict[str, Any]:
-        """Analyze parsed log data using Claude."""
+        """Analyze parsed log data using Claude. (Sonnet)"""
         return self._run_with_tools(
             system_prompt=LOG_ANALYSIS_PROMPT,
             user_message=(
@@ -48,17 +59,23 @@ class AIClient:
                 f"anomalies (array of strings), next_steps (array of strings).\n\n"
                 f"Parsed log data:\n{log_summary}"
             ),
+            model=self._model_override or MODEL_STANDARD,
         )
 
     def _run_with_tools(
-        self, system_prompt: str, user_message: str, max_rounds: int = 5
+        self,
+        system_prompt: str,
+        user_message: str,
+        max_rounds: int = 5,
+        model: str | None = None,
     ) -> dict[str, Any]:
         """Run a Claude conversation with tool use, handling tool calls automatically."""
+        use_model = model or self._model_override or MODEL_STANDARD
         messages: list[dict[str, Any]] = [{"role": "user", "content": user_message}]
 
         for _ in range(max_rounds):
             response = self._client.messages.create(
-                model=self._model,
+                model=use_model,
                 max_tokens=4096,
                 system=system_prompt,
                 tools=ALL_TOOLS,
