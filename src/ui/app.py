@@ -1,6 +1,5 @@
 """Streamlit Web UI for Support Buddy."""
 
-import json
 import tempfile
 from pathlib import Path
 
@@ -18,6 +17,21 @@ st.set_page_config(page_title="Support Buddy", page_icon="🎧", layout="wide")
 # Use a fixed temp directory so ChromaDB persists across Streamlit reruns
 _CHROMA_DIR = str(Path(tempfile.gettempdir()) / "support_buddy_chroma")
 
+# Page config
+_PAGES = {
+    "Inquiry Analysis": {"icon": "🔍", "desc": "Analyze customer inquiries"},
+    "Log Analysis": {"icon": "📊", "desc": "Parse and visualize logs"},
+    "Email Analysis": {"icon": "📧", "desc": "Parse incoming emails"},
+    "Knowledge Search": {"icon": "📚", "desc": "Search the knowledge base"},
+}
+
+_SEVERITY_STYLES = {
+    "critical": ("🔴", "#ff4b4b"),
+    "high": ("🟠", "#ff8c00"),
+    "medium": ("🟡", "#ffc107"),
+    "low": ("🟢", "#28a745"),
+}
+
 
 @st.cache_resource
 def get_engine():
@@ -29,40 +43,162 @@ def get_engine():
 
 def render_sidebar():
     with st.sidebar:
-        st.title("Support Buddy")
-        st.caption("AI-powered support tool for TSEs")
+        st.markdown(
+            "<h1 style='text-align:center;'>🎧 Support Buddy</h1>"
+            "<p style='text-align:center; color:gray; margin-top:-10px;'>"
+            "AI-powered support tool</p>",
+            unsafe_allow_html=True,
+        )
         st.divider()
 
-        page = st.radio(
-            "Navigate",
-            ["Inquiry Analysis", "Log Analysis", "Email Analysis", "Knowledge Search"],
-            label_visibility="collapsed",
+        # Navigation buttons
+        if "page" not in st.session_state:
+            st.session_state.page = "Inquiry Analysis"
+
+        for page_name, info in _PAGES.items():
+            is_active = st.session_state.page == page_name
+            btn_type = "primary" if is_active else "secondary"
+            if st.button(
+                f"{info['icon']}  {page_name}",
+                key=f"nav_{page_name}",
+                use_container_width=True,
+                type=btn_type,
+            ):
+                st.session_state.page = page_name
+                st.rerun()
+
+        st.divider()
+
+        # Status
+        engine = get_engine()
+        col1, col2 = st.columns(2)
+        col1.metric("KB Docs", engine.doc_count())
+        has_ai = bool(ANTHROPIC_API_KEY)
+        col2.metric("AI", "ON" if has_ai else "OFF")
+
+    return st.session_state.page
+
+
+def _severity_badge(severity: str) -> str:
+    icon, color = _SEVERITY_STYLES.get(severity, ("⚪", "#888"))
+    return f"<span style='background:{color}; color:white; padding:4px 12px; border-radius:12px; font-weight:bold;'>{icon} {severity.upper()}</span>"
+
+
+def _render_analysis_results(result, show_draft_button=False, inquiry=""):
+    """Shared result display for inquiry and email analysis."""
+    severity = result.severity.value
+    sev_icon, sev_color = _SEVERITY_STYLES.get(severity, ("⚪", "#888"))
+
+    # Header metrics
+    col1, col2, col3 = st.columns(3)
+    col1.markdown(
+        f"<div style='text-align:center;'>"
+        f"<div style='font-size:0.85em; color:gray;'>Category</div>"
+        f"<div style='font-size:1.5em; font-weight:bold;'>{result.category.value.upper()}</div>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
+    col2.markdown(
+        f"<div style='text-align:center;'>"
+        f"<div style='font-size:0.85em; color:gray;'>Severity</div>"
+        f"<div style='font-size:1.5em;'>{_severity_badge(severity)}</div>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
+    col3.markdown(
+        f"<div style='text-align:center;'>"
+        f"<div style='font-size:0.85em; color:gray;'>Confidence</div>"
+        f"<div style='font-size:1.5em; font-weight:bold;'>{result.confidence:.0%}</div>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("")
+    st.info(f"**Summary:** {result.summary}")
+
+    # Checklist + Follow-up side by side
+    col_left, col_right = st.columns(2)
+
+    with col_left:
+        st.markdown("#### ✅ Checklist")
+        for i, item in enumerate(result.checklist):
+            st.checkbox(item, key=f"chk_{id(result)}_{i}")
+
+    with col_right:
+        st.markdown("#### 💬 Follow-up Questions")
+        for q in result.follow_up_questions:
+            st.markdown(f"- {q}")
+
+    # Relevant articles
+    if result.relevant_articles:
+        st.markdown("#### 📄 Relevant Knowledge Base Articles")
+        articles_data = []
+        for a in result.relevant_articles:
+            score_pct = f"{a.score:.0%}"
+            articles_data.append({
+                "Title": a.title,
+                "Category": a.category,
+                "Relevance": score_pct,
+            })
+        st.dataframe(
+            pd.DataFrame(articles_data),
+            use_container_width=True,
+            hide_index=True,
         )
 
+        with st.expander("View article details"):
+            for a in result.relevant_articles:
+                st.markdown(f"**{a.title}** `{a.category}`")
+                st.markdown(a.content[:500])
+                st.divider()
+
+    if result.confidence < 0.6:
+        st.warning("⚠️ Low confidence — consider escalating to a senior TSE.")
+
+    # Draft response button
+    if show_draft_button and ANTHROPIC_API_KEY and inquiry:
         st.divider()
-        engine = get_engine()
-        st.metric("Knowledge Docs", engine.doc_count())
+        if st.button("✉️ Generate Response Draft", type="primary"):
+            from src.core.responder.drafter import ResponseDrafter
+            engine = get_engine()
+            with st.spinner("Generating draft..."):
+                drafter = ResponseDrafter(engine)
+                response = drafter.draft(inquiry, result)
 
-        has_ai = bool(ANTHROPIC_API_KEY)
-        st.caption(f"AI Mode: {'Available' if has_ai else 'Not configured'}")
+            st.markdown("#### ✉️ Draft Response")
+            st.text_area("Response body", value=response.body, height=200, label_visibility="collapsed")
 
-    return page
+            col1, col2 = st.columns(2)
+            col1.metric("Draft Confidence", f"{response.confidence:.0%}")
+            if response.needs_escalation:
+                col2.error("🚨 Escalation Recommended")
+            else:
+                col2.success("✅ No Escalation Needed")
+
+            if response.suggested_internal_note:
+                with st.expander("🔒 Internal Note (not sent to customer)"):
+                    st.write(response.suggested_internal_note)
 
 
 def render_inquiry_analysis():
-    st.header("Inquiry Analysis")
-    st.caption("Paste a customer inquiry to get classification, checklist, and relevant articles.")
+    st.markdown("## 🔍 Inquiry Analysis")
+    st.caption("Paste a customer inquiry to get instant classification, checklist, and relevant articles.")
 
     use_ai = False
     if ANTHROPIC_API_KEY:
-        use_ai = st.toggle("Use AI (Claude)", value=False)
+        use_ai = st.toggle("⚡ Use AI (Claude)", value=False, help="Uses Haiku for classification. Costs ~$0.003/request.")
 
-    inquiry = st.text_area("Customer Inquiry", height=150, placeholder="e.g., My files are not syncing between my Mac and Windows laptop...")
+    inquiry = st.text_area(
+        "Customer Inquiry",
+        height=150,
+        placeholder="e.g., My files are not syncing between my Mac and Windows laptop. I see SYNC-002 error...",
+        label_visibility="collapsed",
+    )
 
-    if st.button("Analyze", type="primary", disabled=not inquiry):
+    if st.button("Analyze", type="primary", disabled=not inquiry, use_container_width=True):
         engine = get_engine()
 
-        with st.spinner("Analyzing..."):
+        with st.spinner("Analyzing inquiry..."):
             if use_ai:
                 from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
                 analyzer = AIInquiryAnalyzer(engine)
@@ -71,74 +207,28 @@ def render_inquiry_analysis():
                 analyzer = InquiryAnalyzer(engine)
                 result = analyzer.classify(inquiry)
 
-        # Results
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Category", result.category.value.upper())
-        col2.metric("Severity", result.severity.value.upper())
-        col3.metric("Confidence", f"{result.confidence:.0%}")
-
-        st.subheader("Summary")
-        st.info(result.summary)
-
-        col_left, col_right = st.columns(2)
-
-        with col_left:
-            st.subheader("Checklist")
-            for item in result.checklist:
-                st.checkbox(item, key=f"check_{item[:20]}")
-
-        with col_right:
-            st.subheader("Follow-up Questions")
-            for q in result.follow_up_questions:
-                st.write(f"- {q}")
-
-        if result.relevant_articles:
-            st.subheader("Relevant Knowledge Base Articles")
-            articles_data = [
-                {"Title": a.title, "Category": a.category, "Score": f"{a.score:.2f}"}
-                for a in result.relevant_articles
-            ]
-            st.dataframe(pd.DataFrame(articles_data), use_container_width=True)
-
-            with st.expander("View article details"):
-                for a in result.relevant_articles:
-                    st.markdown(f"**{a.title}** ({a.category})")
-                    st.markdown(a.content[:500])
-                    st.divider()
-
-        if result.confidence < 0.6:
-            st.warning("Low confidence — consider escalating to a senior TSE.")
-
-        # Draft response (AI only)
-        if use_ai and ANTHROPIC_API_KEY:
-            if st.button("Generate Response Draft"):
-                from src.core.responder.drafter import ResponseDrafter
-                with st.spinner("Generating draft..."):
-                    drafter = ResponseDrafter(engine)
-                    response = drafter.draft(inquiry, result)
-
-                st.subheader("Draft Response")
-                st.text_area("Response", value=response.body, height=200)
-                st.metric("Draft Confidence", f"{response.confidence:.0%}")
-                if response.needs_escalation:
-                    st.error("Escalation recommended")
-                if response.suggested_internal_note:
-                    st.info(f"Internal note: {response.suggested_internal_note}")
+        st.divider()
+        _render_analysis_results(result, show_draft_button=use_ai, inquiry=inquiry)
 
 
 def render_log_analysis():
-    st.header("Log Analysis")
-    st.caption("Paste logs or upload a log file to get insights.")
+    st.markdown("## 📊 Log Analysis")
+    st.caption("Paste logs or upload a log file to get parsed insights and visualizations.")
 
     use_ai = False
     if ANTHROPIC_API_KEY:
-        use_ai = st.toggle("Use AI (Claude)", value=False, key="log_ai")
+        use_ai = st.toggle("⚡ Use AI (Claude)", value=False, key="log_ai", help="Uses Sonnet for deep analysis. Costs ~$0.017/request.")
 
-    tab_paste, tab_upload = st.tabs(["Paste Logs", "Upload File"])
+    tab_paste, tab_upload = st.tabs(["📋 Paste Logs", "📁 Upload File"])
 
     raw_logs = ""
     with tab_paste:
-        raw_logs = st.text_area("Paste log content", height=200, placeholder='[{"timestamp": "...", "level": "ERROR", ...}]')
+        raw_logs = st.text_area(
+            "Log content",
+            height=200,
+            placeholder='[{"timestamp": "2024-01-15T10:00:00Z", "level": "ERROR", "message": "..."}]',
+            label_visibility="collapsed",
+        )
 
     with tab_upload:
         uploaded = st.file_uploader("Upload log file", type=["json", "log", "txt"])
@@ -146,14 +236,17 @@ def render_log_analysis():
             raw_logs = uploaded.read().decode("utf-8")
             st.code(raw_logs[:500] + ("..." if len(raw_logs) > 500 else ""), language="json")
 
-    if st.button("Analyze Logs", type="primary", disabled=not raw_logs):
+    if st.button("Analyze Logs", type="primary", disabled=not raw_logs, use_container_width=True):
         parser = LogParser()
         events = parser.parse(raw_logs)
 
         if not events:
-            st.error("No log events could be parsed.")
+            st.error("No log events could be parsed from the input.")
             return
 
+        st.divider()
+
+        # AI insights first
         if use_ai:
             engine = get_engine()
             from src.core.analyzer.log_analyzer import AILogAnalyzer
@@ -161,86 +254,94 @@ def render_log_analysis():
                 ai_analyzer = AILogAnalyzer(engine)
                 insight = ai_analyzer.analyze(raw_logs)
 
-            st.subheader("AI Summary")
-            st.info(insight.summary)
-            st.subheader("Root Cause Hypothesis")
-            st.warning(insight.root_cause_hypothesis)
+            st.markdown("#### 🤖 AI Insights")
+            st.info(f"**Summary:** {insight.summary}")
+            st.warning(f"**Root Cause Hypothesis:** {insight.root_cause_hypothesis}")
 
             if insight.anomalies:
-                st.subheader("Anomalies")
-                for a in insight.anomalies:
-                    st.write(f"- {a}")
+                with st.expander("⚠️ Anomalies Detected", expanded=True):
+                    for a in insight.anomalies:
+                        st.markdown(f"- {a}")
+            st.divider()
 
-        # Always show parsed data
-        st.subheader("Parsed Events")
-
-        # Timeline chart
+        # Metrics
         errors = parser.extract_errors(events)
         slow_ops = parser.extract_slow_operations(events)
 
         col1, col2, col3 = st.columns(3)
         col1.metric("Total Events", len(events))
-        col2.metric("Errors", len(errors))
+        col2.metric("Errors", len(errors), delta=f"{len(errors)} found", delta_color="inverse")
         col3.metric("Slow Ops", len(slow_ops))
 
-        # Level distribution
+        # Level distribution chart
+        st.markdown("#### Event Level Distribution")
         level_counts = {}
         for e in events:
             level_counts[e.level] = level_counts.get(e.level, 0) + 1
 
-        st.subheader("Event Level Distribution")
-        st.bar_chart(pd.DataFrame({"Level": list(level_counts.keys()), "Count": list(level_counts.values())}).set_index("Level"))
+        chart_df = pd.DataFrame({
+            "Level": list(level_counts.keys()),
+            "Count": list(level_counts.values()),
+        }).set_index("Level")
+        st.bar_chart(chart_df)
 
         # Error details
         if errors:
-            st.subheader("Errors")
+            st.markdown("#### 🔴 Errors")
             error_data = [{"Timestamp": e.timestamp, "Message": e.message} for e in errors]
-            st.dataframe(pd.DataFrame(error_data), use_container_width=True)
+            st.dataframe(pd.DataFrame(error_data), use_container_width=True, hide_index=True)
 
         # Slow operations
         if slow_ops:
-            st.subheader("Slow Operations")
+            st.markdown("#### 🐢 Slow Operations")
             slow_data = [
                 {"Timestamp": s.timestamp, "Message": s.message, "Duration (ms)": s.metadata.get("duration_ms", "?")}
                 for s in slow_ops
             ]
-            st.dataframe(pd.DataFrame(slow_data), use_container_width=True)
+            st.dataframe(pd.DataFrame(slow_data), use_container_width=True, hide_index=True)
 
-        # Error codes
+        # Error code reference
         error_codes = parser.extract_error_codes(events)
         if error_codes:
             engine = get_engine()
-            st.subheader("Error Code Reference")
+            st.markdown("#### 📖 Error Code Reference")
             for code in error_codes:
                 results = engine.search(code, top_k=1, category="error_code")
                 if results:
-                    with st.expander(f"{code}: {results[0].title}"):
+                    with st.expander(f"`{code}` — {results[0].title}"):
                         st.markdown(results[0].content)
 
-        # Raw text summary
-        with st.expander("Text Summary"):
+        # Raw summary
+        with st.expander("📝 Raw Text Summary"):
             st.code(parser.generate_text_summary(events))
 
 
 def render_email_analysis():
-    st.header("Email Analysis")
-    st.caption("Paste a raw email to parse and analyze the customer inquiry.")
+    st.markdown("## 📧 Email Analysis")
+    st.caption("Paste a raw customer email to automatically parse and analyze the inquiry.")
 
-    raw_email = st.text_area("Raw Email", height=250, placeholder="From: customer@example.com\nSubject: ...\n\n...")
+    raw_email = st.text_area(
+        "Raw Email",
+        height=250,
+        placeholder="From: customer@example.com\nTo: support@cloudsync.io\nSubject: Files not syncing\n\nHi, my files are...",
+        label_visibility="collapsed",
+    )
 
-    if st.button("Parse & Analyze", type="primary", disabled=not raw_email):
+    if st.button("Parse & Analyze", type="primary", disabled=not raw_email, use_container_width=True):
         email_parser = EmailParser()
         parsed = email_parser.parse(raw_email)
 
-        col1, col2 = st.columns(2)
+        st.divider()
+
+        # Email metadata
+        st.markdown("#### 📬 Parsed Email")
+        col1, col2, col3 = st.columns(3)
         col1.metric("Sender", parsed.sender or "Unknown")
-        col2.metric("Error Codes", ", ".join(parsed.error_codes) or "None")
+        col2.metric("Subject", parsed.subject[:30] + "..." if len(parsed.subject) > 30 else parsed.subject or "None")
+        col3.metric("Error Codes", ", ".join(parsed.error_codes) or "None")
 
-        st.subheader("Subject")
-        st.write(parsed.subject)
-
-        st.subheader("Body")
-        st.text(parsed.body)
+        with st.expander("View email body", expanded=False):
+            st.text(parsed.body)
 
         if parsed.body:
             engine = get_engine()
@@ -248,34 +349,38 @@ def render_email_analysis():
             result = analyzer.classify(parsed.to_inquiry_text())
 
             st.divider()
-            st.subheader("Analysis")
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Category", result.category.value.upper())
-            col2.metric("Severity", result.severity.value.upper())
-            col3.metric("Confidence", f"{result.confidence:.0%}")
-
-            st.subheader("Checklist")
-            for item in result.checklist:
-                st.checkbox(item, key=f"email_check_{item[:20]}")
+            st.markdown("#### 📋 Analysis Results")
+            _render_analysis_results(result)
 
 
 def render_knowledge_search():
-    st.header("Knowledge Search")
+    st.markdown("## 📚 Knowledge Search")
+    st.caption("Search the knowledge base using natural language. No exact keywords needed.")
 
-    query = st.text_input("Search query", placeholder="e.g., SYNC-002, webhook not firing, how to enable delta sync")
+    query = st.text_input(
+        "Search",
+        placeholder="e.g., SYNC-002, webhook not firing, how to enable delta sync, SSO login failure...",
+        label_visibility="collapsed",
+    )
+
     col1, col2 = st.columns(2)
-    category = col1.selectbox("Category filter", [None, "faq", "troubleshooting", "error_code", "runbook", "feature"])
-    top_k = col2.slider("Results", 1, 20, 5)
+    category_options = ["All Categories", "faq", "troubleshooting", "error_code", "runbook", "feature"]
+    category_display = ["🗂️ All Categories", "❓ FAQ", "🔧 Troubleshooting", "⚠️ Error Codes", "📋 Runbooks", "⭐ Features"]
+    selected_idx = col1.selectbox("Category", range(len(category_options)), format_func=lambda i: category_display[i])
+    category = None if selected_idx == 0 else category_options[selected_idx]
+    top_k = col2.slider("Max results", 1, 20, 5)
 
     if query:
         engine = get_engine()
         results = engine.search(query, top_k=top_k, category=category)
 
         if not results:
-            st.warning("No results found.")
+            st.warning("No results found. Try different keywords.")
         else:
+            st.markdown(f"**{len(results)} result(s) found**")
             for r in results:
-                with st.expander(f"{r.title} ({r.category}) — score: {r.score:.2f}"):
+                relevance = f"{r.score:.0%}"
+                with st.expander(f"**{r.title}**  `{r.category}` — relevance: {relevance}"):
                     st.markdown(r.content)
 
 
