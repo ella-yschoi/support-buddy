@@ -22,5 +22,3 @@ MODEL_STANDARD = os.getenv("ANTHROPIC_MODEL_STANDARD", "claude-sonnet-4-20250514
 CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", str(PROJECT_ROOT / "chroma_data"))
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
-
-DEFAULT_LANGUAGE = os.getenv("SUPPORT_BUDDY_LANG", "en")

@@ -13,7 +13,6 @@ from rich.table import Table
 from src.config import ANTHROPIC_API_KEY, KNOWLEDGE_DIR
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
-from src.core.i18n import Language, detect_language, t
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import InquiryResult
 
@@ -27,33 +26,21 @@ console = Console()
 _engine: KnowledgeEngine | None = None
 
 
-def _resolve_lang(lang_option: str, text: str = "") -> Language:
-    """Resolve language from --lang option or auto-detect from text."""
-    if lang_option == "ko":
-        return Language.KO
-    if lang_option == "en":
-        return Language.EN
-    return detect_language(text) if text else Language.EN
-
-
-def _get_engine(knowledge_dir: str | None = None, lang: Language = Language.EN) -> KnowledgeEngine:
+def _get_engine(knowledge_dir: str | None = None) -> KnowledgeEngine:
     global _engine
     if _engine is None:
         _engine = KnowledgeEngine()
         kb_path = Path(knowledge_dir) if knowledge_dir else KNOWLEDGE_DIR
         if kb_path.is_dir():
             count = _engine.ingest_directory(kb_path)
-            console.print(f"[dim]{t('loaded_chunks', lang).format(count=count, path=kb_path)}[/dim]")
+            console.print(f"[dim]Loaded {count} knowledge chunks from {kb_path}[/dim]")
         else:
-            console.print(f"[yellow]{t('kb_not_found', lang).format(path=kb_path)}[/yellow]")
+            console.print(f"[yellow]Warning: Knowledge directory not found: {kb_path}[/yellow]")
     return _engine
 
 
-def _display_analysis(result: InquiryResult, title: str = "", lang: Language = Language.EN) -> None:
+def _display_analysis(result: InquiryResult, title: str = "Inquiry Analysis") -> None:
     """Display an InquiryResult with Rich formatting."""
-    if not title:
-        title = t("inquiry_analysis_title", lang)
-
     severity_color = {
         "low": "green", "medium": "yellow", "high": "red", "critical": "bold red"
     }.get(result.severity.value, "white")
@@ -69,21 +56,21 @@ def _display_analysis(result: InquiryResult, title: str = "", lang: Language = L
     ))
 
     console.print()
-    console.print(f"[bold]{t('checklist_title', lang)}[/bold]")
+    console.print("[bold]Checklist:[/bold]")
     for i, item in enumerate(result.checklist, 1):
         console.print(f"  {i}. {item}")
 
     console.print()
-    console.print(f"[bold]{t('follow_up_title', lang)}[/bold]")
+    console.print("[bold]Suggested Follow-up Questions:[/bold]")
     for i, q in enumerate(result.follow_up_questions, 1):
         console.print(f"  {i}. {q}")
 
     if result.relevant_articles:
         console.print()
-        table = Table(title=t("kb_articles_title", lang))
-        table.add_column(t("col_title", lang), style="cyan")
-        table.add_column(t("col_category", lang), style="green")
-        table.add_column(t("col_score", lang), justify="right")
+        table = Table(title="Relevant Knowledge Base Articles")
+        table.add_column("Title", style="cyan")
+        table.add_column("Category", style="green")
+        table.add_column("Score", justify="right")
 
         for article in result.relevant_articles[:5]:
             table.add_row(article.title, article.category, f"{article.score:.2f}")
@@ -92,7 +79,7 @@ def _display_analysis(result: InquiryResult, title: str = "", lang: Language = L
     if result.confidence < 0.6:
         console.print()
         console.print(
-            f"[bold yellow]{t('low_confidence_warning', lang)}[/bold yellow]"
+            "[bold yellow]Low confidence — consider escalating to a senior TSE.[/bold yellow]"
         )
 
 
@@ -101,25 +88,23 @@ def analyze(
     inquiry: str = typer.Argument(..., help="Customer inquiry text to analyze"),
     ai: bool = typer.Option(False, "--ai", help="Use Claude AI for enhanced analysis"),
     knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
-    lang: str = typer.Option("auto", "--lang", "-l", help="Language: auto, en, ko"),
 ):
     """Analyze a customer inquiry and get TSE guidance."""
-    resolved_lang = _resolve_lang(lang, inquiry)
-    engine = _get_engine(knowledge_dir, resolved_lang)
+    engine = _get_engine(knowledge_dir)
 
     if ai:
         if not ANTHROPIC_API_KEY:
-            console.print(f"[red]{t('api_key_missing', resolved_lang)}[/red]")
+            console.print("[red]Error: ANTHROPIC_API_KEY not set. Use without --ai or set the key.[/red]")
             raise typer.Exit(1)
         from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
         analyzer = AIInquiryAnalyzer(engine)
-        console.print(f"[dim]{t('using_ai_analysis', resolved_lang)}[/dim]")
-        result = analyzer.analyze(inquiry, lang=resolved_lang)
-        _display_analysis(result, title=t("ai_inquiry_analysis_title", resolved_lang), lang=resolved_lang)
+        console.print("[dim]Using Claude AI for analysis...[/dim]")
+        result = analyzer.analyze(inquiry)
+        _display_analysis(result, title="AI-Powered Inquiry Analysis")
     else:
         analyzer = InquiryAnalyzer(engine)
-        result = analyzer.classify(inquiry, lang=resolved_lang)
-        _display_analysis(result, lang=resolved_lang)
+        result = analyzer.classify(inquiry)
+        _display_analysis(result)
 
 
 @app.command()
@@ -128,10 +113,8 @@ def logs(
     ai: bool = typer.Option(False, "--ai", help="Use Claude AI for enhanced log analysis"),
     threshold: int = typer.Option(5000, "--threshold", "-t", help="Slow operation threshold (ms)"),
     knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
-    lang: str = typer.Option("auto", "--lang", "-l", help="Language: auto, en, ko"),
 ):
     """Parse and analyze log data."""
-    resolved_lang = _resolve_lang(lang)
     log_path = Path(log_input)
     if log_path.is_file():
         raw_logs = log_path.read_text(encoding="utf-8")
@@ -140,37 +123,37 @@ def logs(
 
     if ai:
         if not ANTHROPIC_API_KEY:
-            console.print(f"[red]{t('api_key_missing', resolved_lang)}[/red]")
+            console.print("[red]Error: ANTHROPIC_API_KEY not set. Use without --ai or set the key.[/red]")
             raise typer.Exit(1)
         from src.core.analyzer.log_analyzer import AILogAnalyzer
-        engine = _get_engine(knowledge_dir, resolved_lang)
+        engine = _get_engine(knowledge_dir)
         ai_analyzer = AILogAnalyzer(engine)
-        console.print(f"[dim]{t('using_ai_log_analysis', resolved_lang)}[/dim]")
-        insight = ai_analyzer.analyze(raw_logs, lang=resolved_lang)
+        console.print("[dim]Using Claude AI for log analysis...[/dim]")
+        insight = ai_analyzer.analyze(raw_logs)
 
         console.print()
         console.print(Panel(
-            f"[bold]{t('summary_label', resolved_lang)}[/bold]\n{insight.summary}\n\n"
-            f"[bold]{t('root_cause_label', resolved_lang)}[/bold]\n{insight.root_cause_hypothesis}",
-            title=f"[bold blue]{t('ai_log_analysis_title', resolved_lang)}[/bold blue]",
+            f"[bold]Summary:[/bold]\n{insight.summary}\n\n"
+            f"[bold]Root Cause Hypothesis:[/bold]\n{insight.root_cause_hypothesis}",
+            title="[bold blue]AI Log Analysis[/bold blue]",
             border_style="blue",
         ))
 
         if insight.anomalies:
             console.print()
-            console.print(f"[bold]{t('anomalies_label', resolved_lang)}[/bold]")
+            console.print("[bold]Anomalies Detected:[/bold]")
             for a in insight.anomalies:
                 console.print(f"  - {a}")
 
         if insight.errors:
             console.print()
-            console.print(f"[bold]{t('errors_found', resolved_lang).format(count=len(insight.errors))}[/bold]")
+            console.print(f"[bold]{len(insight.errors)} Error(s):[/bold]")
             for e in insight.errors:
                 console.print(f"  [{e.timestamp}] {e.message}")
 
         if insight.slow_operations:
             console.print()
-            console.print(f"[bold]{t('slow_ops_found', resolved_lang).format(count=len(insight.slow_operations))}[/bold]")
+            console.print(f"[bold]{len(insight.slow_operations)} Slow Operation(s):[/bold]")
             for s in insight.slow_operations:
                 dur = s.metadata.get("duration_ms", "?")
                 console.print(f"  [{s.timestamp}] {s.message} ({dur}ms)")
@@ -179,86 +162,76 @@ def logs(
         events = parser.parse(raw_logs)
 
         if not events:
-            console.print(f"[yellow]{t('no_log_events', resolved_lang)}[/yellow]")
+            console.print("[yellow]No log events could be parsed from the input.[/yellow]")
             raise typer.Exit(1)
 
-        summary = parser.generate_text_summary(events, lang=resolved_lang)
+        summary = parser.generate_text_summary(events)
         console.print()
-        console.print(Panel(summary, title=f"[bold blue]{t('log_analysis_title', resolved_lang)}[/bold blue]", border_style="blue"))
+        console.print(Panel(summary, title="[bold blue]Log Analysis[/bold blue]", border_style="blue"))
 
         error_codes = parser.extract_error_codes(events)
         if error_codes:
-            engine = _get_engine(knowledge_dir, resolved_lang)
+            engine = _get_engine(knowledge_dir)
             console.print()
-            console.print(f"[bold]{t('error_code_details', resolved_lang)}[/bold]")
+            console.print("[bold]Error Code Details:[/bold]")
             for code in error_codes:
                 results = engine.search(code, top_k=1, category="error_code")
                 if results:
                     console.print(f"\n  [cyan]{code}[/cyan]: {results[0].title}")
                     console.print(f"  {results[0].content[:200]}...")
                 else:
-                    console.print(f"\n  [cyan]{code}[/cyan]: {t('no_documentation_found', resolved_lang)}")
+                    console.print(f"\n  [cyan]{code}[/cyan]: No documentation found")
 
 
 @app.command()
 def draft(
     inquiry: str = typer.Argument(..., help="Customer inquiry text"),
     knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
-    lang: str = typer.Option("auto", "--lang", "-l", help="Language: auto, en, ko"),
 ):
     """Generate a draft response for a customer inquiry (requires AI)."""
-    resolved_lang = _resolve_lang(lang, inquiry)
-
     if not ANTHROPIC_API_KEY:
-        console.print(f"[red]{t('api_key_missing', resolved_lang)}[/red]")
+        console.print("[red]Error: ANTHROPIC_API_KEY not set.[/red]")
         raise typer.Exit(1)
 
-    engine = _get_engine(knowledge_dir, resolved_lang)
+    engine = _get_engine(knowledge_dir)
 
-    # First analyze
     from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
     from src.core.responder.drafter import ResponseDrafter
 
-    console.print(f"[dim]{t('analyzing_inquiry', resolved_lang)}[/dim]")
+    console.print("[dim]Analyzing inquiry...[/dim]")
     analyzer = AIInquiryAnalyzer(engine)
-    analysis = analyzer.analyze(inquiry, lang=resolved_lang)
+    analysis = analyzer.analyze(inquiry)
 
-    _display_analysis(analysis, title=t("inquiry_analysis_title", resolved_lang), lang=resolved_lang)
+    _display_analysis(analysis, title="Analysis")
 
-    # Then draft response
     console.print()
-    console.print(f"[dim]{t('generating_draft', resolved_lang)}[/dim]")
+    console.print("[dim]Generating response draft...[/dim]")
     drafter = ResponseDrafter(engine)
-    response = drafter.draft(inquiry, analysis, lang=resolved_lang)
+    response = drafter.draft(inquiry, analysis)
 
-    # Display draft
-    escalation_text = (
-        f"[bold red]{t('needs_escalation_yes', resolved_lang)}[/bold red]"
-        if response.needs_escalation
-        else f"[green]{t('needs_escalation_no', resolved_lang)}[/green]"
-    )
+    escalation = "[bold red]YES — Escalation Recommended[/bold red]" if response.needs_escalation else "[green]No[/green]"
 
     console.print()
     console.print(Panel(
         response.body,
-        title=f"[bold green]{t('draft_response_title', resolved_lang)}[/bold green] (confidence: {response.confidence:.0%})",
+        title=f"[bold green]Draft Response[/bold green] (confidence: {response.confidence:.0%})",
         border_style="green",
     ))
 
     console.print()
-    console.print(f"  {t('needs_escalation_label', resolved_lang)}{escalation_text}")
+    console.print(f"  Needs escalation: {escalation}")
 
     if response.suggested_internal_note:
         console.print()
         console.print(Panel(
             response.suggested_internal_note,
-            title=f"[bold yellow]{t('internal_note_title', resolved_lang)}[/bold yellow]",
+            title="[bold yellow]Internal Note (not sent to customer)[/bold yellow]",
             border_style="yellow",
         ))
 
     if response.citations:
         console.print()
-        console.print(f"[bold]{t('sources_title', resolved_lang)}[/bold]")
+        console.print("[bold]Sources:[/bold]")
         for c in response.citations:
             console.print(f"  - {c.title} ({c.category})")
 
@@ -269,15 +242,13 @@ def search(
     category: str = typer.Option(None, "--category", "-c", help="Filter by category"),
     top_k: int = typer.Option(5, "--top", "-k", help="Number of results"),
     knowledge_dir: str = typer.Option(None, "--kb", help="Path to knowledge directory"),
-    lang: str = typer.Option("auto", "--lang", "-l", help="Language: auto, en, ko"),
 ):
     """Search the knowledge base."""
-    resolved_lang = _resolve_lang(lang, query)
-    engine = _get_engine(knowledge_dir, resolved_lang)
+    engine = _get_engine(knowledge_dir)
     results = engine.search(query, top_k=top_k, category=category)
 
     if not results:
-        console.print(f"[yellow]{t('no_results', resolved_lang)}[/yellow]")
+        console.print("[yellow]No results found.[/yellow]")
         raise typer.Exit(0)
 
     console.print()
@@ -292,21 +263,19 @@ def search(
 @app.command()
 def ingest(
     path: str = typer.Argument(..., help="Path to a directory or file to ingest"),
-    lang: str = typer.Option("auto", "--lang", "-l", help="Language: auto, en, ko"),
 ):
     """Ingest knowledge documents into the knowledge base."""
-    resolved_lang = _resolve_lang(lang)
     p = Path(path)
-    engine = _get_engine(lang=resolved_lang)
+    engine = _get_engine()
 
     if p.is_dir():
         count = engine.ingest_directory(p)
-        console.print(f"[green]{t('ingested_chunks', resolved_lang).format(count=count, path=p)}[/green]")
+        console.print(f"[green]Ingested {count} document chunks from {p}[/green]")
     elif p.is_file():
         count = engine.ingest_file(p)
-        console.print(f"[green]{t('ingested_chunks', resolved_lang).format(count=count, path=p)}[/green]")
+        console.print(f"[green]Ingested {count} document chunks from {p}[/green]")
     else:
-        console.print(f"[red]{t('path_not_found', resolved_lang).format(path=p)}[/red]")
+        console.print(f"[red]Path not found: {p}[/red]")
         raise typer.Exit(1)
 
 

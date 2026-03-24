@@ -8,14 +8,9 @@ from typing import Any
 import anthropic
 
 from src.config import ANTHROPIC_API_KEY, MODEL_FAST, MODEL_STANDARD
-from src.core.ai.prompts import (
-    INQUIRY_ANALYSIS_PROMPT,
-    LOG_ANALYSIS_PROMPT,
-    language_instruction,
-)
+from src.core.ai.prompts import INQUIRY_ANALYSIS_PROMPT, LOG_ANALYSIS_PROMPT
 from src.core.ai.tools import ALL_TOOLS
 from src.core.exceptions import AIClientError
-from src.core.i18n import Language
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import SearchResult
 
@@ -41,12 +36,10 @@ class AIClient:
         self._client = anthropic.Anthropic(api_key=self._api_key)
         self._model_override = model  # If set, always use this model
 
-    def analyze_inquiry(
-        self, inquiry_text: str, lang: Language = Language.EN
-    ) -> dict[str, Any]:
+    def analyze_inquiry(self, inquiry_text: str) -> dict[str, Any]:
         """Analyze a customer inquiry using Claude with tool use. (Haiku)"""
         return self._run_with_tools(
-            system_prompt=INQUIRY_ANALYSIS_PROMPT + language_instruction(lang),
+            system_prompt=INQUIRY_ANALYSIS_PROMPT,
             user_message=(
                 f"Analyze this customer inquiry and respond with a JSON object containing: "
                 f"category, severity, summary, checklist (array of strings), "
@@ -56,12 +49,10 @@ class AIClient:
             model=self._model_override or MODEL_FAST,
         )
 
-    def analyze_logs(
-        self, log_summary: str, lang: Language = Language.EN
-    ) -> dict[str, Any]:
+    def analyze_logs(self, log_summary: str) -> dict[str, Any]:
         """Analyze parsed log data using Claude. (Sonnet)"""
         return self._run_with_tools(
-            system_prompt=LOG_ANALYSIS_PROMPT + language_instruction(lang),
+            system_prompt=LOG_ANALYSIS_PROMPT,
             user_message=(
                 f"Analyze these parsed logs and respond with a JSON object containing: "
                 f"summary (string), root_cause_hypothesis (string), "

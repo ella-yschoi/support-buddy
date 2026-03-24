@@ -6,7 +6,6 @@ from typing import Any
 
 from src.core.ai.client import AIClient
 from src.core.analyzer.log_parser import LogParser
-from src.core.i18n import Language
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import LogEvent, LogInsight
 
@@ -19,17 +18,17 @@ class AILogAnalyzer:
         self._ai_client = AIClient(knowledge_engine, api_key=api_key)
         self._parser = LogParser()
 
-    def analyze(self, raw_logs: str, lang: Language = Language.EN) -> LogInsight:
+    def analyze(self, raw_logs: str) -> LogInsight:
         """Parse logs, then use AI to generate insights."""
         events = self._parser.parse(raw_logs)
         if not events:
             return LogInsight(
-                summary=_FALLBACK[lang]["no_events"],
+                summary="No log events found to analyze.",
                 errors=[],
                 slow_operations=[],
                 anomalies=[],
                 timeline=[],
-                root_cause_hypothesis=_FALLBACK[lang]["no_data"],
+                root_cause_hypothesis="No data available for analysis.",
             )
 
         errors = self._parser.extract_errors(events)
@@ -37,7 +36,7 @@ class AILogAnalyzer:
         error_codes = self._parser.extract_error_codes(events)
 
         # Build a text summary for Claude
-        text_summary = self._parser.generate_text_summary(events, lang=lang)
+        text_summary = self._parser.generate_text_summary(events)
 
         # Get AI insights
         try:
@@ -45,32 +44,30 @@ class AILogAnalyzer:
             return self._build_insight(ai_result, events, errors, slow_ops)
         except Exception:
             # Fallback to parser-only insights
-            return self._fallback_insight(events, errors, slow_ops, error_codes, lang=lang)
+            return self._fallback_insight(events, errors, slow_ops, error_codes)
 
-    def analyze_from_events(
-        self, events: list[LogEvent], lang: Language = Language.EN
-    ) -> LogInsight:
+    def analyze_from_events(self, events: list[LogEvent]) -> LogInsight:
         """Analyze pre-parsed log events with AI."""
         if not events:
             return LogInsight(
-                summary=_FALLBACK[lang]["no_events"],
+                summary="No log events to analyze.",
                 errors=[],
                 slow_operations=[],
                 anomalies=[],
                 timeline=[],
-                root_cause_hypothesis=_FALLBACK[lang]["no_data"],
+                root_cause_hypothesis="No data available.",
             )
 
         errors = self._parser.extract_errors(events)
         slow_ops = self._parser.extract_slow_operations(events)
         error_codes = self._parser.extract_error_codes(events)
-        text_summary = self._parser.generate_text_summary(events, lang=lang)
+        text_summary = self._parser.generate_text_summary(events)
 
         try:
             ai_result = self._ai_client.analyze_logs(text_summary)
             return self._build_insight(ai_result, events, errors, slow_ops)
         except Exception:
-            return self._fallback_insight(events, errors, slow_ops, error_codes, lang=lang)
+            return self._fallback_insight(events, errors, slow_ops, error_codes)
 
     def _build_insight(
         self,
@@ -112,22 +109,21 @@ class AILogAnalyzer:
         errors: list[LogEvent],
         slow_ops: list[LogEvent],
         error_codes: list[str],
-        lang: Language = Language.EN,
     ) -> LogInsight:
         """Generate insight without AI (parser-only fallback)."""
-        fb = _FALLBACK[lang]
-        summary = self._parser.generate_text_summary(events, lang=lang)
+        summary = self._parser.generate_text_summary(events)
 
         anomalies = []
         if errors:
-            anomalies.append(fb["errors_detected"].format(count=len(errors)))
+            anomalies.append(f"{len(errors)} error(s) detected")
         if slow_ops:
-            anomalies.append(fb["slow_ops_detected"].format(count=len(slow_ops)))
+            anomalies.append(f"{len(slow_ops)} slow operation(s) detected")
 
-        hypothesis = fb["no_root_cause"]
+        hypothesis = "Unable to determine root cause without AI analysis."
         if error_codes:
-            hypothesis = fb["error_code_hypothesis"].format(
-                codes=", ".join(error_codes)
+            hypothesis = (
+                f"Errors related to code(s): {', '.join(error_codes)}. "
+                "Check the knowledge base for resolution steps."
             )
 
         return LogInsight(
@@ -138,29 +134,3 @@ class AILogAnalyzer:
             timeline=events,
             root_cause_hypothesis=hypothesis,
         )
-
-
-_FALLBACK: dict[Language, dict[str, str]] = {
-    Language.EN: {
-        "no_events": "No log events found to analyze.",
-        "no_data": "No data available for analysis.",
-        "no_root_cause": "Unable to determine root cause without AI analysis.",
-        "errors_detected": "{count} error(s) detected",
-        "slow_ops_detected": "{count} slow operation(s) detected",
-        "error_code_hypothesis": (
-            "Errors related to code(s): {codes}. "
-            "Check the knowledge base for resolution steps."
-        ),
-    },
-    Language.KO: {
-        "no_events": "분석할 로그 이벤트를 찾을 수 없습니다.",
-        "no_data": "분석에 사용할 데이터가 없습니다.",
-        "no_root_cause": "AI 분석 없이는 근본 원인을 판단할 수 없습니다.",
-        "errors_detected": "{count}개의 오류가 감지되었습니다",
-        "slow_ops_detected": "{count}개의 느린 작업이 감지되었습니다",
-        "error_code_hypothesis": (
-            "오류 코드 {codes} 관련 문제입니다. "
-            "지식 베이스에서 해결 방법을 확인하세요."
-        ),
-    },
-}

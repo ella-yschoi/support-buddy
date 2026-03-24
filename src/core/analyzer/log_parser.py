@@ -6,7 +6,6 @@ import json
 import re
 from typing import Optional
 
-from src.core.i18n import Language
 from src.core.models import LogEvent
 
 
@@ -51,7 +50,6 @@ class LogParser:
         try:
             data = json.loads(raw_input.strip())
         except json.JSONDecodeError:
-            # Try newline-delimited JSON
             events = []
             for line in raw_input.strip().split("\n"):
                 line = line.strip().rstrip(",")
@@ -70,7 +68,6 @@ class LogParser:
         for entry in data:
             if not isinstance(entry, dict):
                 continue
-            # Extract standard fields, put the rest in metadata
             timestamp = str(entry.get("timestamp", ""))
             level = str(entry.get("level", "INFO")).upper()
             message = str(entry.get("message", ""))
@@ -114,7 +111,6 @@ class LogParser:
                     )
                 )
             else:
-                # Unparseable line — store as INFO with raw content
                 result.append(
                     LogEvent(timestamp="", level="INFO", message=line, metadata={})
                 )
@@ -130,13 +126,11 @@ class LogParser:
         """Extract events indicating slow operations."""
         slow = []
         for event in events:
-            # Check metadata for duration
             duration = event.metadata.get("duration_ms")
             if duration is not None and int(duration) > threshold_ms:
                 slow.append(event)
                 continue
 
-            # Check message for slow indicators
             if "slow" in event.message.lower():
                 slow.append(event)
 
@@ -146,81 +140,49 @@ class LogParser:
         """Extract unique error codes from log events."""
         codes: set[str] = set()
         for event in events:
-            # Check metadata
             code = event.metadata.get("error_code")
             if code:
                 codes.add(str(code).upper())
 
-            # Check message
             found = self._ERROR_CODE_PATTERN.findall(event.message)
             codes.update(c.upper() for c in found)
 
         return sorted(codes)
 
-    def generate_text_summary(
-        self, events: list[LogEvent], lang: Language = Language.EN
-    ) -> str:
+    def generate_text_summary(self, events: list[LogEvent]) -> str:
         """Generate a human-readable summary of the log events."""
-        labels = _SUMMARY_LABELS[lang]
-
         if not events:
-            return labels["no_events"]
+            return "No log events to summarize."
 
         total = len(events)
         errors = self.extract_errors(events)
         slow_ops = self.extract_slow_operations(events)
         error_codes = self.extract_error_codes(events)
 
-        lines = [f"{labels['log_summary']}: {total} {labels['events_total']}"]
+        lines = [f"Log Summary: {total} events total"]
 
         if events[0].timestamp and events[-1].timestamp:
-            lines.append(f"{labels['time_range']}: {events[0].timestamp} → {events[-1].timestamp}")
+            lines.append(f"Time range: {events[0].timestamp} → {events[-1].timestamp}")
 
         # Level breakdown
         level_counts: dict[str, int] = {}
         for e in events:
             level_counts[e.level] = level_counts.get(e.level, 0) + 1
         breakdown = ", ".join(f"{k}: {v}" for k, v in sorted(level_counts.items()))
-        lines.append(f"{labels['levels']}: {breakdown}")
+        lines.append(f"Levels: {breakdown}")
 
         if errors:
-            lines.append(f"\n{len(errors)} {labels['errors_found']}:")
+            lines.append(f"\n{len(errors)} ERROR(s) found:")
             for e in errors:
                 lines.append(f"  [{e.timestamp}] {e.message}")
 
         if slow_ops:
-            lines.append(f"\n{len(slow_ops)} {labels['slow_ops']}:")
+            lines.append(f"\n{len(slow_ops)} slow operation(s):")
             for s in slow_ops:
                 dur = s.metadata.get("duration_ms", "?")
-                lines.append(f"  [{s.timestamp}] {s.message} ({labels['duration']}: {dur}ms)")
+                lines.append(f"  [{s.timestamp}] {s.message} (duration: {dur}ms)")
 
         if error_codes:
-            lines.append(f"\n{labels['error_codes']}: {', '.join(error_codes)}")
+            lines.append(f"\nError codes: {', '.join(error_codes)}")
 
         return "\n".join(lines)
-
-
-_SUMMARY_LABELS: dict[Language, dict[str, str]] = {
-    Language.EN: {
-        "no_events": "No log events to summarize.",
-        "log_summary": "Log Summary",
-        "events_total": "events total",
-        "time_range": "Time range",
-        "levels": "Levels",
-        "errors_found": "ERROR(s) found",
-        "slow_ops": "slow operation(s)",
-        "duration": "duration",
-        "error_codes": "Error codes",
-    },
-    Language.KO: {
-        "no_events": "요약할 로그 이벤트가 없습니다.",
-        "log_summary": "로그 요약",
-        "events_total": "개 이벤트",
-        "time_range": "시간 범위",
-        "levels": "레벨",
-        "errors_found": "개 오류 발견",
-        "slow_ops": "개 느린 작업",
-        "duration": "소요 시간",
-        "error_codes": "오류 코드",
-    },
-}
