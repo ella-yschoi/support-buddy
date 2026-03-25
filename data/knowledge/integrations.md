@@ -14,14 +14,14 @@ Connect CloudSync to Slack to receive file activity notifications in your channe
 4. Choose which events to notify: file uploads, shares, comments, errors
 
 **Available Slash Commands (after install):**
-- `/cloudsync search <query>` — Search files from Slack
-- `/cloudsync share <file-id> <#channel>` — Share a file link to a channel
-- `/cloudsync status` — Check sync status for your account
+- `/cloudsync search <query>` - Search files from Slack
+- `/cloudsync share <file-id> <#channel>` - Share a file link to a channel
+- `/cloudsync status` - Check sync status for your account
 
 **Troubleshooting:**
 - If notifications stop: check that the Slack bot is still in the channel (may have been removed)
 - Re-authorize if you see "token_revoked" errors in the integration logs
-- Slack integration uses a separate webhook — does not count against your webhook endpoint limit
+- Slack integration uses a separate webhook - does not count against your webhook endpoint limit
 
 ## Jira Integration
 
@@ -62,7 +62,7 @@ Automate workflows between CloudSync and 5,000+ other apps using Zapier.
 - Move file to folder
 
 **Popular Zap recipes:**
-1. "When a file is uploaded to CloudSync, post to Slack" — keeps team informed
+1. "When a file is uploaded to CloudSync, post to Slack" - keeps team informed
 2. "When a Google Form is submitted, create a CloudSync folder for the respondent"
 3. "When a file is shared in CloudSync, create a Trello card for review"
 4. "Daily: export CloudSync audit log to Google Sheets"

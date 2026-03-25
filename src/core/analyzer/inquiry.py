@@ -1,4 +1,4 @@
-"""Inquiry analyzer — classify, generate checklist, and suggest follow-ups."""
+"""Inquiry analyzer - classify, generate checklist, and suggest follow-ups."""
 
 from __future__ import annotations
 

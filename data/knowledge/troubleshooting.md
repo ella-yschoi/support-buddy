@@ -8,18 +8,18 @@ category: troubleshooting
 **Symptoms:** Files modified on one device do not appear on other devices. Sync icon shows paused or error state.
 
 **Diagnostic Steps:**
-1. Check sync agent status — tray icon should be green (running). Yellow = paused, Red = error
-2. Verify network connectivity — try accessing https://status.cloudsync.io
+1. Check sync agent status - tray icon should be green (running). Yellow = paused, Red = error
+2. Verify network connectivity - try accessing https://status.cloudsync.io
 3. Check sync logs: Settings > Logs > View Recent
 4. Verify the file is in a synced folder (not excluded)
 5. Check if the file exceeds the 5GB size limit
-6. Check for file locks — close any application that may have the file open
+6. Check for file locks - close any application that may have the file open
 
 **Common Resolutions:**
 - Restart the sync agent (right-click tray icon > Restart)
 - Reset sync index: Settings > Sync > Reset Sync
 - Verify the file path doesn't contain special characters (avoid: < > : " | ? *)
-- Check antivirus exclusions — add CloudSync data folder to exclusions
+- Check antivirus exclusions - add CloudSync data folder to exclusions
 
 ## Slow Sync Performance
 
@@ -27,7 +27,7 @@ category: troubleshooting
 
 **Diagnostic Steps:**
 1. Check available bandwidth with a speed test
-2. Check number of files being synced — many small files are slower than fewer large files
+2. Check number of files being synced - many small files are slower than fewer large files
 3. Check concurrent sync threads: Settings > Sync > Advanced
 4. Look for PERF-001 (throttling) errors in logs
 5. Check system resources (CPU, RAM, disk I/O)
@@ -69,7 +69,7 @@ category: troubleshooting
 - Fix endpoint URL (ensure HTTPS, no trailing slash issues)
 - Update SSL certificate on the receiving server
 - Increase endpoint timeout (must respond within 10 seconds)
-- Check firewall rules — allow traffic from CloudSync IP ranges (see docs)
+- Check firewall rules - allow traffic from CloudSync IP ranges (see docs)
 - Re-register the webhook if delivery log shows persistent failures
 
 ## Desktop Client Crashes on Startup

@@ -79,7 +79,7 @@ def _display_analysis(result: InquiryResult, title: str = "Inquiry Analysis") ->
     if result.confidence < 0.6:
         console.print()
         console.print(
-            "[bold yellow]Low confidence — consider escalating to a senior TSE.[/bold yellow]"
+            "[bold yellow]Low confidence - consider escalating to a senior TSE.[/bold yellow]"
         )
 
 
@@ -209,7 +209,7 @@ def draft(
     drafter = ResponseDrafter(engine)
     response = drafter.draft(inquiry, analysis)
 
-    escalation = "[bold red]YES — Escalation Recommended[/bold red]" if response.needs_escalation else "[green]No[/green]"
+    escalation = "[bold red]YES - Escalation Recommended[/bold red]" if response.needs_escalation else "[green]No[/green]"
 
     console.print()
     console.print(Panel(
@@ -255,7 +255,7 @@ def search(
     for i, r in enumerate(results, 1):
         console.print(Panel(
             f"{r.content[:300]}{'...' if len(r.content) > 300 else ''}",
-            title=f"[cyan]{i}. {r.title}[/cyan] ({r.category}) — score: {r.score:.2f}",
+            title=f"[cyan]{i}. {r.title}[/cyan] ({r.category}) - score: {r.score:.2f}",
             border_style="dim",
         ))
 

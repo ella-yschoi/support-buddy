@@ -6,7 +6,7 @@ category: troubleshooting
 ## KI-001: macOS Sonoma Finder Integration Broken (v4.2.x)
 
 **Affected:** Desktop client v4.2.0–v4.2.1 on macOS Sonoma 14.x
-**Status:** Fix in progress — ETA: v4.3.0 (next release)
+**Status:** Fix in progress - ETA: v4.3.0 (next release)
 **Severity:** Medium
 
 **Symptoms:**
@@ -18,7 +18,7 @@ category: troubleshooting
 **Workaround:**
 1. Use the CloudSync desktop app directly (drag and drop files)
 2. Or use the web dashboard for sharing
-3. Sync functionality itself is NOT affected — only the Finder UI integration
+3. Sync functionality itself is NOT affected - only the Finder UI integration
 
 ## KI-002: Duplicate File Notifications on Windows
 
@@ -39,12 +39,12 @@ category: troubleshooting
 ## KI-003: Delta Sync Fails for Files Over 4GB
 
 **Affected:** All platforms, Pro and Enterprise plans
-**Status:** Known limitation — architectural change required
+**Status:** Known limitation - architectural change required
 **Severity:** Medium
 
 **Symptoms:**
 - Files over 4GB always upload completely instead of using delta sync
-- No error is shown — delta sync silently falls back to full upload
+- No error is shown - delta sync silently falls back to full upload
 
 **Root cause:** The delta sync algorithm uses a 32-bit block index, limiting the addressable file size to ~4GB.
 
@@ -56,7 +56,7 @@ category: troubleshooting
 ## KI-004: Search Not Finding Recently Uploaded Files
 
 **Affected:** Web dashboard, all plans
-**Status:** By design — search index updates are asynchronous
+**Status:** By design - search index updates are asynchronous
 **Severity:** Low
 
 **Symptoms:**
@@ -73,7 +73,7 @@ category: troubleshooting
 ## KI-005: Team Space Storage Showing Incorrect Usage
 
 **Affected:** Web dashboard, Enterprise plan
-**Status:** Fix deployed — may require cache refresh
+**Status:** Fix deployed - may require cache refresh
 **Severity:** Low
 
 **Symptoms:**
@@ -85,4 +85,4 @@ category: troubleshooting
 **Workaround:**
 1. Empty the Team Space trash: Team Space > Trash > "Empty Trash"
 2. Wait 24 hours for the storage calculation to refresh
-3. If still incorrect after 24 hours, contact support — we can trigger a manual recalculation
+3. If still incorrect after 24 hours, contact support - we can trigger a manual recalculation

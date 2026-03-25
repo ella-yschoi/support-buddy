@@ -1,8 +1,8 @@
-# CloudSync Inc. — Company Profile
+# CloudSync Inc. - Company Profile
 
 ## Overview
 
-- **Product:** CloudSync — cloud-based file sync and team collaboration platform
+- **Product:** CloudSync - cloud-based file sync and team collaboration platform
 - **Founded:** 2019, San Francisco, CA
 - **Business model:** B2B SaaS, per-user subscription
 - **Plans:** Free, Pro ($12/user/month), Enterprise (custom pricing)
@@ -11,9 +11,9 @@
 
 ## Product Suite
 
-- **Desktop client:** Windows, macOS, Linux — real-time file sync with tray icon
+- **Desktop client:** Windows, macOS, Linux - real-time file sync with tray icon
 - **Web dashboard:** File management, admin console, audit logs
-- **Mobile app:** iOS, Android — view/download files, photo backup
+- **Mobile app:** iOS, Android - view/download files, photo backup
 - **REST API:** v1, for third-party integrations and automation
 - **Webhooks:** Real-time event notifications to external systems
 

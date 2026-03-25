@@ -77,7 +77,7 @@ CloudSync supports SAML 2.0 Single Sign-On for Enterprise plans. SSO allows orga
 ## SSO Session Management
 
 - Default session duration: 8 hours (configurable by admin, range: 1-72 hours)
-- Session is tied to IdP session — if IdP session expires, CloudSync re-authenticates via IdP
+- Session is tied to IdP session - if IdP session expires, CloudSync re-authenticates via IdP
 - Admin can revoke all SSO sessions: Admin > Security > Active Sessions > "Revoke All"
 - When SSO is set to "Required", password-based login is disabled for all non-admin users
 - Break-glass: workspace Owner can always log in with email/password even when SSO is required

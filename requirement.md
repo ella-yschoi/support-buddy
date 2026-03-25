@@ -13,7 +13,7 @@
 For development and testing, we use a fictional SaaS company:
 
 ### CloudSync Inc.
-- **Product:** CloudSync — a cloud-based file synchronization and team collaboration platform
+- **Product:** CloudSync - a cloud-based file synchronization and team collaboration platform
 - **Customers:** B2B SaaS companies, 50-5000 employees
 - **Support channels:** Email, in-app chat, Linear tickets
 
@@ -102,27 +102,27 @@ For development and testing, we use a fictional SaaS company:
 
 ## 5. Implementation Phases
 
-### Phase 1 — Foundation (MVP)
+### Phase 1 - Foundation (MVP)
 - [ ] Project setup (Python, FastAPI, ChromaDB)
 - [ ] Knowledge ingestion pipeline (Markdown → embeddings)
 - [ ] Basic RAG engine (query → retrieve → generate)
 - [ ] CLI interface for "inquiry in → guidance out"
 - [ ] Virtual company test data (CloudSync Inc.)
 
-### Phase 2 — Core Intelligence
+### Phase 2 - Core Intelligence
 - [ ] Inquiry classifier (category + severity)
 - [ ] Checklist generator
 - [ ] Log parser (JSON, plain text)
 - [ ] Log analysis with AI insights
 - [ ] Response draft generator
 
-### Phase 3 — Integration & UI
+### Phase 3 - Integration & UI
 - [ ] Linear integration (read/write tickets)
 - [ ] GitHub integration (reference issues/code)
 - [ ] Email parser
 - [ ] Streamlit web UI with log visualization
 
-### Phase 4 — Optimization
+### Phase 4 - Optimization
 - [ ] Feedback loop (TSE corrections improve knowledge)
 - [ ] 80% auto-response rate measurement
 - [ ] Onboarding simulation mode

@@ -80,12 +80,12 @@ Files marked for offline access are not available when the device has no connect
 
 **Common causes:**
 - File was marked offline but download did not complete before going offline
-- Device storage is full — offline file was evicted to free space
+- Device storage is full - offline file was evicted to free space
 - The file was updated on the cloud but the offline copy was not refreshed
 
 **Resolution:**
 1. While online, check offline status: file should show a green checkmark icon
 2. If no checkmark, tap the file > "Make Available Offline" again and wait for download
-3. Free up device storage — offline files need reserved space
+3. Free up device storage - offline files need reserved space
 4. Go to Settings > Offline Files > "Refresh All" to re-download latest versions
-5. Check Settings > Offline Files > Storage Limit — increase if possible
+5. Check Settings > Offline Files > Storage Limit - increase if possible

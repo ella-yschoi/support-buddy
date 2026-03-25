@@ -17,7 +17,7 @@ Use the search_knowledge_base tool to find relevant information from our knowled
 Use the get_error_code_info tool if the customer mentions any error codes.
 
 Always cite specific knowledge base articles when making suggestions.
-Be specific and actionable — avoid vague advice.
+Be specific and actionable - avoid vague advice.
 Express confidence as a float from 0.0 to 1.0."""
 
 LOG_ANALYSIS_PROMPT = """You are an expert at analyzing application logs for CloudSync, a cloud-based file synchronization and collaboration platform.

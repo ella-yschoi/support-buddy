@@ -1,4 +1,4 @@
-"""Email parser — extract structured inquiry from email content."""
+"""Email parser - extract structured inquiry from email content."""
 
 from __future__ import annotations
 

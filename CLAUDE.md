@@ -57,7 +57,7 @@ support-buddy/
 
 ## Key Rules
 
-- Never commit secrets (.env, API keys, credentials) — they are in .gitignore
+- Never commit secrets (.env, API keys, credentials) - they are in .gitignore
 - All new features require tests FIRST (TDD)
 - Use type hints for all function signatures
 - Domain knowledge files go in `data/knowledge/` as Markdown or JSON

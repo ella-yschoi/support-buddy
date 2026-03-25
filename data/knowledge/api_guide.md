@@ -51,7 +51,7 @@ All list endpoints support cursor-based pagination for efficient traversal of la
 - Always check `has_more` before making the next request
 - Store `next_cursor` and resume from it if interrupted
 - Use the maximum `limit` (200) to reduce total API calls
-- Do NOT use offset-based pagination (not supported) — always use cursors
+- Do NOT use offset-based pagination (not supported) - always use cursors
 
 ## API Error Handling
 
@@ -72,11 +72,11 @@ The CloudSync API uses standard HTTP status codes with structured error response
 **Status codes:**
 | Code | Meaning | Action |
 |------|---------|--------|
-| 400 | Bad request — invalid parameters | Fix request body/params |
-| 401 | Unauthorized — invalid or expired key | Check/rotate API key |
-| 403 | Forbidden — insufficient permissions | Check key scope |
-| 404 | Not found — resource does not exist | Verify resource ID |
-| 409 | Conflict — resource already exists | Handle idempotency |
+| 400 | Bad request - invalid parameters | Fix request body/params |
+| 401 | Unauthorized - invalid or expired key | Check/rotate API key |
+| 403 | Forbidden - insufficient permissions | Check key scope |
+| 404 | Not found - resource does not exist | Verify resource ID |
+| 409 | Conflict - resource already exists | Handle idempotency |
 | 429 | Rate limited | Wait for `retry_after` seconds |
 | 500 | Internal server error | Retry with backoff |
 | 503 | Service unavailable | Check status page, retry |
@@ -92,10 +92,10 @@ The CloudSync API uses standard HTTP status codes with structured error response
 Reduce API calls by using batch endpoints for bulk operations.
 
 **Available batch endpoints:**
-- `POST /api/v1/files/batch-move` — Move up to 100 files in one request
-- `POST /api/v1/files/batch-delete` — Delete up to 100 files
-- `POST /api/v1/shares/batch-create` — Share multiple files/folders at once
-- `POST /api/v1/users/batch-invite` — Invite up to 50 users
+- `POST /api/v1/files/batch-move` - Move up to 100 files in one request
+- `POST /api/v1/files/batch-delete` - Delete up to 100 files
+- `POST /api/v1/shares/batch-create` - Share multiple files/folders at once
+- `POST /api/v1/users/batch-invite` - Invite up to 50 users
 
 **Batch request format:**
 ```json
@@ -140,7 +140,7 @@ def verify_webhook(payload_body, signature_header, secret):
 - Always use constant-time comparison (`hmac.compare_digest`) to prevent timing attacks
 - Verify BEFORE processing the payload
 - Reject requests with missing or invalid signatures
-- Webhook signatures expire after 5 minutes — check the `X-CloudSync-Timestamp` header
+- Webhook signatures expire after 5 minutes - check the `X-CloudSync-Timestamp` header
 
 ## API Rate Limit Management
 
@@ -153,7 +153,7 @@ Proactively manage rate limits to avoid disruptions.
 
 **Strategies for high-volume integrations:**
 1. Monitor `X-RateLimit-Remaining` and slow down when below 20%
-2. Use webhooks instead of polling — eliminates periodic GET calls
+2. Use webhooks instead of polling - eliminates periodic GET calls
 3. Use batch endpoints to consolidate operations
 4. Cache responses client-side (files metadata changes infrequently)
 5. Distribute requests evenly over time instead of bursting

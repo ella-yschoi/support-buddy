@@ -1,4 +1,4 @@
-"""Response drafter — generate customer-facing response drafts."""
+"""Response drafter - generate customer-facing response drafts."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ class ResponseDrafter:
 
     def __init__(self, knowledge_engine: KnowledgeEngine, api_key: str | None = None):
         self._knowledge = knowledge_engine
-        # Response drafting is complex — always use Sonnet
+        # Response drafting is complex - always use Sonnet
         self._ai_client = AIClient(knowledge_engine, api_key=api_key, model=MODEL_STANDARD)
 
     def draft(self, inquiry_text: str, analysis: InquiryResult) -> DraftResponse:

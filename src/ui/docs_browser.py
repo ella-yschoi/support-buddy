@@ -1,4 +1,4 @@
-"""Documentation browser page — browse and read knowledge base articles."""
+"""Documentation browser page - browse and read knowledge base articles."""
 
 from dataclasses import dataclass
 from pathlib import Path

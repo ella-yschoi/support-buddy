@@ -1,4 +1,4 @@
-"""Log parser — parse various log formats and extract insights."""
+"""Log parser - parse various log formats and extract insights."""
 
 from __future__ import annotations
 

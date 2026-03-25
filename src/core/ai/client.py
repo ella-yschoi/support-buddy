@@ -19,7 +19,7 @@ class AIClient:
     """Wrapper around Claude API with tool use for knowledge base search.
 
     Uses two model tiers:
-    - FAST (Haiku): classification, simple tasks — cheap & quick
+    - FAST (Haiku): classification, simple tasks - cheap & quick
     - STANDARD (Sonnet): complex analysis, log insights, response drafting
     """
 

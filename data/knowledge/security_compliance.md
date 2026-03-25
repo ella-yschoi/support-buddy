@@ -20,7 +20,7 @@ CloudSync encrypts all data at rest and in transit.
 **Client-side encryption (Enterprise add-on):**
 - Files are encrypted on the device before upload
 - CloudSync servers never see unencrypted content
-- Customer holds the master key — CloudSync cannot decrypt
+- Customer holds the master key - CloudSync cannot decrypt
 - Trade-off: search and preview features are not available for client-side encrypted files
 
 ## Compliance Certifications
@@ -30,7 +30,7 @@ CloudSync maintains the following compliance certifications:
 **SOC 2 Type II:**
 - Audited annually by independent third party
 - Covers: Security, Availability, Confidentiality
-- Report available under NDA — contact sales@cloudsync.io
+- Report available under NDA - contact sales@cloudsync.io
 
 **GDPR:**
 - EU data residency option (eu-west-1) for Enterprise customers
@@ -57,7 +57,7 @@ CloudSync provides granular access control for organizations.
 | Role | Permissions |
 |------|------------|
 | Owner | Full control including billing and workspace deletion |
-| Admin | Manage users, settings, integrations — no billing access |
+| Admin | Manage users, settings, integrations - no billing access |
 | Member | Create files, join Team Spaces, use standard features |
 | Guest | Access only specifically shared files/folders, no workspace navigation |
 
@@ -93,7 +93,7 @@ CloudSync follows a structured incident response process.
 **How TSEs should handle incident inquiries:**
 1. Check https://status.cloudsync.io first
 2. If an incident is active, point the customer to the status page
-3. Do NOT speculate about root cause — refer to official status updates
+3. Do NOT speculate about root cause - refer to official status updates
 4. Log the customer's report in the incident ticket for impact tracking
 
 ## Data Retention & Deletion
@@ -114,11 +114,11 @@ CloudSync data retention policies vary by plan and data type.
 
 **Permanent deletion:**
 - When a file is removed from Trash (or retention expires), it is permanently deleted
-- Permanent deletion is irreversible — files cannot be recovered by CloudSync staff
+- Permanent deletion is irreversible - files cannot be recovered by CloudSync staff
 - Enterprise with CMK: deletion includes cryptographic shredding of the encryption key
 
 **Account closure:**
 1. Admin > Account > "Close Account"
-2. 30-day (or 90-day Enterprise) grace period — can reactivate by logging in
+2. 30-day (or 90-day Enterprise) grace period - can reactivate by logging in
 3. After grace period: all data permanently deleted
 4. Confirmation email sent at closure, 7 days before deletion, and after deletion

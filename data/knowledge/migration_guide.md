@@ -1,5 +1,5 @@
 ---
-title: Migration Guides — Moving to CloudSync
+title: Migration Guides - Moving to CloudSync
 category: faq
 ---
 
@@ -29,7 +29,7 @@ category: faq
 **Tips:**
 - Run migration during off-hours to minimize bandwidth impact
 - Keep both services active for 1-2 weeks to catch anything missed
-- Notify collaborators before migration starts — shared folders will send re-invites
+- Notify collaborators before migration starts - shared folders will send re-invites
 
 ## Migrating from Google Drive
 
@@ -54,7 +54,7 @@ category: faq
 - Permissions are mapped: Owner→Owner, Manager→Admin, Contributor→Editor, Viewer→Viewer
 
 **Tips:**
-- Google Docs conversion may have minor formatting differences — review key documents
+- Google Docs conversion may have minor formatting differences - review key documents
 - Files shared via link (not folder membership) are not auto-migrated
 
 ## Migrating from OneDrive / SharePoint

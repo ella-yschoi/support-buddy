@@ -1,4 +1,4 @@
-"""Knowledge Engine — orchestrates loading, storing, and searching knowledge."""
+"""Knowledge Engine - orchestrates loading, storing, and searching knowledge."""
 
 from __future__ import annotations
 

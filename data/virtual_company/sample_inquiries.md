@@ -1,12 +1,12 @@
 # Sample Customer Inquiries
 
-## Inquiry 1: Sync Failure — Storage Quota
+## Inquiry 1: Sync Failure - Storage Quota
 
 **Customer:** Sarah Kim (Free plan, solo user)
 **Channel:** Email
 **Priority:** Medium
 
-> Subject: Files stopped syncing — error SYNC-002
+> Subject: Files stopped syncing - error SYNC-002
 >
 > Hi support team,
 >
@@ -23,13 +23,13 @@
 
 ---
 
-## Inquiry 2: SSO Outage — Entire Organization
+## Inquiry 2: SSO Outage - Entire Organization
 
 **Customer:** James Park, Acme Corp (Enterprise, 2,300 users)
 **Channel:** Email (urgent)
 **Priority:** Critical
 
-> Subject: URGENT — All employees unable to log in via SSO
+> Subject: URGENT - All employees unable to log in via SSO
 >
 > Hi,
 >
@@ -74,7 +74,7 @@
 >
 > Hi,
 >
-> Our team works with Photoshop and Illustrator files that are usually 500MB to 2GB each. Syncing these files takes forever — sometimes 30+ minutes for a single file. Our previous tool (Dropbox) was much faster for large files.
+> Our team works with Photoshop and Illustrator files that are usually 500MB to 2GB each. Syncing these files takes forever - sometimes 30+ minutes for a single file. Our previous tool (Dropbox) was much faster for large files.
 >
 > Is there anything we can do to speed this up? We have 45 designers who are losing productivity because of this.
 >
@@ -149,7 +149,7 @@
 - Category: api
 - Severity: medium
 - Key actions: Review current rate limit, discuss batch endpoints, consider rate limit increase
-- Relevant KB: error_codes.md (API-001), features.md (Webhooks — batch alternative), runbooks.md (API Integration)
+- Relevant KB: error_codes.md (API-001), features.md (Webhooks - batch alternative), runbooks.md (API Integration)
 
 ---
 
@@ -175,7 +175,7 @@
 **Channel:** Email (urgent)
 **Priority:** Critical
 
-> Subject: URGENT — Files missing from shared Team Space!!!
+> Subject: URGENT - Files missing from shared Team Space!!!
 >
 > Several of our designers are reporting that files are missing from the "Client Projects Q1" team space. These are active project files that we need for client deliverables THIS WEEK. Approximately 50-60 PSD and AI files seem to have disappeared overnight.
 >
@@ -187,11 +187,11 @@
 - Category: sync
 - Severity: critical
 - Key actions: Follow Data Loss runbook, check CloudSync Trash, check audit log for deletions, reassure about recovery
-- Relevant KB: runbooks.md (Data Loss), faq.md (file deletion/trash), features.md (Audit Log — limited on Pro)
+- Relevant KB: runbooks.md (Data Loss), faq.md (file deletion/trash), features.md (Audit Log - limited on Pro)
 
 ---
 
-## Inquiry 10: Feature Question — SSO on Pro Plan
+## Inquiry 10: Feature Question - SSO on Pro Plan
 
 **Customer:** Dr. Lisa Wong, GlobalEd Foundation (Pro, 120 users)
 **Channel:** Email
@@ -209,4 +209,4 @@
 - Category: feature
 - Severity: low
 - Key actions: Confirm SSO is Enterprise-only, suggest contacting sales for non-profit Enterprise pricing
-- Relevant KB: plan_matrix.md (SSO — Enterprise only), sso_guide.md (overview), faq.md (2FA as alternative)
+- Relevant KB: plan_matrix.md (SSO - Enterprise only), sso_guide.md (overview), faq.md (2FA as alternative)

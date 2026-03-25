@@ -1,4 +1,4 @@
-"""Tests for AI client (mocked — does not call real API)."""
+"""Tests for AI client (mocked - does not call real API)."""
 
 from __future__ import annotations
 

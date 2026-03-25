@@ -44,7 +44,7 @@
 - **Common issues:** node_modules accidentally syncing, desktop client memory issues, webhook configuration
 - **Notes:** Tech-savvy team. Often reports edge cases and feature requests. Active in community forum.
 
-## Solo Freelancer — Sarah Kim
+## Solo Freelancer - Sarah Kim
 
 - **Industry:** Photography / Freelance
 - **Plan:** Free
@@ -61,7 +61,7 @@
 - **Plan:** Pro (discounted)
 - **Users:** 120
 - **Key contact:** Dr. Lisa Wong (IT Coordinator)
-- **Setup:** Google Workspace SSO (not available on Pro — using manual login), team spaces per department
+- **Setup:** Google Workspace SSO (not available on Pro - using manual login), team spaces per department
 - **Integration:** None
 - **Common issues:** Users forgetting passwords (no SSO), sharing permissions confusion, accidental file deletions
 - **Notes:** Received 50% non-profit discount. Would benefit from Enterprise SSO but budget is limited. High ticket volume relative to user count.

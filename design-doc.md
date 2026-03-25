@@ -1,4 +1,4 @@
-# Design Document — Support Buddy
+# Design Document - Support Buddy
 
 ## 1. System Architecture
 
