@@ -41,7 +41,7 @@ from src.ui.styles import (
     search_result_card,
     severity_chip,
     status_bar,
-    followup_card,
+    action_card,
     PRIMARY,
     PRIMARY_CONTAINER,
     ERROR,
@@ -61,7 +61,7 @@ st.set_page_config(
 # Use a fixed temp directory so ChromaDB persists across Streamlit reruns
 _CHROMA_DIR = str(Path(tempfile.gettempdir()) / "support_buddy_chroma")
 
-# Page config — icon uses Streamlit's :material/ syntax
+# Page config - icon uses Streamlit's :material/ syntax
 _PAGES = {
     "Inquiry Analysis": {"desc": "Analyze customer inquiries", "icon": ":material/analytics:"},
     "Log Analysis": {"desc": "Parse and visualize logs", "icon": ":material/terminal:"},
@@ -110,7 +110,7 @@ def get_engine():
 
 def render_sidebar():
     with st.sidebar:
-        # Branding — logo with icon
+        # Branding - logo with icon
         _logo_b64 = _b64.b64encode(_LOGO_PATH.read_bytes()).decode()
         st.markdown(
             f"""
@@ -145,7 +145,7 @@ def render_sidebar():
                 st.session_state.page = page_name
                 st.rerun()
 
-        # Bottom section — wrapped in st.container() so its primary button
+        # Bottom section - wrapped in st.container() so its primary button
         # gets a nested stVerticalBlock, allowing CSS to distinguish it
         # from the nav-active primary buttons above.
         with st.container():
@@ -178,7 +178,7 @@ def render_sidebar():
                     st.rerun()
 
                 if st.session_state.get("kb_refreshed") is not None:
-                    st.success(f"Docs refreshed — {st.session_state.pop('kb_refreshed')} chunks")
+                    st.success(f"Docs refreshed - {st.session_state.pop('kb_refreshed')} chunks")
 
     return st.session_state.page
 
@@ -214,19 +214,10 @@ def _render_analysis_results(result, show_draft_button=False, inquiry=""):
     col_left, col_right = st.columns(2)
 
     with col_left:
-        st.markdown(
-            f'<div style="background:{SURFACE_CONTAINER_LOW}; border-radius:0.5rem; '
-            f'padding:1.25rem 1.5rem;">'
-            f'<p style="font-size:0.625rem; font-weight:700; color:#737687; '
-            f'text-transform:uppercase; letter-spacing:0.1em; margin:0 0 0.75rem 0;">'
-            f'Checklist</p></div>',
-            unsafe_allow_html=True,
-        )
-        for i, item in enumerate(result.checklist):
-            st.checkbox(item, key=f"chk_{id(result)}_{i}")
+        action_card("Checklist", result.checklist)
 
     with col_right:
-        followup_card(result.follow_up_questions)
+        action_card("Follow-up Questions", result.follow_up_questions)
 
     # Relevant articles
     if result.relevant_articles:
@@ -251,7 +242,7 @@ def _render_analysis_results(result, show_draft_button=False, inquiry=""):
             )
 
     if result.confidence < 0.6:
-        st.warning("Low confidence — consider escalating to a senior TSE.")
+        st.warning("Low confidence - consider escalating to a senior TSE.")
 
     # Draft response button
     if show_draft_button and ANTHROPIC_API_KEY and inquiry:
@@ -476,7 +467,7 @@ def render_log_analysis():
             for code in error_codes:
                 results = engine.search(code, top_k=1, category="error_code")
                 if results:
-                    with st.expander(f"`{code}` — {results[0].title}"):
+                    with st.expander(f"`{code}` - {results[0].title}"):
                         st.markdown(results[0].content)
 
         # Raw summary

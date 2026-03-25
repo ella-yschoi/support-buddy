@@ -1,4 +1,4 @@
-"""UI styling module — The Intelligent Ledger design system.
+"""UI styling module - The Intelligent Ledger design system.
 
 All CSS injection and HTML helper functions for the Support Buddy reskin.
 Uses Streamlit's st.markdown(unsafe_allow_html=True) pattern exclusively.
@@ -118,7 +118,7 @@ def inject_global_css() -> None:
         [data-testid="stSidebar"] [data-testid="stVerticalBlockBorderWrapper"] {
             border: none !important;
         }
-        /* Sidebar nav buttons — shared base (both primary & secondary) */
+        /* Sidebar nav buttons - shared base (both primary & secondary) */
         [data-testid="stSidebar"] [data-testid="stButton"] button {
             text-transform: uppercase !important;
             letter-spacing: 0.05em !important;
@@ -146,7 +146,7 @@ def inject_global_css() -> None:
         [data-testid="stSidebar"] [data-testid="stButton"] button[kind="secondary"]:hover {
             background: #f7f9fc !important;
         }
-        /* Active nav (primary) — blue tint + right accent */
+        /* Active nav (primary) - blue tint + right accent */
         [data-testid="stSidebar"] [data-testid="stButton"] button[kind="primary"] {
             background: rgba(0,75,202,0.1) !important;
             border-right: 4px solid #0061ff !important;
@@ -507,7 +507,7 @@ def search_result_card(
 def severity_chip(level: str) -> str:
     """Return HTML for a severity chip (inline badge).
 
-    Returns the HTML string — caller wraps it in st.markdown().
+    Returns the HTML string - caller wraps it in st.markdown().
     """
     level_lower = level.lower()
     chip_map = {
@@ -559,41 +559,34 @@ def status_bar(docs_count: int, ai_status: str) -> None:
     )
 
 
-def checklist_card(items: list[str], key_prefix: str) -> None:
-    """Render checklist items inside a styled container."""
-    st.markdown(
-        f"""
-        <div style="background:{SURFACE_CONTAINER_LOW}; border-radius:0.5rem;
-                    padding:1.25rem 1.5rem; height:100%;">
-            <p style="font-size:0.625rem; font-weight:700; color:{OUTLINE};
-                      text-transform:uppercase; letter-spacing:0.1em;
-                      margin:0 0 0.75rem 0;">Checklist</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    # Use native Streamlit checkboxes within the container
-    for i, item in enumerate(items):
-        st.checkbox(item, key=f"{key_prefix}_{i}")
+def action_card(title: str, items: list[str]) -> None:
+    """Render a checklist / follow-up card as pure HTML.
 
-
-def followup_card(questions: list[str]) -> None:
-    """Render follow-up questions inside a styled container."""
-    items_html = "".join(
-        f'<li style="font-size:0.875rem; color:{ON_SURFACE_VARIANT}; '
-        f'line-height:1.7; margin-bottom:0.25rem;">{q}</li>'
-        for q in questions
-    )
+    Everything - the green-bordered wrapper, title, and checkbox rows - is
+    rendered in a single ``st.markdown`` call so the styling is guaranteed
+    regardless of Streamlit's internal DOM structure.
+    """
+    rows = ""
+    for item in items:
+        safe = item.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        rows += (
+            f'<label style="display:flex; align-items:flex-start; gap:0.5rem; '
+            f'padding:0.35rem 0; cursor:pointer;">'
+            f'<input type="checkbox" style="margin-top:0.2rem; '
+            f'accent-color:#28a745; flex-shrink:0;"> '
+            f'<span style="font-size:0.875rem; color:{ON_SURFACE}; '
+            f'font-family:Inter,sans-serif; line-height:1.5;">{safe}</span>'
+            f'</label>'
+        )
     st.markdown(
-        f"""
-        <div style="background:{SURFACE_CONTAINER_LOW}; border-radius:0.5rem;
-                    padding:1.25rem 1.5rem; height:100%;">
-            <p style="font-size:0.625rem; font-weight:700; color:{OUTLINE};
-                      text-transform:uppercase; letter-spacing:0.1em;
-                      margin:0 0 0.75rem 0;">Follow-up Questions</p>
-            <ul style="margin:0; padding-left:1.25rem;">{items_html}</ul>
-        </div>
-        """,
+        f'<div style="background:#ffffff; border-left:4px solid #28a745; '
+        f'border-radius:0.5rem; padding:1rem 1.25rem; '
+        f'box-shadow:0 12px 40px rgba(25,28,30,0.06);">'
+        f'<p style="font-size:0.625rem; font-weight:700; color:{OUTLINE}; '
+        f'text-transform:uppercase; letter-spacing:0.1em; '
+        f'margin:0 0 0.5rem 0;">{title}</p>'
+        f'{rows}'
+        f'</div>',
         unsafe_allow_html=True,
     )
 
