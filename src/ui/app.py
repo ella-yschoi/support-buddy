@@ -1,9 +1,16 @@
 """Streamlit Web UI for Support Buddy."""
 
+# Ensure project root is on sys.path so "from src.…" imports work on Streamlit Cloud.
+import sys
+from pathlib import Path as _Path
+
+_project_root = str(_Path(__file__).resolve().parent.parent.parent)
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
 # Streamlit Cloud ships an old SQLite; swap in pysqlite3 before chromadb loads.
 try:
     __import__("pysqlite3")
-    import sys
     sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 except ImportError:
     pass
