@@ -1,8 +1,8 @@
 # Support Buddy
 
-AI-powered internal support tool that helps Technical Support Engineers (TSEs) handle customer inquiries faster and more accurately.
+AI-powered internal support tool that helps Technical Support Engineers (TSEs) handle customer inquiries faster and more accurately. Plug in your own knowledge base, and Support Buddy handles inquiry classification, log diagnostics, email parsing, and response drafting out of the box.
 
-Built as a portfolio project demonstrating end-to-end AI application development - from vector-based knowledge retrieval to automated log analysis and intelligent response drafting.
+Built with a virtual company scenario (CloudSync Inc.) for demo purposes, but designed to work with any team's documentation and workflow.
 
 <br/>
 
