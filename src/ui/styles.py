@@ -557,6 +557,63 @@ def inject_material_icons() -> None:
     st.markdown(_MATERIAL_ICONS_CSS, unsafe_allow_html=True)
 
 
+def doc_card(
+    title: str,
+    category: str,
+    filename: str,
+    accent_color: str = PRIMARY,
+) -> str:
+    """Return HTML for a documentation card (static, no <details>).
+
+    The actual click behaviour is handled by a companion st.button.
+    """
+    cat_color = accent_color
+    return (
+        f'<div style="background:#ffffff; border-left:4px solid {accent_color}; '
+        f'border-radius:0.5rem; padding:1rem 1.25rem; margin-bottom:0.25rem; '
+        f'box-shadow:0 12px 40px rgba(25,28,30,0.06);">'
+        f'<span style="font-family:Manrope,sans-serif; font-weight:700; '
+        f'font-size:0.95rem; color:{ON_SURFACE};">{title}</span>'
+        f'<span style="background:{cat_color}10; color:{cat_color}; '
+        f'font-size:0.625rem; font-weight:700; padding:0.15rem 0.5rem; '
+        f'border-radius:0.125rem; text-transform:uppercase; '
+        f'letter-spacing:0.05em; margin-left:0.5rem; '
+        f'vertical-align:middle;">{category}</span>'
+        f'<p style="font-size:0.75rem; color:{OUTLINE}; margin:0.35rem 0 0 0; '
+        f'font-family:Inter,sans-serif;">{filename}</p>'
+        f'</div>'
+    )
+
+
+def doc_detail_header(
+    title: str,
+    category: str,
+    filename: str,
+    accent_color: str = PRIMARY,
+) -> None:
+    """Render the detail-view header: category badge + filename + large title."""
+    cat_color = accent_color
+    st.markdown(
+        f"""
+        <div style="border-left:4px solid {accent_color}; padding-left:1.25rem;
+                    margin-bottom:2rem;">
+            <span style="background:{cat_color}10; color:{cat_color};
+                         font-size:0.625rem; font-weight:700; padding:0.15rem 0.5rem;
+                         border-radius:0.125rem; text-transform:uppercase;
+                         letter-spacing:0.05em;">{category}</span>
+            <span style="font-size:0.75rem; color:{OUTLINE}; margin-left:0.5rem;
+                         font-family:Inter,sans-serif;">{filename}</span>
+            <h2 style="font-family:Manrope,sans-serif; font-size:2rem;
+                        font-weight:800; letter-spacing:-0.02em; color:{ON_SURFACE};
+                        margin:0.5rem 0 0 0; line-height:1.2;">
+                {title}
+            </h2>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 # Map page names to Material Symbols icon names for sidebar active indicator
 _NAV_ICONS = {
     "Inquiry Analysis": "analytics",

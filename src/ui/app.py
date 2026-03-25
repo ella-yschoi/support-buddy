@@ -30,6 +30,7 @@ from src.core.knowledge.engine import KnowledgeEngine
 from src.integrations.email.parser import EmailParser
 import base64 as _b64
 
+from src.ui.docs_browser import render_documentation
 from src.ui.styles import (
     inject_global_css,
     inject_material_icons,
@@ -148,6 +149,17 @@ def render_sidebar():
         # gets a nested stVerticalBlock, allowing CSS to distinguish it
         # from the nav-active primary buttons above.
         with st.container():
+            if st.button(
+                "Documentation",
+                key="nav_docs",
+                use_container_width=True,
+                type="secondary",
+                icon=":material/library_books:",
+            ):
+                st.session_state.page = "Documentation"
+                st.session_state.pop("docs_selected_file", None)
+                st.rerun()
+
             engine = get_engine()
             has_ai = bool(ANTHROPIC_API_KEY)
             status_bar(engine.doc_count(), "ON" if has_ai else "OFF")
@@ -583,6 +595,8 @@ def main():
         render_email_analysis()
     elif page == "Knowledge Search":
         render_knowledge_search()
+    elif page == "Documentation":
+        render_documentation()
 
 
 if __name__ == "__main__":
