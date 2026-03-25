@@ -34,6 +34,28 @@ class KnowledgeEngine:
         self._store.add_documents(docs)
         return len(docs)
 
+    def update_file(self, file_path: str | Path) -> int:
+        """Re-ingest a single file, replacing all its existing chunks.
+
+        Returns the number of document chunks after update.
+        """
+        file_path = Path(file_path)
+        self._store.delete_by_source(str(file_path))
+        docs = self._loader.load_file(file_path)
+        self._store.upsert_documents(docs)
+        return len(docs)
+
+    def update_directory(self, dir_path: str | Path) -> int:
+        """Re-ingest all Markdown files in a directory.
+
+        Returns the total number of document chunks after update.
+        """
+        dir_path = Path(dir_path)
+        total = 0
+        for md_file in sorted(dir_path.glob("*.md")):
+            total += self.update_file(md_file)
+        return total
+
     def search(
         self, query: str, top_k: int = 5, category: str | None = None
     ) -> list[SearchResult]:

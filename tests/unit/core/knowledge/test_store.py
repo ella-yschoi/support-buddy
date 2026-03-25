@@ -54,3 +54,45 @@ class TestKnowledgeStore:
     def test_empty_store_search(self, store: KnowledgeStore):
         results = store.search("anything", top_k=3)
         assert results == []
+
+    def test_upsert_new_documents(self, store: KnowledgeStore, sample_knowledge_dir: Path):
+        loader = KnowledgeLoader()
+        docs = loader.load_directory(sample_knowledge_dir)
+        store.upsert_documents(docs)
+        assert store.count() == 6
+
+    def test_upsert_existing_updates_content(self, store: KnowledgeStore):
+        from src.core.models import KnowledgeCategory, KnowledgeDoc
+
+        doc = KnowledgeDoc(
+            id="test-upsert-1",
+            title="Original Title",
+            content="Original content about syncing files.",
+            category=KnowledgeCategory.FAQ,
+            source_file="test.md",
+        )
+        store.upsert_documents([doc])
+        assert store.count() == 1
+
+        updated = KnowledgeDoc(
+            id="test-upsert-1",
+            title="Updated Title",
+            content="Completely new content about permissions.",
+            category=KnowledgeCategory.FAQ,
+            source_file="test.md",
+        )
+        store.upsert_documents([updated])
+        assert store.count() == 1
+
+        results = store.search("permissions", top_k=1)
+        assert results[0].title == "Updated Title"
+        assert "permissions" in results[0].content
+
+    def test_delete_by_source(self, loaded_store: KnowledgeStore):
+        initial_count = loaded_store.count()
+        # faq.md has 2 chunks
+        faq_results = loaded_store.search("reset sync", top_k=1)
+        source = faq_results[0].source_file
+
+        loaded_store.delete_by_source(source)
+        assert loaded_store.count() == initial_count - 2

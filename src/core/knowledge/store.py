@@ -80,6 +80,27 @@ class KnowledgeStore:
 
         return search_results
 
+    def upsert_documents(self, docs: list[KnowledgeDoc]) -> None:
+        if not docs:
+            return
+
+        self._collection.upsert(
+            ids=[d.id for d in docs],
+            documents=[d.content for d in docs],
+            metadatas=[
+                {
+                    "title": d.title,
+                    "category": d.category.value,
+                    "source_file": d.source_file,
+                    "parent_title": d.metadata.get("parent_title", ""),
+                }
+                for d in docs
+            ],
+        )
+
+    def delete_by_source(self, source_file: str) -> None:
+        self._collection.delete(where={"source_file": source_file})
+
     def delete_document(self, doc_id: str) -> None:
         self._collection.delete(ids=[doc_id])
 
