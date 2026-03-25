@@ -1,0 +1,18 @@
+[
+  {"timestamp": "2024-02-20T09:00:00Z", "level": "INFO", "message": "SSO login attempt initiated", "service": "auth-service", "user_email": "jpark@acmecorp.com", "idp": "okta"},
+  {"timestamp": "2024-02-20T09:00:01Z", "level": "INFO", "message": "SAML request sent to IdP: https://acmecorp.okta.com/app/cloudsync/sso/saml", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:00:03Z", "level": "ERROR", "message": "SAML assertion validation failed: AUTH-003 - Certificate expired on 2024-02-01", "service": "auth-service", "error_code": "AUTH-003"},
+  {"timestamp": "2024-02-20T09:00:03Z", "level": "WARN", "message": "Falling back to direct login prompt for jpark@acmecorp.com", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:05:12Z", "level": "INFO", "message": "SSO login attempt initiated", "service": "auth-service", "user_email": "mlee@acmecorp.com", "idp": "okta"},
+  {"timestamp": "2024-02-20T09:05:14Z", "level": "ERROR", "message": "SAML assertion validation failed: AUTH-003 - Certificate expired on 2024-02-01", "service": "auth-service", "error_code": "AUTH-003"},
+  {"timestamp": "2024-02-20T09:05:14Z", "level": "WARN", "message": "Falling back to direct login prompt for mlee@acmecorp.com", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:10:30Z", "level": "INFO", "message": "SSO login attempt initiated", "service": "auth-service", "user_email": "admin@acmecorp.com", "idp": "okta"},
+  {"timestamp": "2024-02-20T09:10:31Z", "level": "ERROR", "message": "SAML assertion validation failed: AUTH-003 - Certificate expired on 2024-02-01", "service": "auth-service", "error_code": "AUTH-003"},
+  {"timestamp": "2024-02-20T09:10:32Z", "level": "WARN", "message": "3 consecutive SSO failures for org acmecorp in 11 minutes — potential org-wide outage", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:10:33Z", "level": "INFO", "message": "Auto-alert triggered: SSO outage notification sent to acmecorp workspace owner", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:15:00Z", "level": "INFO", "message": "Break-glass login used by admin@acmecorp.com via email/password", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:20:45Z", "level": "INFO", "message": "SAML certificate updated for org acmecorp by admin@acmecorp.com", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:21:00Z", "level": "INFO", "message": "SSO login attempt initiated", "service": "auth-service", "user_email": "jpark@acmecorp.com", "idp": "okta"},
+  {"timestamp": "2024-02-20T09:21:02Z", "level": "INFO", "message": "SAML assertion validated successfully for jpark@acmecorp.com", "service": "auth-service"},
+  {"timestamp": "2024-02-20T09:21:02Z", "level": "INFO", "message": "SSO login successful: session created for jpark@acmecorp.com", "service": "auth-service", "session_id": "sess-okta-9f3a"}
+]

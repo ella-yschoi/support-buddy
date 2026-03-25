@@ -1,0 +1,22 @@
+[
+  {"timestamp": "2024-03-05T14:00:00Z", "level": "INFO", "message": "Webhook event queued: file.updated for endpoint https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service", "event": "file.updated", "org": "bigretail"},
+  {"timestamp": "2024-03-05T14:00:01Z", "level": "INFO", "message": "Delivering webhook POST to https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service", "attempt": 1},
+  {"timestamp": "2024-03-05T14:00:12Z", "level": "ERROR", "message": "Webhook delivery failed: API-002 - Connection timed out after 10s", "service": "webhook-service", "error_code": "API-002", "endpoint": "https://api.bigretail.com/hooks/cloudsync"},
+  {"timestamp": "2024-03-05T14:00:12Z", "level": "INFO", "message": "Scheduling retry 1/3 with 1s backoff", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T14:00:14Z", "level": "INFO", "message": "Delivering webhook POST to https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service", "attempt": 2},
+  {"timestamp": "2024-03-05T14:00:25Z", "level": "ERROR", "message": "Webhook delivery failed: API-002 - Connection timed out after 10s", "service": "webhook-service", "error_code": "API-002", "endpoint": "https://api.bigretail.com/hooks/cloudsync"},
+  {"timestamp": "2024-03-05T14:00:25Z", "level": "INFO", "message": "Scheduling retry 2/3 with 10s backoff", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T14:00:36Z", "level": "INFO", "message": "Delivering webhook POST to https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service", "attempt": 3},
+  {"timestamp": "2024-03-05T14:00:47Z", "level": "ERROR", "message": "Webhook delivery failed: API-002 - Connection timed out after 10s", "service": "webhook-service", "error_code": "API-002", "endpoint": "https://api.bigretail.com/hooks/cloudsync"},
+  {"timestamp": "2024-03-05T14:00:47Z", "level": "INFO", "message": "Scheduling retry 3/3 with 100s backoff", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T14:02:28Z", "level": "INFO", "message": "Delivering webhook POST to https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service", "attempt": 4},
+  {"timestamp": "2024-03-05T14:02:39Z", "level": "ERROR", "message": "Webhook delivery failed: API-002 - Connection timed out after 10s. Max retries exceeded.", "service": "webhook-service", "error_code": "API-002", "endpoint": "https://api.bigretail.com/hooks/cloudsync"},
+  {"timestamp": "2024-03-05T14:02:39Z", "level": "WARN", "message": "Webhook endpoint marked unhealthy: https://api.bigretail.com/hooks/cloudsync — 4 consecutive failures", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T14:02:40Z", "level": "INFO", "message": "Notification sent to bigretail workspace admin: webhook endpoint unreachable", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T14:15:00Z", "level": "INFO", "message": "Webhook event queued: file.created for endpoint https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service", "event": "file.created", "org": "bigretail"},
+  {"timestamp": "2024-03-05T14:15:01Z", "level": "WARN", "message": "Skipping delivery: endpoint https://api.bigretail.com/hooks/cloudsync is marked unhealthy. Events will be queued for 1 hour.", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T15:15:00Z", "level": "INFO", "message": "Health check: retrying endpoint https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T15:15:02Z", "level": "INFO", "message": "Webhook health check succeeded (200 OK). Endpoint marked healthy.", "service": "webhook-service", "endpoint": "https://api.bigretail.com/hooks/cloudsync"},
+  {"timestamp": "2024-03-05T15:15:03Z", "level": "INFO", "message": "Flushing 12 queued events to https://api.bigretail.com/hooks/cloudsync", "service": "webhook-service"},
+  {"timestamp": "2024-03-05T15:15:05Z", "level": "INFO", "message": "All queued events delivered successfully to bigretail webhook endpoint", "service": "webhook-service"}
+]

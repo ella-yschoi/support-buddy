@@ -1,0 +1,22 @@
+[
+  {"timestamp": "2024-03-18T11:30:00Z", "level": "INFO", "message": "CloudSync Desktop v4.2.1 starting on Windows 11 (22H2)", "service": "desktop-client", "version": "4.2.1", "os": "win11"},
+  {"timestamp": "2024-03-18T11:30:01Z", "level": "INFO", "message": "Loading configuration from %APPDATA%/CloudSync/config.json", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:30:02Z", "level": "INFO", "message": "Initializing file watcher for 3 sync roots", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:30:02Z", "level": "INFO", "message": "File watcher monitoring: C:/Users/sarah/Documents, C:/Users/sarah/Projects, C:/Users/sarah/Photos", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:30:03Z", "level": "INFO", "message": "Connecting to sync server: wss://sync.cloudsync.io/v2", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:30:04Z", "level": "INFO", "message": "WebSocket connection established, session: sess-desk-7b2e", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:30:05Z", "level": "INFO", "message": "Initial scan started: enumerating local files", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:30:45Z", "level": "WARN", "message": "Large directory detected: C:/Users/sarah/Projects/node_modules (148,392 files)", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:31:20Z", "level": "WARN", "message": "PERF-002: Memory usage at 1.6GB during file enumeration", "service": "desktop-client", "error_code": "PERF-002", "memory_mb": 1600},
+  {"timestamp": "2024-03-18T11:32:00Z", "level": "WARN", "message": "PERF-002: Memory usage at 2.1GB — approaching system limit", "service": "desktop-client", "error_code": "PERF-002", "memory_mb": 2100},
+  {"timestamp": "2024-03-18T11:32:15Z", "level": "ERROR", "message": "OutOfMemoryError during file enumeration at C:/Users/sarah/Projects/node_modules/webpack/lib", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:32:15Z", "level": "ERROR", "message": "Fatal: unhandled exception in FileWatcher thread — initiating crash report", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:32:16Z", "level": "INFO", "message": "Crash report generated: crash-2024-0318-113216.dmp", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:32:16Z", "level": "INFO", "message": "Crash report uploaded to https://telemetry.cloudsync.io/crashes", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:32:17Z", "level": "FATAL", "message": "CloudSync Desktop crashed. Restart will be attempted in 60 seconds.", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:33:17Z", "level": "INFO", "message": "CloudSync Desktop v4.2.1 auto-restart initiated", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:33:18Z", "level": "INFO", "message": "Loading configuration with safe mode: excluding previously problematic paths", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:33:19Z", "level": "WARN", "message": "Safe mode: excluding C:/Users/sarah/Projects/node_modules from file watch", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:33:25Z", "level": "INFO", "message": "Initial scan completed in safe mode: 23,417 files (excluded 148,392)", "service": "desktop-client"},
+  {"timestamp": "2024-03-18T11:33:26Z", "level": "INFO", "message": "Memory usage stable at 420MB. Desktop client running normally.", "service": "desktop-client", "memory_mb": 420}
+]

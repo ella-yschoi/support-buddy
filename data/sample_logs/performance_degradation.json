@@ -1,0 +1,21 @@
+[
+  {"timestamp": "2024-03-12T08:00:00Z", "level": "INFO", "message": "Sync session started for workspace designstudio", "service": "sync-engine", "user_id": "user-ds-042", "session_id": "sess-perf-01"},
+  {"timestamp": "2024-03-12T08:00:02Z", "level": "INFO", "message": "Indexing local changes: 12,847 files detected across 340 folders", "service": "sync-engine", "session_id": "sess-perf-01"},
+  {"timestamp": "2024-03-12T08:00:15Z", "level": "WARN", "message": "High file count detected: 12,847 files exceeds recommended 10,000 per sync session", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:01:30Z", "level": "INFO", "message": "Upload batch 1/26 started: 500 files", "service": "sync-engine", "duration_ms": 0},
+  {"timestamp": "2024-03-12T08:03:45Z", "level": "WARN", "message": "Slow upload detected: batch 1/26 took 135s (expected <30s)", "service": "sync-engine", "duration_ms": 135000},
+  {"timestamp": "2024-03-12T08:03:46Z", "level": "WARN", "message": "PERF-001: Sync throttled — concurrent thread limit reached (5/5)", "service": "sync-engine", "error_code": "PERF-001"},
+  {"timestamp": "2024-03-12T08:03:47Z", "level": "INFO", "message": "Reducing concurrent threads from 5 to 3 due to throttling", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:04:00Z", "level": "INFO", "message": "Upload batch 2/26 started: 500 files", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:07:20Z", "level": "WARN", "message": "Slow upload detected: batch 2/26 took 200s (expected <30s)", "service": "sync-engine", "duration_ms": 200000},
+  {"timestamp": "2024-03-12T08:07:21Z", "level": "WARN", "message": "Network bandwidth below threshold: 2.1 Mbps (minimum recommended: 10 Mbps)", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:10:00Z", "level": "INFO", "message": "Upload batch 3/26 started: 500 files", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:10:45Z", "level": "WARN", "message": "PERF-002: High memory usage detected — 1.8GB (threshold: 1.5GB)", "service": "sync-engine", "error_code": "PERF-002", "memory_mb": 1800},
+  {"timestamp": "2024-03-12T08:10:46Z", "level": "INFO", "message": "Triggering memory optimization: clearing file hash cache", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:10:47Z", "level": "INFO", "message": "Memory reduced to 1.1GB after cache clear", "service": "sync-engine", "memory_mb": 1100},
+  {"timestamp": "2024-03-12T08:14:30Z", "level": "WARN", "message": "Slow upload detected: batch 3/26 took 270s (expected <30s)", "service": "sync-engine", "duration_ms": 270000},
+  {"timestamp": "2024-03-12T08:14:31Z", "level": "ERROR", "message": "Upload timeout: batch 4/26 exceeded 300s deadline. Pausing sync.", "service": "sync-engine", "duration_ms": 300000},
+  {"timestamp": "2024-03-12T08:14:32Z", "level": "WARN", "message": "Sync paused due to repeated performance issues. 1,500/12,847 files synced (11.7%)", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:14:33Z", "level": "INFO", "message": "Recommendation: reduce monitored folders or schedule sync during off-peak hours", "service": "sync-engine"},
+  {"timestamp": "2024-03-12T08:14:34Z", "level": "INFO", "message": "Sync session paused. Will auto-resume in 30 minutes.", "service": "sync-engine", "session_id": "sess-perf-01"}
+]
