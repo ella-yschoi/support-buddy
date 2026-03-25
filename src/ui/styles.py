@@ -284,6 +284,46 @@ def inject_global_css() -> None:
             border-top-color: #004bca !important;
         }
 
+        /* ── Doc card grid spacing ───────────────────────── */
+        /* Match vertical gap between card rows to the horizontal column gap */
+        [data-testid="stHorizontalBlock"]:has(.doc-card-click) {
+            margin-bottom: 0.5rem !important;
+        }
+
+        /* ── Doc card click overlay ──────────────────────── */
+        /* Card hover feedback */
+        .doc-card-click {
+            cursor: pointer;
+        }
+        .doc-card-click > div {
+            transition: box-shadow 0.15s ease, transform 0.15s ease;
+        }
+        .doc-card-click:hover > div {
+            box-shadow: 0 4px 20px rgba(25,28,30,0.12) !important;
+            transform: translateY(-1px);
+        }
+        /* Column containing a doc card becomes a positioning context */
+        [data-testid="stColumn"]:has(.doc-card-click) [data-testid="stVerticalBlock"] {
+            position: relative !important;
+        }
+        /* Stretch the invisible button over the entire card area */
+        [data-testid="stElementContainer"]:has(.doc-card-click) + [data-testid="stElementContainer"] {
+            position: absolute !important;
+            inset: 0 !important;
+            z-index: 2 !important;
+        }
+        [data-testid="stElementContainer"]:has(.doc-card-click) + [data-testid="stElementContainer"] button {
+            opacity: 0 !important;
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: unset !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            cursor: pointer !important;
+        }
+
         /* ── Hide default Streamlit elements ──────────────── */
         #MainMenu {visibility: hidden;}
         header[data-testid="stHeader"] {
@@ -570,7 +610,7 @@ def doc_card(
     cat_color = accent_color
     return (
         f'<div style="background:#ffffff; border-left:4px solid {accent_color}; '
-        f'border-radius:0.5rem; padding:1rem 1.25rem; margin-bottom:0.25rem; '
+        f'border-radius:0.5rem; padding:1rem 1.25rem; '
         f'box-shadow:0 12px 40px rgba(25,28,30,0.06);">'
         f'<span style="font-family:Manrope,sans-serif; font-weight:700; '
         f'font-size:0.95rem; color:{ON_SURFACE};">{title}</span>'
