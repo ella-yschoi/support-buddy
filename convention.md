@@ -68,6 +68,7 @@ from src.core.knowledge.engine import KnowledgeEngine
   - 인프라/설정 변경(pyproject.toml, config, 공통 모델 등)은 기능 커밋과 분리하여 먼저 커밋
   - 하나의 커밋이 여러 독립적인 기능을 포함하지 않도록 한다
   - 커밋 body에 변경 사항을 bullet point로 요약
+- **Co-Authored-By:** 커밋에 `Co-Authored-By` 줄을 추가하지 않는다
 - **PR:** one logical change per PR, include test plan
 
 ## Testing

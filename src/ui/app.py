@@ -1,5 +1,13 @@
 """Streamlit Web UI for Support Buddy."""
 
+# Streamlit Cloud ships an old SQLite; swap in pysqlite3 before chromadb loads.
+try:
+    __import__("pysqlite3")
+    import sys
+    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+except ImportError:
+    pass
+
 import tempfile
 from pathlib import Path
 
