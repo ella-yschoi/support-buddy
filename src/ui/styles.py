@@ -63,7 +63,7 @@ def inject_global_css() -> None:
         }
         .main .block-container {
             max-width: 1400px;
-            padding-top: 2rem;
+            padding-top: 0 !important;
         }
 
         /* ── Sidebar ──────────────────────────────────────── */
@@ -71,32 +71,46 @@ def inject_global_css() -> None:
             background-color: #eceef1 !important;
             border-right: none !important;
         }
-        /* Force height: 100% down the entire sidebar chain so flex
-           children can compute available space for margin-top: auto. */
+        /* ── Sidebar flex chain: push bottom section to the very bottom ──
+           Uses > * wildcards so the chain works regardless of how many
+           intermediate wrapper divs Streamlit injects between known
+           data-testid nodes. */
         [data-testid="stSidebar"] > div {
             height: 100% !important;
         }
-        [data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+        [data-testid="stSidebarContent"] {
             display: flex !important;
             flex-direction: column !important;
             height: 100% !important;
         }
-        [data-testid="stSidebar"] [data-testid="stSidebarContent"] > [data-testid="stVerticalBlockBorderWrapper"] {
+        /* Outer wrapper → grows to fill sidebar */
+        [data-testid="stSidebarContent"] > [data-testid="stVerticalBlockBorderWrapper"] {
             flex: 1 !important;
             display: flex !important;
             flex-direction: column !important;
         }
-        [data-testid="stSidebar"] [data-testid="stSidebarContent"] > [data-testid="stVerticalBlockBorderWrapper"] > div {
+        /* Propagate flex through any intermediate wrapper layers (1-3 deep)
+           between the outer stVerticalBlockBorderWrapper and the
+           top-level stVerticalBlock. */
+        [data-testid="stSidebarContent"] > [data-testid="stVerticalBlockBorderWrapper"] > * {
             flex: 1 !important;
             display: flex !important;
             flex-direction: column !important;
         }
-        [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+        [data-testid="stSidebarContent"] > [data-testid="stVerticalBlockBorderWrapper"] > * > * {
             flex: 1 !important;
             display: flex !important;
             flex-direction: column !important;
         }
-        /* Push st.container() (bottom section) to the sidebar bottom. */
+        [data-testid="stSidebarContent"] > [data-testid="stVerticalBlockBorderWrapper"] > * > * > * {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        /* Push st.container() (bottom section) to the sidebar bottom.
+           This overrides the wildcard flex:1 rules above for the
+           container wrapper, which is the only stVerticalBlockBorderWrapper
+           that is a direct child of a stVerticalBlock. */
         [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlockBorderWrapper"] {
             margin-top: auto !important;
             flex: 0 0 auto !important;
