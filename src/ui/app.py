@@ -58,6 +58,20 @@ st.set_page_config(
     layout="wide",
 )
 
+# OG meta tags for social media link previews (LinkedIn, Twitter, etc.)
+_OG_IMAGE = "https://raw.githubusercontent.com/ella-yschoi/support-buddy/main/docs/images/log-analysis-charts.png"
+st.markdown(
+    f"""
+    <meta property="og:title" content="Support Buddy" />
+    <meta property="og:description" content="AI-powered support tool that helps Technical Support Engineers handle customer inquiries faster and more accurately." />
+    <meta property="og:image" content="{_OG_IMAGE}" />
+    <meta property="og:url" content="https://support-buddy.streamlit.app/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    """,
+    unsafe_allow_html=True,
+)
+
 # Use a fixed temp directory so ChromaDB persists across Streamlit reruns
 _CHROMA_DIR = str(Path(tempfile.gettempdir()) / "support_buddy_chroma")
 
