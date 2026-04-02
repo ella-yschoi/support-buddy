@@ -1,0 +1,12 @@
+name: Keep Streamlit Alive
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # every 6 hours
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Streamlit App
+        run: curl -sS -o /dev/null -w "%{http_code}" https://support-buddy.streamlit.app
