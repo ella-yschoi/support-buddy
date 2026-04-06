@@ -3,10 +3,42 @@ name: Keep Streamlit Alive
 on:
   schedule:
     - cron: '0 */6 * * *' # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
-  ping:
+  visit:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Streamlit App
-        run: curl -sS -o /dev/null -w "%{http_code}" https://support-buddy.streamlit.app
+      - name: Visit Streamlit app with headless browser
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+          python - <<'SCRIPT'
+          import asyncio
+          from playwright.async_api import async_playwright
+
+          async def main():
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch()
+                  page = await browser.new_page()
+                  await page.goto(
+                      "https://support-buddy.streamlit.app",
+                      wait_until="networkidle",
+                  )
+                  print("Page loaded, keeping session for 30s...")
+                  await asyncio.sleep(30)
+                  print("Done – closing browser.")
+                  await browser.close()
+
+          asyncio.run(main())
+          SCRIPT
+
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
