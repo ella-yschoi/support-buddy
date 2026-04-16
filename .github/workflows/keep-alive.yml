@@ -15,8 +15,8 @@ jobs:
     steps:
       - name: Visit Streamlit app with headless browser
         run: |
-          pip install playwright
-          playwright install chromium --with-deps
+          python -m pip install playwright --break-system-packages
+          python -m playwright install chromium --with-deps
           python - <<'SCRIPT'
           import asyncio
           from playwright.async_api import async_playwright
@@ -40,7 +40,7 @@ jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         with:
           script: |
             // Re-enable this workflow if GitHub auto-disabled it
