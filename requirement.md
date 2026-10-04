@@ -149,11 +149,11 @@ For development and testing, we use a fictional SaaS company:
 - Clear, actionable outputs (not vague suggestions)
 - Verification score and autonomy reasons on all AI-generated suggestions (not LLM self-reported confidence)
 
-### NFR-3b: UI Design ("Quiet Apple", see design-doc §15)
+### NFR-3b: UI Design ("Black", see design-doc §15)
 - One primary task per screen; progressive disclosure for evidence and logs
-- Single accent color; semantic colors only for state
-- System font stack, soft radii, hairline borders, translucent sidebar
-- Light and dark mode via `prefers-color-scheme`
+- One white primary action; color only for state (ready, confirm, needs a person, critical)
+- Geist or the system font stack, small radii, thin borders instead of shadows, translucent top bar
+- Dark theme only (no light mode, no toggle)
 - No gradient/glow/emoji decoration; motion limited to short fades
 - Text contrast meets WCAG AA
 
@@ -208,7 +208,7 @@ Ordered; each step TDD. See design-doc §16.
 - [x] 5.2 Autonomy Policy (FR-8)
 - [x] 5.3 Eval harness, 40-case golden set, model registry (FR-10)
 - [x] 5.4 Briefing pipeline, store, inbox trigger and API (FR-9; Overnight Queue UI follows in 5.5)
-- [ ] 5.5 UI restyle to Quiet Apple, new information architecture (NFR-3b). Started: `web/` has Queue and Briefing detail with demo-data fallback; Analyze, Knowledge and Insights screens remain
+- [ ] 5.5 Web UI in the black design system, new information architecture (NFR-3b). Started: `web/` has Queue, Briefing detail, Analyze and the reply editor with a demo-data fallback; Knowledge and Insights screens remain
 - [ ] 5.6 Review chain (FR-11)
 - [ ] 5.7 Log correlation + PII redaction (FR-12)
 - [ ] 5.8 System context, patterns, forecast, batch decisions (FR-13)

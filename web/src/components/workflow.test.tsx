@@ -16,7 +16,7 @@ const approve = vi.mocked(api.approveBriefing);
 const create = vi.mocked(api.createBriefing);
 
 beforeEach(() => {
-  vi.clearAllMocks();
+  vi.resetAllMocks();
 });
 
 describe("ReplyEditor", () => {
@@ -106,6 +106,40 @@ describe("AnalyzeForm", () => {
     expect(submit).toBeEnabled();
   });
 
+  it("offers the plans as a radio group with Unknown selected by default", () => {
+    render(<AnalyzeForm readOnly={false} onCreated={() => {}} />);
+    const group = screen.getByRole("radiogroup", { name: /plan/i });
+    expect(group).toBeInTheDocument();
+    expect(screen.getAllByRole("radio").map((r) => r.getAttribute("value"))).toEqual([
+      "unknown",
+      "free",
+      "pro",
+      "enterprise",
+    ]);
+    expect(screen.getByRole("radio", { name: /unknown/i })).toBeChecked();
+  });
+
+  it("keeps the logs box hidden until asked, and toggles from the same button spot", async () => {
+    render(<AnalyzeForm readOnly={false} onCreated={() => {}} />);
+    expect(screen.queryByRole("textbox", { name: /^logs$/i })).not.toBeInTheDocument();
+    const toggle = screen.getByRole("button", { name: /add logs/i });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(toggle);
+    expect(screen.getByRole("textbox", { name: /^logs$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /remove logs/i })).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("does not send logs that were removed again", async () => {
+    create.mockResolvedValueOnce(makeBriefing());
+    render(<AnalyzeForm readOnly={false} onCreated={() => {}} />);
+    await userEvent.type(screen.getByRole("textbox", { name: /customer message/i }), "Hi");
+    await userEvent.click(screen.getByRole("button", { name: /add logs/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /^logs$/i }), "stale");
+    await userEvent.click(screen.getByRole("button", { name: /remove logs/i }));
+    await userEvent.click(screen.getByRole("button", { name: /prepare briefing/i }));
+    expect(create).toHaveBeenCalledWith({ inquiry: "Hi", plan: "unknown", logs: "" });
+  });
+
   it("creates a briefing with the chosen plan and logs", async () => {
     const created = makeBriefing({ id: "fresh" });
     create.mockResolvedValueOnce(created);
@@ -113,9 +147,9 @@ describe("AnalyzeForm", () => {
     render(<AnalyzeForm readOnly={false} onCreated={onCreated} />);
 
     await userEvent.type(screen.getByRole("textbox", { name: /customer message/i }), "Sync is broken");
-    await userEvent.selectOptions(screen.getByRole("combobox", { name: /plan/i }), "enterprise");
+    await userEvent.click(screen.getByRole("radio", { name: /enterprise/i }));
     await userEvent.click(screen.getByRole("button", { name: /add logs/i }));
-    await userEvent.type(screen.getByRole("textbox", { name: /logs/i }), "ERROR boom");
+    await userEvent.type(screen.getByRole("textbox", { name: /^logs$/i }), "ERROR boom");
     await userEvent.click(screen.getByRole("button", { name: /prepare briefing/i }));
 
     expect(create).toHaveBeenCalledWith({ inquiry: "Sync is broken", plan: "enterprise", logs: "ERROR boom" });
@@ -136,5 +170,6 @@ describe("AnalyzeForm", () => {
     expect(screen.getByText(/connect the backend/i)).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: /customer message/i })).toBeDisabled();
     expect(screen.getByRole("button", { name: /prepare briefing/i })).toBeDisabled();
+    screen.getAllByRole("radio").forEach((r) => expect(r).toBeDisabled());
   });
 });
