@@ -208,7 +208,7 @@ Ordered; each step TDD. See design-doc §16.
 - [x] 5.2 Autonomy Policy (FR-8)
 - [x] 5.3 Eval harness, 40-case golden set, model registry (FR-10)
 - [x] 5.4 Briefing pipeline, store, inbox trigger and API (FR-9; Overnight Queue UI follows in 5.5)
-- [ ] 5.5 UI restyle to Quiet Apple, new information architecture (NFR-3b)
+- [ ] 5.5 UI restyle to Quiet Apple, new information architecture (NFR-3b). Started: `web/` has Queue and Briefing detail with demo-data fallback; Analyze, Knowledge and Insights screens remain
 - [ ] 5.6 Review chain (FR-11)
 - [ ] 5.7 Log correlation + PII redaction (FR-12)
 - [ ] 5.8 System context, patterns, forecast, batch decisions (FR-13)

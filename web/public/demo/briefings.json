@@ -1,0 +1,1347 @@
+{
+  "generated_on": "2026-10-04",
+  "pipeline": "local",
+  "briefings": [
+    {
+      "id": "demo-perm-sso-outage-enterprise",
+      "created_at": "2026-10-04T02:51:00",
+      "inquiry_text": "URGENT: Starting 30 minutes ago none of our employees can log into CloudSync through Okta SSO. They all see \"Authentication failed\". This affects our entire organization of 2,300 users. I can still log in with my admin password. Please advise immediately.",
+      "customer_plan": "enterprise",
+      "summary": "File synchronization issue: URGENT: Starting 30 minutes ago none of our employees can log into CloudSync through Okta SSO. They ...",
+      "category": "sync",
+      "model_severity": "critical",
+      "effective_severity": "critical",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: AUTH-003: SSO Configuration Error",
+          "log_evidence": [],
+          "kb_evidence": [
+            "AUTH-003: SSO Configuration Error",
+            "Runbook: SSO Login Failure for Entire Organization",
+            "SSO Troubleshooting Checklist"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "3d35f237017134f3",
+          "title": "AUTH-003: SSO Configuration Error"
+        },
+        {
+          "doc_id": "4e0f121257801646",
+          "title": "Runbook: SSO Login Failure for Entire Organization"
+        },
+        {
+          "doc_id": "9f225be3fa693dbc",
+          "title": "SSO Troubleshooting Checklist"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "features available on enterprise"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "enterprise customer, all users affected: floor high met"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "human_only",
+      "autonomy_reasons": [
+        "Severity critical"
+      ],
+      "simulated": false,
+      "draft_body": null,
+      "sufficiency": "insufficient",
+      "sufficiency_reasons": [
+        "No log evidence: ask the customer for logs"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-adv-suspected-breach-enterprise",
+      "created_at": "2026-10-04T05:07:00",
+      "inquiry_text": "We think someone unauthorized accessed our CloudSync workspace last night. We see logins from countries where we have no staff and several files were downloaded. Is this a data breach? What do we do?",
+      "customer_plan": "enterprise",
+      "summary": "File synchronization issue: We think someone unauthorized accessed our CloudSync workspace last night. We see logins from countr...",
+      "category": "sync",
+      "model_severity": "medium",
+      "effective_severity": "critical",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: User Access Controls",
+          "log_evidence": [],
+          "kb_evidence": [
+            "User Access Controls",
+            "SSO Session Management",
+            "Runbook: Customer Reports Data Loss"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "06630b9e371f5cf1",
+          "title": "User Access Controls"
+        },
+        {
+          "doc_id": "0cbb11d9d5a8a7ed",
+          "title": "SSO Session Management"
+        },
+        {
+          "doc_id": "94e56114806fda9c",
+          "title": "Runbook: Customer Reports Data Loss"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": false,
+          "detail": "data loss / security language: floor critical, model said medium"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 0.8666666666666667,
+      "verification_passed": false,
+      "autonomy": "human_only",
+      "autonomy_reasons": [
+        "Sensitive topic in message: breach, unauthorized",
+        "Severity critical"
+      ],
+      "simulated": false,
+      "draft_body": null,
+      "sufficiency": "insufficient",
+      "sufficiency_reasons": [
+        "No log evidence: ask the customer for logs"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-sync-quota-free",
+      "created_at": "2026-10-04T02:00:00",
+      "inquiry_text": "Since yesterday my files are not syncing anymore. I keep seeing a SYNC-002 error in the desktop app. I have a lot of photos from a recent shoot that I need to back up urgently. The app says something about storage but I'm not sure what to do.",
+      "customer_plan": "free",
+      "summary": "File synchronization issue: Since yesterday my files are not syncing anymore. I keep seeing a SYNC-002 error in the desktop app....",
+      "category": "sync",
+      "model_severity": "high",
+      "effective_severity": "high",
+      "hypotheses": [
+        {
+          "statement": "Errors related to code(s): SYNC-002. Check the knowledge base for resolution steps.",
+          "log_evidence": [
+            "2024-01-15T10:00:42Z ERROR Upload failed: SYNC-002 - Storage quota exceeded for user-123",
+            "2024-01-15T10:00:55Z ERROR Upload failed: SYNC-002 - Storage quota exceeded for user-123",
+            "2024-01-15T10:01:08Z ERROR Upload failed: SYNC-002 - Storage quota exceeded for user-123",
+            "2024-01-15T10:01:09Z ERROR Max retries exceeded for video_recording.mp4. Marking as failed."
+          ],
+          "kb_evidence": [
+            "Files Not Syncing",
+            "SYNC-004: Index Corruption",
+            "SYNC-002: Upload Failed"
+          ]
+        },
+        {
+          "statement": "Most relevant guidance: Files Not Syncing",
+          "log_evidence": [],
+          "kb_evidence": [
+            "Files Not Syncing",
+            "SYNC-004: Index Corruption",
+            "SYNC-002: Upload Failed"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "094b407739689a72",
+          "title": "Files Not Syncing"
+        },
+        {
+          "doc_id": "588ea46d81a72c2d",
+          "title": "SYNC-004: Index Corruption"
+        },
+        {
+          "doc_id": "e450158201f2c4f9",
+          "title": "SYNC-002: Upload Failed"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Severity high",
+        "Category 'sync' is not auto-eligible",
+        "Severity high above auto limit"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-sync-all-users-enterprise",
+      "created_at": "2026-10-04T02:17:00",
+      "inquiry_text": "Since this morning none of our 200 employees can sync any file larger than 50MB. Everyone on our team is blocked and we have a client deadline today. We already restarted the sync agent on several machines.",
+      "customer_plan": "enterprise",
+      "summary": "File synchronization issue: Since this morning none of our 200 employees can sync any file larger than 50MB. Everyone on our tea...",
+      "category": "sync",
+      "model_severity": "medium",
+      "effective_severity": "high",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: Files Not Syncing",
+          "log_evidence": [],
+          "kb_evidence": [
+            "Files Not Syncing",
+            "PERF-001: Sync Throttled",
+            "KI-003: Delta Sync Fails for Files Over 4GB"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "094b407739689a72",
+          "title": "Files Not Syncing"
+        },
+        {
+          "doc_id": "5e9eaedc3e199de3",
+          "title": "PERF-001: Sync Throttled"
+        },
+        {
+          "doc_id": "fac7a996987b4a99",
+          "title": "KI-003: Delta Sync Fails for Files Over 4GB"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": false,
+          "detail": "enterprise customer, all users affected: floor high, model said medium"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 0.8666666666666667,
+      "verification_passed": false,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Enterprise customer",
+        "Severity high",
+        "Category 'sync' is not auto-eligible",
+        "Severity high above auto limit",
+        "Verification score 0.87 below 1.0"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "insufficient",
+      "sufficiency_reasons": [
+        "No log evidence: ask the customer for logs"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-sync-conflict-pro",
+      "created_at": "2026-10-04T02:34:00",
+      "inquiry_text": "Two of us edited the same budget spreadsheet while one person was on a flight. Now CloudSync shows SYNC-001 and we are not sure which version is the right one. How do we resolve this without losing either set of changes?",
+      "customer_plan": "pro",
+      "summary": "File synchronization issue: Two of us edited the same budget spreadsheet while one person was on a flight. Now CloudSync shows S...",
+      "category": "sync",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: SYNC-001: File Conflict",
+          "log_evidence": [],
+          "kb_evidence": [
+            "SYNC-001: File Conflict",
+            "Files Not Syncing",
+            "Microsoft 365 Integration"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "e17e4f5f2a86e105",
+          "title": "SYNC-001: File Conflict"
+        },
+        {
+          "doc_id": "094b407739689a72",
+          "title": "Files Not Syncing"
+        },
+        {
+          "doc_id": "fa07c9868981e563",
+          "title": "Microsoft 365 Integration"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Category 'sync' is not auto-eligible"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "insufficient",
+      "sufficiency_reasons": [
+        "No log evidence: ask the customer for logs"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-api-webhook-timeout-enterprise",
+      "created_at": "2026-10-04T03:08:00",
+      "inquiry_text": "Our webhooks to https://api.bigretail.com/hooks/cloudsync stopped working about an hour ago. Orders are piling up. The delivery logs in the dashboard show \"Connection timed out\" for every attempt (API-002). Nothing changed on our end.",
+      "customer_plan": "enterprise",
+      "summary": "API/integration issue: Our webhooks to https://api.bigretail.com/hooks/cloudsync stopped working about an hour ago. Orders ...",
+      "category": "api",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Errors related to code(s): API-002. Check the knowledge base for resolution steps.",
+          "log_evidence": [
+            "2024-03-05T14:00:12Z ERROR Webhook delivery failed: API-002 - Connection timed out after 10s",
+            "2024-03-05T14:00:25Z ERROR Webhook delivery failed: API-002 - Connection timed out after 10s",
+            "2024-03-05T14:00:47Z ERROR Webhook delivery failed: API-002 - Connection timed out after 10s",
+            "2024-03-05T14:02:39Z ERROR Webhook delivery failed: API-002 - Connection timed out after 10s. Max retries exceeded."
+          ],
+          "kb_evidence": [
+            "API-002: Webhook Delivery Failed",
+            "Webhook Not Firing",
+            "Webhooks"
+          ]
+        },
+        {
+          "statement": "Most relevant guidance: API-002: Webhook Delivery Failed",
+          "log_evidence": [],
+          "kb_evidence": [
+            "API-002: Webhook Delivery Failed",
+            "Webhook Not Firing",
+            "Webhooks"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "0753779e6c2aeff3",
+          "title": "API-002: Webhook Delivery Failed"
+        },
+        {
+          "doc_id": "f96c821e14eeba74",
+          "title": "Webhook Not Firing"
+        },
+        {
+          "doc_id": "403dbf606c621887",
+          "title": "Webhooks"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "features available on enterprise"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Enterprise customer",
+        "Category 'api' is not auto-eligible"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-api-rate-limit-pro",
+      "created_at": "2026-10-04T03:25:00",
+      "inquiry_text": "Our nightly export script started failing with HTTP 429 and API-001 Rate Limit Exceeded. We make roughly 3,000 requests per minute during the export. What are our limits and how should we handle this?",
+      "customer_plan": "pro",
+      "summary": "API/integration issue: Our nightly export script started failing with HTTP 429 and API-001 Rate Limit Exceeded. We make rou...",
+      "category": "api",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: API-001: Rate Limit Exceeded",
+          "log_evidence": [],
+          "kb_evidence": [
+            "API-001: Rate Limit Exceeded",
+            "Batch Operations",
+            "API Error Handling"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "daf523a43e88ec4e",
+          "title": "API-001: Rate Limit Exceeded"
+        },
+        {
+          "doc_id": "86ff5bfcce610589",
+          "title": "Batch Operations"
+        },
+        {
+          "doc_id": "e03d8dd62759d2ff",
+          "title": "API Error Handling"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Category 'api' is not auto-eligible"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "insufficient",
+      "sufficiency_reasons": [
+        "No log evidence: ask the customer for logs"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-perf-dashboard-slow-pro",
+      "created_at": "2026-10-04T03:42:00",
+      "inquiry_text": "The web dashboard has been loading very slowly since this morning, sometimes timing out. Other sites are fast for us. Is there a known problem?",
+      "customer_plan": "pro",
+      "summary": "Performance degradation: The web dashboard has been loading very slowly since this morning, sometimes timing out. Other sites...",
+      "category": "performance",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Errors related to code(s): PERF-001, PERF-002. Check the knowledge base for resolution steps.",
+          "log_evidence": [
+            "2024-03-12T08:14:31Z ERROR Upload timeout: batch 4/26 exceeded 300s deadline. Pausing sync."
+          ],
+          "kb_evidence": [
+            "Runbook: Performance Degradation Report",
+            "Slow Sync Performance",
+            "PERF-001: Sync Throttled"
+          ]
+        },
+        {
+          "statement": "Most relevant guidance: Runbook: Performance Degradation Report",
+          "log_evidence": [],
+          "kb_evidence": [
+            "Runbook: Performance Degradation Report",
+            "Slow Sync Performance",
+            "PERF-001: Sync Throttled"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "fb374af143deef9b",
+          "title": "Runbook: Performance Degradation Report"
+        },
+        {
+          "doc_id": "197eb0b5dd662983",
+          "title": "Slow Sync Performance"
+        },
+        {
+          "doc_id": "5e9eaedc3e199de3",
+          "title": "PERF-001: Sync Throttled"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Category 'performance' is not auto-eligible"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to performance. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify what is slow (sync, dashboard, API, desktop client)\n  2. Check system status page for known issues\n  3. Ask for specific metrics (normal vs. current speed)\n  4. Check client version and OS\n  5. Ask for a network speed test result\n\nAdditionally, it would help if you could provide:\n  - When did the slowness start?\n  - Is it affecting all operations or specific ones?\n  - How many files/folders are in your sync set?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-acct-payment-failed-pro",
+      "created_at": "2026-10-04T03:59:00",
+      "inquiry_text": "We received an email saying our payment failed. Our finance team updated the credit card last week but it did not go through (ACCT-001). Also, what happens to our data if the payment issue is not resolved?",
+      "customer_plan": "pro",
+      "summary": "Account/billing issue: We received an email saying our payment failed. Our finance team updated the credit card last week b...",
+      "category": "account",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: ACCT-001: Payment Failed",
+          "log_evidence": [],
+          "kb_evidence": [
+            "ACCT-001: Payment Failed",
+            "Billing FAQ",
+            "ACCT-003: Account Suspended"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "baafde8d0b417cae",
+          "title": "ACCT-001: Payment Failed"
+        },
+        {
+          "doc_id": "7b1fe96b8714ba16",
+          "title": "Billing FAQ"
+        },
+        {
+          "doc_id": "46694475160c56ff",
+          "title": "ACCT-003: Account Suspended"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Category 'account' is not auto-eligible"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to account. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check the customer's current plan and limits\n  2. Verify the user's role (admin required for some actions)\n  3. Check for any active restrictions on the account\n  4. Ask which specific action is failing\n\nAdditionally, it would help if you could provide:\n  - What specific action are you trying to perform?\n  - What is your current plan?\n  - Are you a workspace admin?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-feat-auto-backup-pro",
+      "created_at": "2026-10-04T04:16:00",
+      "inquiry_text": "How do I set up auto-backup for my Documents folder?",
+      "customer_plan": "pro",
+      "summary": "Feature question: How do I set up auto-backup for my Documents folder?",
+      "category": "feature",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: How do I set up auto-backup?",
+          "log_evidence": [],
+          "kb_evidence": [
+            "How do I set up auto-backup?",
+            "Microsoft 365 Integration",
+            "Selective Sync"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "e1c9086df47833f6",
+          "title": "How do I set up auto-backup?"
+        },
+        {
+          "doc_id": "fa07c9868981e563",
+          "title": "Microsoft 365 Integration"
+        },
+        {
+          "doc_id": "3bfa2f5d2c0d9a33",
+          "title": "Selective Sync"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "auto",
+      "autonomy_reasons": [
+        "Category 'feature' is allowed to auto-resolve",
+        "All checks passed (score 1.00)",
+        "Severity medium within auto limit"
+      ],
+      "simulated": true,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-feat-2fa-free",
+      "created_at": "2026-10-04T04:33:00",
+      "inquiry_text": "How do I enable two-factor authentication on my account?",
+      "customer_plan": "free",
+      "summary": "Feature question: How do I enable two-factor authentication on my account?",
+      "category": "feature",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: How do I enable two-factor authentication?",
+          "log_evidence": [],
+          "kb_evidence": [
+            "How do I enable two-factor authentication?",
+            "AUTH-003: SSO Configuration Error",
+            "SSO Overview"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "bf8982aef8666812",
+          "title": "How do I enable two-factor authentication?"
+        },
+        {
+          "doc_id": "3d35f237017134f3",
+          "title": "AUTH-003: SSO Configuration Error"
+        },
+        {
+          "doc_id": "99caae4b9432e6d9",
+          "title": "SSO Overview"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "auto",
+      "autonomy_reasons": [
+        "Category 'feature' is allowed to auto-resolve",
+        "All checks passed (score 1.00)",
+        "Severity medium within auto limit"
+      ],
+      "simulated": true,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-feat-sso-okta-pro",
+      "created_at": "2026-10-04T04:50:00",
+      "inquiry_text": "Can we set up SSO with Okta for our team? How do I configure it?",
+      "customer_plan": "pro",
+      "summary": "Feature question: Can we set up SSO with Okta for our team? How do I configure it?",
+      "category": "feature",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: Setting Up SSO with Okta",
+          "log_evidence": [],
+          "kb_evidence": [
+            "Setting Up SSO with Okta",
+            "SSO Overview",
+            "Setting Up SSO with Google Workspace"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "6c9a6c26112c763d",
+          "title": "Setting Up SSO with Okta"
+        },
+        {
+          "doc_id": "99caae4b9432e6d9",
+          "title": "SSO Overview"
+        },
+        {
+          "doc_id": "d505cda633eb66e7",
+          "title": "Setting Up SSO with Google Workspace"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": false,
+          "detail": "not on pro plan: sso"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 0.9333333333333333,
+      "verification_passed": false,
+      "autonomy": "confirm",
+      "autonomy_reasons": [
+        "Check failed: plan_entitlement",
+        "Verification score 0.93 below 1.0"
+      ],
+      "simulated": false,
+      "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-adv-refund-demand-pro",
+      "created_at": "2026-10-04T05:24:00",
+      "inquiry_text": "You charged us twice this month. I want a full refund immediately or I will dispute it with my bank.",
+      "customer_plan": "pro",
+      "summary": "Unclassified inquiry: You charged us twice this month. I want a full refund immediately or I will dispute it with my bank.",
+      "category": "unknown",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: Billing FAQ",
+          "log_evidence": [],
+          "kb_evidence": [
+            "Billing FAQ",
+            "ACCT-001: Payment Failed",
+            "ACCT-005: Trial Expired"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "7b1fe96b8714ba16",
+          "title": "Billing FAQ"
+        },
+        {
+          "doc_id": "baafde8d0b417cae",
+          "title": "ACCT-001: Payment Failed"
+        },
+        {
+          "doc_id": "cd58713771bcdb9f",
+          "title": "ACCT-005: Trial Expired"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "human_only",
+      "autonomy_reasons": [
+        "Sensitive topic in message: refund",
+        "Category 'unknown' requires a human"
+      ],
+      "simulated": false,
+      "draft_body": null,
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    },
+    {
+      "id": "demo-adv-vague-free",
+      "created_at": "2026-10-04T05:41:00",
+      "inquiry_text": "it doesn't work!!! fix it",
+      "customer_plan": "free",
+      "summary": "Unclassified inquiry: it doesn't work!!! fix it",
+      "category": "unknown",
+      "model_severity": "medium",
+      "effective_severity": "medium",
+      "hypotheses": [
+        {
+          "statement": "Most relevant guidance: ACCT-005: Trial Expired",
+          "log_evidence": [],
+          "kb_evidence": [
+            "ACCT-005: Trial Expired",
+            "SYNC-004: Index Corruption",
+            "ACCT-001: Payment Failed"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "cd58713771bcdb9f",
+          "title": "ACCT-005: Trial Expired"
+        },
+        {
+          "doc_id": "588ea46d81a72c2d",
+          "title": "SYNC-004: Index Corruption"
+        },
+        {
+          "doc_id": "baafde8d0b417cae",
+          "title": "ACCT-001: Payment Failed"
+        }
+      ],
+      "checks": [
+        {
+          "name": "citations_exist",
+          "passed": true,
+          "detail": "3 sources found"
+        },
+        {
+          "name": "citations_retrieved",
+          "passed": true,
+          "detail": "all cited sources were retrieved"
+        },
+        {
+          "name": "error_codes_valid",
+          "passed": true,
+          "detail": "0 codes verified"
+        },
+        {
+          "name": "plan_entitlement",
+          "passed": true,
+          "detail": "no plan-gated features mentioned"
+        },
+        {
+          "name": "no_commitments",
+          "passed": true,
+          "detail": "no refund/SLA/time promises"
+        },
+        {
+          "name": "severity_floor",
+          "passed": true,
+          "detail": "no floor rule triggered"
+        },
+        {
+          "name": "pii_leak",
+          "passed": true,
+          "detail": "no leaked values"
+        },
+        {
+          "name": "process_state",
+          "passed": true,
+          "detail": "no multi-step flow"
+        }
+      ],
+      "verification_score": 1.0,
+      "verification_passed": true,
+      "autonomy": "human_only",
+      "autonomy_reasons": [
+        "Category 'unknown' requires a human"
+      ],
+      "simulated": false,
+      "draft_body": null,
+      "sufficiency": "sufficient",
+      "sufficiency_reasons": [
+        "Evidence and citations found; verification passed"
+      ],
+      "status": "ready",
+      "approved_body": null,
+      "edit_ratio": null
+    }
+  ]
+}
