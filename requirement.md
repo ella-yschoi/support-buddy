@@ -204,10 +204,10 @@ For development and testing, we use a fictional SaaS company:
 
 ### Phase 5 - Trustworthy Automation
 Ordered; each step TDD. See design-doc §16.
-- [ ] 5.1 Trust Layer (FR-7)
-- [ ] 5.2 Autonomy Policy (FR-8)
-- [ ] 5.3 Eval harness, 40-case golden set, model registry (FR-10)
-- [ ] 5.4 Briefing pipeline + Overnight Queue (FR-9)
+- [x] 5.1 Trust Layer (FR-7)
+- [x] 5.2 Autonomy Policy (FR-8)
+- [x] 5.3 Eval harness, 40-case golden set, model registry (FR-10)
+- [x] 5.4 Briefing pipeline, store, inbox trigger and API (FR-9; Overnight Queue UI follows in 5.5)
 - [ ] 5.5 UI restyle to Quiet Apple, new information architecture (NFR-3b)
 - [ ] 5.6 Review chain (FR-11)
 - [ ] 5.7 Log correlation + PII redaction (FR-12)
@@ -215,8 +215,8 @@ Ordered; each step TDD. See design-doc §16.
 - [ ] 5.9 Multiplier metrics (FR-14)
 
 **Phase 5 exit criteria**
-- [ ] Unsafe-pass rate = 0 on the golden set
-- [ ] Auto-resolvable rate measured and recorded with set size and date
+- [x] Unsafe-pass rate = 0 on the golden set (local baseline, n = 40, 2026-10-04)
+- [x] Auto-resolvable rate measured and recorded with set size and date (local baseline: 60.0% of 40 cases, 77.4% of in-scope cases, 2026-10-04; Claude configs pending)
 - [ ] Model comparison report committed for ≥ 3 configs
-- [ ] Trust Layer has no LLM/SDK dependency (test passes)
+- [x] Trust Layer has no LLM/SDK dependency (test passes)
 - [ ] README and resume figures match the committed eval report

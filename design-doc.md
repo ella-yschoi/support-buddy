@@ -282,7 +282,8 @@ trust/
 ├── __init__.py
 ├── verifier.py        # Verifier: run all checks, return VerificationReport
 ├── checks.py          # Individual deterministic checks (pure functions)
-├── rules.py           # Severity floors, forbidden phrases (loaded from rules.yaml)
+├── rules.py           # Rule data: severity floors, plan gates, commitment/PII patterns
+├── kb_index.py        # KnowledgeIndex: doc ids and error codes that exist in the KB
 └── models.py          # Check, VerificationReport
 ```
 
@@ -293,8 +294,8 @@ trust/
 | `citations_exist` | Every cited article ID/title exists in the KB | block Auto |
 | `citations_retrieved` | Cited articles were actually returned by retrieval for this inquiry | block Auto |
 | `error_codes_valid` | Every `XXXX-NNN` code in the draft exists in `error_codes.md` | block Auto |
-| `plan_entitlement` | Features recommended are available on the customer's plan (`plan_matrix.md`) | force Confirm |
-| `no_commitments` | No refund, SLA, credit, or delivery-date promises (pattern list in `rules.yaml`) | force Human-only |
+| `plan_entitlement` | Plan-gated features named in the customer's question **or** our draft are available on the customer's plan (`plan_matrix.md`). Found by the golden set: checking the draft alone let "Can we use SSO on Pro?" through | force Confirm |
+| `no_commitments` | No refund, SLA, credit, or time promises (pattern list in `rules.py`) | force Human-only |
 | `severity_floor` | Rule-based minimum severity (e.g. enterprise + "all users affected" → ≥ HIGH) overrides a lower LLM severity | raise severity |
 | `pii_leak` | Draft contains no addresses/tokens/keys from the log input | block Auto |
 | `process_state` | For multi-step flows (e.g. migration, SSO setup) the claimed step matches the step recorded in state | force Confirm |
@@ -344,8 +345,12 @@ Ingest ─► Parse ─► Classify ─► Log analysis ─► KB search ─► 
 
 - `Briefing` = summary, hypotheses (ranked), evidence (log lines, KB citations), verification report, autonomy decision, draft (unless HUMAN_ONLY).
 - **Sufficiency verdict:** deterministic rule. `SUFFICIENT` if root-cause hypothesis cites ≥1 log evidence line and ≥1 KB article and verification score ≥ threshold; otherwise `INSUFFICIENT`, and the UI leads with raw logs (fallback to the classic workflow).
-- Storage: SQLite (`briefings` table) for MVP; the queue is the **Overnight Queue** page, sorted by severity then age.
-- Trigger modes: manual ("Prepare now"), folder watcher, IMAP poll (reusing `integrations/email`).
+- Storage: SQLite (`briefings` table, path from `BRIEFING_DB_PATH`); the queue is the **Overnight Queue**, sorted by effective severity (after trust-layer floors) then age.
+- **Sufficiency rule (implemented):** a briefing is `SUFFICIENT` only if the draft has a KB citation, technical categories (sync, performance, api, permission) have log evidence, and the verification score is ≥ 0.80. Otherwise the reasons say what is missing (e.g. "ask the customer for logs").
+- **Fail-safe:** a pipeline or log-analysis failure never drops the ticket. It becomes a visible human-only briefing with effective severity HIGH.
+- Human-only briefings carry no customer-facing draft.
+- TSE approval records `edit_ratio` (0.0 = sent as drafted, 1.0 = fully rewritten).
+- Trigger modes: manual (`POST /api/v1/briefings`), folder drop (`process_inbox`: `.eml` plus optional `.log` sidecar; implemented), IMAP poll (later, reusing `integrations/email`).
 
 ## 11. Review Chain (`src/core/review/`)
 
@@ -415,6 +420,10 @@ expected:
 **Model registry:** `MODELS` in config maps roles (`classify`, `draft`, `critic`, `accuracy`) to model IDs via env/YAML. The runner accepts multiple configs (e.g. Haiku / Sonnet / Opus, 200K vs 1M context) and outputs a side-by-side table. No module may hardcode a model ID.
 
 **Golden set size:** 40 cases at start (≥ 5 per category, ≥ 8 expected HUMAN_ONLY or adversarial). Reported numbers always state the set size.
+
+**Running it:** `python -m src.cli eval --pipeline local` is free and deterministic (keyword classifier + template draft) and is the committed baseline in `docs/eval/`. `--pipeline claude --names balanced,premium` calls the paid API after a cost confirmation. A Claude component that silently falls back to local output is recorded as an error, never as a Claude result.
+
+**What "auto-resolvable" does and does not mean:** it measures that a draft passed every deterministic check and was routed to Auto or Confirm. It does **not** measure that the answer is correct. Answer quality needs human or LLM-judge grading and is not claimed.
 
 **Multiplier metrics (live usage):** draft approval rate, edit distance between draft and sent text, time-to-first-response, per TSE (opt-in, stored locally).
 
@@ -517,14 +526,16 @@ The current UI ("Intelligent Ledger": Manrope/Inter, blue accent, gray container
 4. **Knowledge** (search + browse merged)
 5. **Insights** (patterns, eval results, multiplier metrics)
 
-**Implementation notes:** Streamlit stays for the MVP; styling is centralized in `src/ui/styles.py` (tokens as CSS variables). Streamlit chrome (header, footer, default fonts) is overridden; icons use inline SVG (SF-Symbols-like, 1.5px stroke) instead of Material Symbols. React migration remains a later option, and the tokens are portable.
+**Hosting decision (Option C):** the production UI is a static React app (Cloudflare Pages: no sleep, no cost) talking to the FastAPI backend (Cloud Run, scale to zero, wakes on request). The public demo serves **pre-computed briefings** and never needs an API key; "run it yourself" is the only path that calls Claude and sits behind per-IP and global daily limits plus a console spend limit. Streamlit remains until the React app replaces it.
+
+**Implementation notes (Streamlit era):** Streamlit stays for the MVP; styling is centralized in `src/ui/styles.py` (tokens as CSS variables). Streamlit chrome (header, footer, default fonts) is overridden; icons use inline SVG (SF-Symbols-like, 1.5px stroke) instead of Material Symbols. React migration remains a later option, and the tokens are portable.
 
 ## 16. Phase 5 Delivery Order
 
-1. Trust Layer + tests (pure Python, no UI)
-2. Autonomy Policy + `policy.yaml`
-3. Eval harness + 40-case golden set + model registry
-4. Briefing pipeline + Overnight Queue UI
+1. Trust Layer + tests (pure Python, no UI) **(done)**
+2. Autonomy Policy + `policy.yaml` **(done)**
+3. Eval harness + 40-case golden set + model registry **(done; Claude-pipeline numbers pending an API run)**
+4. Briefing pipeline, queue store, folder-drop trigger and API **(done; Overnight Queue UI is part of step 5)**
 5. UI restyle to the Quiet Apple system (can start in parallel with 4)
 6. Review chain
 7. Log correlation + PII redaction
