@@ -62,7 +62,9 @@ def error_codes_valid(inp: TrustInput) -> Check:
 
 
 def plan_entitlement(inp: TrustInput) -> Check:
-    body = _body(inp).lower()
+    # Both the customer's question and our draft count: asking about a feature the
+    # plan lacks is as much a reason for review as recommending one.
+    body = f"{inp.inquiry_text}\n{_body(inp)}".lower()
     mentioned = {f: p for f, p in rules.FEATURE_MIN_PLAN.items() if f in body}
     if not mentioned:
         return Check("plan_entitlement", True, 1.0, "no plan-gated features mentioned")

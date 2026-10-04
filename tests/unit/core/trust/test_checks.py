@@ -77,6 +77,27 @@ class TestPlanEntitlement:
         draft = make_draft(body="Restart the app.")
         assert checks.plan_entitlement(make_input(draft=draft, plan="unknown")).passed
 
+    def test_customer_asking_about_feature_above_plan_fails_even_if_draft_is_silent(
+        self, make_input
+    ):
+        inp = make_input(
+            inquiry_text="Can we set up SSO with Okta?",
+            draft=make_draft(body="Here is how to configure it. SYNC-002"),
+            plan="pro",
+        )
+        result = checks.plan_entitlement(inp)
+        assert not result.passed
+        assert result.on_fail is FailEffect.FORCE_CONFIRM
+        assert "sso" in result.detail
+
+    def test_inquiry_mentioning_available_feature_passes(self, make_input):
+        inp = make_input(inquiry_text="How do I set up a webhook?", plan="pro")
+        assert checks.plan_entitlement(inp).passed
+
+    def test_inquiry_check_applies_without_a_draft(self, make_input):
+        inp = make_input(inquiry_text="I want SAML login", plan="free", with_draft=False)
+        assert not checks.plan_entitlement(inp).passed
+
     def test_enterprise_can_use_everything(self, make_input):
         draft = make_draft(body="Use SSO and the audit log and webhooks.")
         assert checks.plan_entitlement(make_input(draft=draft, plan="enterprise")).passed
