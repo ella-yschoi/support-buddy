@@ -5,7 +5,7 @@ from __future__ import annotations
 from src.core.models import Severity
 from src.core.trust import checks
 from src.core.trust.models import FailEffect, ProcessState
-from tests.unit.core.trust.conftest import make_analysis, make_draft, make_result
+from tests.unit.core.conftest import make_analysis, make_draft, make_result
 
 
 class TestCitationsExist:

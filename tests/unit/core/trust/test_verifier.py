@@ -8,7 +8,7 @@ from src.core.models import Severity
 from src.core.trust import checks
 from src.core.trust.models import Check, FailEffect
 from src.core.trust.verifier import Verifier
-from tests.unit.core.trust.conftest import make_analysis, make_draft
+from tests.unit.core.conftest import make_analysis, make_draft
 
 
 def test_clean_draft_passes_with_full_score(make_input):
