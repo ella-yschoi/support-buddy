@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { loadBriefings } from "./api";
 import { AnalyzeForm } from "./components/AnalyzeForm";
 import { BriefingDetail } from "./components/BriefingDetail";
+import { Logo } from "./components/Logo";
 import { QueueList } from "./components/QueueList";
 import { sortQueue } from "./format";
 import type { Briefing, Source } from "./types";
@@ -86,7 +87,10 @@ export default function App() {
   return (
     <>
       <header className="topbar">
-        <span className="wordmark">Support Buddy</span>
+        <span className="wordmark">
+          <Logo />
+          Support Buddy
+        </span>
         <nav className="nav" aria-label="Main">
           <a href="#/" aria-current={route.name !== "analyze" ? "page" : undefined}>
             Queue

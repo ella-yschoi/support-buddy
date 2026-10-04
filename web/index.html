@@ -5,10 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Support Buddy</title>
+    <style>
+      html, body { background: #000; margin: 0; }
+      .boot { display: grid; place-items: center; min-height: 100vh; color: #ededed; }
+      .boot svg { width: 40px; height: 40px; animation: boot-pulse 1.6s ease-in-out infinite; }
+      @keyframes boot-pulse { 50% { opacity: 0.35; } }
+      @media (prefers-reduced-motion: reduce) { .boot svg { animation: none; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="boot" role="status" aria-label="Loading"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><defs><clipPath id="boot-clip"><circle cx="9" cy="12" r="7"/></clipPath></defs><circle cx="15" cy="12" r="7" fill="currentColor" clip-path="url(#boot-clip)"/><circle cx="9" cy="12" r="7" stroke="currentColor" stroke-width="1.8"/><circle cx="15" cy="12" r="7" stroke="currentColor" stroke-width="1.8"/></svg></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
