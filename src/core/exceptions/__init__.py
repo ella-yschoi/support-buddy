@@ -31,3 +31,7 @@ class PolicyError(SupportBuddyError):
 
 class ConfigError(SupportBuddyError):
     """Application configuration file is missing or invalid."""
+
+
+class BriefingError(SupportBuddyError):
+    """A briefing could not be stored, found, or updated."""
