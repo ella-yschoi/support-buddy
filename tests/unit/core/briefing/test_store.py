@@ -8,7 +8,7 @@ import pytest
 
 from src.core.briefing.models import Briefing, CheckView, Citation, Hypothesis, Sufficiency
 from src.core.briefing.store import BriefingStore
-from src.core.exceptions import BriefingError
+from src.core.exceptions import BriefingError, BriefingStateError
 from src.core.models import InquiryCategory, Severity
 from src.core.policy.models import AutonomyLevel
 
@@ -117,3 +117,11 @@ def test_adding_duplicate_id_raises(store):
     store.add(make_briefing())
     with pytest.raises(BriefingError):
         store.add(make_briefing())
+
+
+def test_approving_twice_is_rejected_and_keeps_the_first_approval(store):
+    store.add(make_briefing())
+    store.approve("b1", "first")
+    with pytest.raises(BriefingStateError):
+        store.approve("b1", "second")
+    assert store.get("b1").approved_body == "first"

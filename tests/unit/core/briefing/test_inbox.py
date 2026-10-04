@@ -92,3 +92,18 @@ def test_undecodable_email_still_gets_a_briefing_and_does_not_abort_batch(
     ids = process_inbox(builder, store, inbox, done)
     assert len(ids) == 2
     assert not list(inbox.glob("*.eml"))
+
+
+def test_redropped_email_is_not_processed_twice(tmp_path, kb_index, policy):
+    inbox, done, store = _setup(tmp_path)
+    builder = make_builder(kb_index, policy, analysis=feature_analysis(), id_factory=counter_ids())
+    (inbox / "t.eml").write_text(EMAIL)
+    first = process_inbox(builder, store, inbox, done)
+
+    (inbox / "t.eml").write_text(EMAIL)  # e.g. a failed move left the file behind
+    second = process_inbox(builder, store, inbox, done)
+
+    assert len(first) == 1
+    assert second == []
+    assert len(store.list_queue()) == 1
+    assert not list(inbox.glob("*.eml"))

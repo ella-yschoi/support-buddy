@@ -35,3 +35,7 @@ class ConfigError(SupportBuddyError):
 
 class BriefingError(SupportBuddyError):
     """A briefing could not be stored, found, or updated."""
+
+
+class BriefingStateError(BriefingError):
+    """The briefing is not in a state that allows this operation (e.g. already approved)."""

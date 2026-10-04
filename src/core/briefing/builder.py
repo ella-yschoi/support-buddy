@@ -7,8 +7,6 @@ import uuid
 from collections.abc import Callable
 from datetime import datetime
 
-import anthropic
-
 from src.core.briefing.models import (
     Briefing,
     CheckView,
@@ -16,7 +14,6 @@ from src.core.briefing.models import (
     Hypothesis,
     Sufficiency,
 )
-from src.core.exceptions import SupportBuddyError
 from src.core.models import DraftResponse, InquiryCategory, InquiryResult, LogInsight, Severity
 from src.core.policy.engine import PolicyEngine
 from src.core.policy.models import AutonomyLevel, Policy
@@ -25,8 +22,6 @@ from src.core.trust.models import Customer, TrustInput
 from src.core.trust.verifier import Verifier
 
 logger = logging.getLogger(__name__)
-
-_ERRORS = (SupportBuddyError, anthropic.APIError, OSError, ValueError, KeyError, TypeError)
 
 # A briefing is only "sufficient" at or above this verification score.
 SUFFICIENCY_MIN_SCORE = 0.8
@@ -75,13 +70,20 @@ class BriefingBuilder:
         self._id_factory = id_factory
         self._clock = clock
 
-    def build(self, inquiry_text: str, customer: Customer, log_text: str = "") -> Briefing:
+    def build(
+        self,
+        inquiry_text: str,
+        customer: Customer,
+        log_text: str = "",
+        briefing_id: str | None = None,
+    ) -> Briefing:
+        briefing_id = briefing_id or self._id_factory()
         try:
             analysis = self._analyze(inquiry_text)
             draft = self._draft(inquiry_text, analysis)
-        except _ERRORS as exc:
+        except Exception as exc:  # deliberate: any analyzer/drafter failure must not lose a ticket
             logger.error("briefing pipeline failed", exc_info=True)
-            return self._failed(inquiry_text, customer, exc)
+            return self._failed(briefing_id, inquiry_text, customer, exc)
 
         insight, log_problem = self._run_log_analysis(log_text)
 
@@ -100,7 +102,7 @@ class BriefingBuilder:
             analysis, draft, insight, log_problem, bool(log_text.strip()), report.score
         )
         return Briefing(
-            id=self._id_factory(),
+            id=briefing_id,
             created_at=self._clock(),
             inquiry_text=inquiry_text,
             customer_plan=customer.plan,
@@ -129,7 +131,7 @@ class BriefingBuilder:
             return None, "log analysis is not configured"
         try:
             return self._analyze_logs(log_text), None
-        except _ERRORS as exc:
+        except Exception as exc:  # deliberate: a log failure degrades the briefing, not the ticket
             logger.error("log analysis failed", exc_info=True)
             return None, f"log analysis failed: {exc}"
 
@@ -178,10 +180,12 @@ class BriefingBuilder:
             return Sufficiency.INSUFFICIENT, tuple(problems)
         return Sufficiency.SUFFICIENT, ("Evidence and citations found; verification passed",)
 
-    def _failed(self, inquiry_text: str, customer: Customer, exc: Exception) -> Briefing:
+    def _failed(
+        self, briefing_id: str, inquiry_text: str, customer: Customer, exc: Exception
+    ) -> Briefing:
         """Never lose a ticket: a pipeline failure becomes a visible, human-only briefing."""
         return Briefing(
-            id=self._id_factory(),
+            id=briefing_id,
             created_at=self._clock(),
             inquiry_text=inquiry_text,
             customer_plan=customer.plan,

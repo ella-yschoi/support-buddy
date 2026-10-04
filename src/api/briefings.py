@@ -10,7 +10,7 @@ from src.core.briefing.builder import BriefingBuilder
 from src.core.briefing.factory import DEFAULT_POLICY_PATH, build_local_builder
 from src.core.briefing.models import Briefing
 from src.core.briefing.store import BriefingStore
-from src.core.exceptions import BriefingError
+from src.core.exceptions import BriefingError, BriefingStateError, PolicyError
 from src.core.policy.loader import load_policy
 from src.core.trust.models import Customer
 
@@ -70,6 +70,8 @@ def approve_briefing(
 ) -> BriefingResponse:
     try:
         return _response(store.approve(briefing_id, req.final_body))
+    except BriefingStateError as exc:
+        raise HTTPException(409, str(exc)) from exc
     except BriefingError as exc:
         raise HTTPException(404, str(exc)) from exc
 
@@ -77,7 +79,10 @@ def approve_briefing(
 @router.get("/policy", response_model=PolicyResponse)
 def get_policy() -> PolicyResponse:
     """Read-only view of the autonomy policy in force."""
-    p = load_policy(DEFAULT_POLICY_PATH)
+    try:
+        p = load_policy(DEFAULT_POLICY_PATH)
+    except PolicyError as exc:
+        raise HTTPException(500, f"policy file is invalid: {exc}") from exc
     return PolicyResponse(
         auto_send_enabled=p.auto_send_enabled,
         human_only_keywords=list(p.human_only_keywords),

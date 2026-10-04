@@ -160,3 +160,15 @@ def test_log_analysis_failure_degrades_to_insufficient_not_crash(kb_index, polic
     b = builder.build("Uploads fail", Customer(plan="pro"), log_text="x")
     assert b.sufficiency is Sufficiency.INSUFFICIENT
     assert any("log" in r.lower() for r in b.sufficiency_reasons)
+
+
+def test_unexpected_exception_in_analyzer_still_yields_a_briefing(kb_index, policy):
+    builder = make_builder(kb_index, policy, error=RuntimeError("chroma exploded"))
+    b = builder.build("Anything", Customer(plan="pro"))
+    assert b.autonomy is AutonomyLevel.HUMAN_ONLY
+    assert "chroma exploded" in b.summary
+
+
+def test_explicit_briefing_id_overrides_the_factory(kb_index, policy):
+    b = make_builder(kb_index, policy).build("q", Customer(plan="pro"), briefing_id="fixed-1")
+    assert b.id == "fixed-1"

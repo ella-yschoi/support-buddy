@@ -10,7 +10,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 from src.core.briefing.models import Briefing
-from src.core.exceptions import BriefingError
+from src.core.exceptions import BriefingError, BriefingStateError
 from src.core.trust.rules import SEVERITY_ORDER
 
 _SCHEMA = """
@@ -51,6 +51,11 @@ class BriefingStore:
         except sqlite3.IntegrityError as exc:
             raise BriefingError(f"briefing {briefing.id} already exists") from exc
 
+    def exists(self, briefing_id: str) -> bool:
+        with closing(self._connect()) as conn:
+            row = conn.execute("SELECT 1 FROM briefings WHERE id = ?", (briefing_id,)).fetchone()
+        return row is not None
+
     def get(self, briefing_id: str) -> Briefing:
         with closing(self._connect()) as conn:
             row = conn.execute(
@@ -72,6 +77,8 @@ class BriefingStore:
     def approve(self, briefing_id: str, final_body: str) -> Briefing:
         """Record what the TSE actually sent and how far it moved from the draft."""
         current = self.get(briefing_id)
+        if current.status != "ready":
+            raise BriefingStateError(f"briefing {briefing_id} is already {current.status}")
         ratio: float | None = None
         if current.draft_body is not None:
             ratio = 1.0 - SequenceMatcher(None, current.draft_body, final_body).ratio()
@@ -79,8 +86,10 @@ class BriefingStore:
             current, status="approved", approved_body=final_body, edit_ratio=ratio
         )
         with closing(self._connect()) as conn, conn:
-            conn.execute(
-                "UPDATE briefings SET status = ?, payload = ? WHERE id = ?",
+            cursor = conn.execute(
+                "UPDATE briefings SET status = ?, payload = ? WHERE id = ? AND status = 'ready'",
                 (updated.status, json.dumps(updated.to_dict()), briefing_id),
             )
+            if cursor.rowcount != 1:  # lost a race with another approval
+                raise BriefingStateError(f"briefing {briefing_id} is no longer ready")
         return updated

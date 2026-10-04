@@ -102,3 +102,10 @@ def test_policy_endpoint_exposes_rules_read_only(client):
     assert data["auto_send_enabled"] is False
     assert "breach" in data["human_only_keywords"]
     assert client.post("/api/v1/policy", json={}).status_code == 405
+
+
+def test_approving_an_already_approved_briefing_is_409(client):
+    created = create(client).json()
+    url = f"/api/v1/briefings/{created['id']}/approve"
+    assert client.post(url, json={"final_body": "one"}).status_code == 200
+    assert client.post(url, json={"final_body": "two"}).status_code == 409
