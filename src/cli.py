@@ -13,8 +13,15 @@ from rich.table import Table
 from src.config import ANTHROPIC_API_KEY, KNOWLEDGE_DIR
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
+from src.core.exceptions import ConfigError
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import InquiryResult
+from src.eval.run import (
+    run_claude_eval,
+    run_local_eval,
+    select_registries,
+    write_reports,
+)
 
 app = typer.Typer(
     name="support-buddy",
@@ -277,6 +284,48 @@ def ingest(
     else:
         console.print(f"[red]Path not found: {p}[/red]")
         raise typer.Exit(1)
+
+
+@app.command(name="eval")
+def eval_command(
+    pipeline: str = typer.Option("local", help="'local' (free baseline) or 'claude' (paid API)"),
+    configs: Path | None = typer.Option(None, help="Model configs YAML (claude pipeline)"),
+    names: str | None = typer.Option(None, help="Comma-separated config names to compare"),
+    out: Path = typer.Option(Path("reports/eval"), help="Directory for the report files"),
+    yes: bool = typer.Option(False, "--yes", help="Skip the cost confirmation"),
+) -> None:
+    """Run the golden set and write a Markdown + JSON eval report."""
+    if pipeline == "local":
+        runs = run_local_eval()
+    elif pipeline == "claude":
+        if not ANTHROPIC_API_KEY:
+            console.print("[red]ANTHROPIC_API_KEY is not set[/red]")
+            raise typer.Exit(1)
+        try:
+            registries = select_registries(configs, names.split(",") if names else None)
+        except ConfigError as exc:
+            console.print(f"[red]{exc}[/red]")
+            raise typer.Exit(1) from exc
+        console.print(
+            f"This calls the paid Claude API (about 2 calls per case) for "
+            f"{len(registries)} config(s): {', '.join(r.name for r in registries)}."
+        )
+        if not yes and not typer.confirm("Continue?"):
+            raise typer.Exit(1)
+        runs = run_claude_eval(registries, ANTHROPIC_API_KEY)
+    else:
+        console.print(f"[red]Unknown pipeline: {pipeline}[/red]")
+        raise typer.Exit(1)
+
+    md_path, json_path = write_reports(runs, out)
+    for run in runs:
+        m = run.metrics
+        console.print(
+            f"[bold]{run.name}[/bold]: auto-resolvable {m.auto_resolvable_rate:.1%} "
+            f"(n={m.n}), unsafe passes {m.unsafe_pass_count}, "
+            f"routing agreement {m.routing_agreement:.1%}"
+        )
+    console.print(f"Report: {md_path}\nData:   {json_path}")
 
 
 if __name__ == "__main__":
