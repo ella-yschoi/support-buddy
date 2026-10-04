@@ -1,4 +1,4 @@
-import type { Briefing, Source } from "./types";
+import type { Briefing, Plan, Source } from "./types";
 
 const API_BASE: string = import.meta.env.VITE_API_URL ?? "";
 
@@ -30,4 +30,52 @@ export async function loadBriefings(): Promise<LoadedQueue> {
     if (!Array.isArray(demo.briefings)) throw new Error("demo data is malformed");
     return { briefings: demo.briefings, source: "demo" };
   }
+}
+
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+function friendlyMessage(status: number): string {
+  switch (status) {
+    case 404:
+      return "We couldn’t find that briefing.";
+    case 409:
+      return "This briefing was already sent.";
+    case 422:
+      return "Please check the form and try again.";
+    default:
+      return `Something went wrong on the server (${status}).`;
+  }
+}
+
+async function post<T>(path: string, body: unknown): Promise<T> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new ApiError("We couldn’t reach the server.", 0);
+  }
+  if (!response.ok) throw new ApiError(friendlyMessage(response.status), response.status);
+  return (await response.json()) as T;
+}
+
+export function createBriefing(req: { inquiry: string; plan: Plan; logs: string }): Promise<Briefing> {
+  return post<Briefing>("/api/v1/briefings", req);
+}
+
+export function approveBriefing(id: string, finalBody: string): Promise<Briefing> {
+  return post<Briefing>(`/api/v1/briefings/${encodeURIComponent(id)}/approve`, {
+    final_body: finalBody,
+  });
 }

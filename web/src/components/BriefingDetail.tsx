@@ -10,11 +10,14 @@ import {
 } from "../format";
 import type { Briefing, Hypothesis } from "../types";
 import { AutonomyPill } from "./AutonomyPill";
+import { ReplyEditor } from "./ReplyEditor";
 import { VerificationStrip } from "./VerificationStrip";
 
 interface Props {
   briefing: Briefing;
   onBack: () => void;
+  readOnly?: boolean;
+  onApproved?: (briefing: Briefing) => void;
 }
 
 function HypothesisItem({ hypothesis }: { hypothesis: Hypothesis }) {
@@ -58,7 +61,7 @@ function HypothesisItem({ hypothesis }: { hypothesis: Hypothesis }) {
   );
 }
 
-export function BriefingDetail({ briefing: b, onBack }: Props) {
+export function BriefingDetail({ briefing: b, onBack, readOnly = true, onApproved = () => {} }: Props) {
   const attention = needsAttention(b);
   return (
     <article className="detail">
@@ -116,13 +119,12 @@ export function BriefingDetail({ briefing: b, onBack }: Props) {
         </section>
       )}
 
-      <section className="card" aria-label="Draft reply">
-        <h2>Draft reply</h2>
-        {b.draft_body === null ? (
+      <section className="card" aria-label="Reply">
+        <h2>{b.status === "approved" ? "Sent reply" : "Draft reply"}</h2>
+        {b.draft_body === null && b.status !== "approved" && (
           <p className="muted">No customer-facing draft. This one needs a person.</p>
-        ) : (
-          <p className="draft">{b.draft_body}</p>
         )}
+        <ReplyEditor key={b.id + b.status} briefing={b} readOnly={readOnly} onApproved={onApproved} />
         {b.citations.length > 0 && (
           <p className="muted small">Sources: {b.citations.map((c) => c.title).join(" · ")}</p>
         )}

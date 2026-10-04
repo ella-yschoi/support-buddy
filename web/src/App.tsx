@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { loadBriefings } from "./api";
+import { AnalyzeForm } from "./components/AnalyzeForm";
 import { BriefingDetail } from "./components/BriefingDetail";
 import { QueueList } from "./components/QueueList";
+import { sortQueue } from "./format";
 import type { Briefing, Source } from "./types";
 
 type LoadState =
@@ -9,14 +11,33 @@ type LoadState =
   | { status: "error" }
   | { status: "ready"; briefings: Briefing[]; source: Source };
 
-function readRoute(): string | null {
-  const match = /^#\/b\/(.+)$/.exec(window.location.hash);
-  return match ? decodeURIComponent(match[1]) : null;
+type Route = { name: "queue" } | { name: "analyze" } | { name: "briefing"; id: string };
+
+function readRoute(): Route {
+  const hash = window.location.hash;
+  const briefing = /^#\/b\/(.+)$/.exec(hash);
+  if (briefing) return { name: "briefing", id: decodeURIComponent(briefing[1]) };
+  if (hash === "#/analyze") return { name: "analyze" };
+  return { name: "queue" };
+}
+
+function Skeleton() {
+  return (
+    <div role="status" aria-busy="true" aria-label="Loading the queue" className="skeleton">
+      <div className="skeleton__title" />
+      <div className="skeleton__line" />
+      <div className="group">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="skeleton__row" />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function App() {
   const [state, setState] = useState<LoadState>({ status: "loading" });
-  const [openId, setOpenId] = useState<string | null>(readRoute);
+  const [route, setRoute] = useState<Route>(readRoute);
 
   useEffect(() => {
     let cancelled = false;
@@ -29,28 +50,52 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const onHashChange = () => setOpenId(readRoute());
+    const onHashChange = () => setRoute(readRoute());
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  const open = useCallback((id: string) => {
-    window.location.hash = `#/b/${encodeURIComponent(id)}`;
-    setOpenId(id);
-  }, []);
-  const back = useCallback(() => {
-    window.location.hash = "";
-    setOpenId(null);
+  const go = useCallback((hash: string) => {
+    window.location.hash = hash;
+    setRoute(readRoute());
   }, []);
 
-  const selected =
-    state.status === "ready" && openId ? state.briefings.find((b) => b.id === openId) : undefined;
+  const replace = useCallback((updated: Briefing) => {
+    setState((s) =>
+      s.status === "ready"
+        ? { ...s, briefings: s.briefings.map((b) => (b.id === updated.id ? updated : b)) }
+        : s,
+    );
+  }, []);
+
+  const created = useCallback(
+    (briefing: Briefing) => {
+      setState((s) =>
+        s.status === "ready" ? { ...s, briefings: sortQueue([...s.briefings, briefing]) } : s,
+      );
+      go(`#/b/${encodeURIComponent(briefing.id)}`);
+    },
+    [go],
+  );
+
+  const ready = state.status === "ready" ? state : null;
+  const readOnly = ready?.source !== "api";
+  const queue = ready ? ready.briefings.filter((b) => b.status === "ready") : [];
+  const selected = ready && route.name === "briefing" ? ready.briefings.find((b) => b.id === route.id) : undefined;
 
   return (
     <>
       <header className="topbar">
         <span className="wordmark">Support Buddy</span>
-        {state.status === "ready" && state.source === "demo" && (
+        <nav className="nav" aria-label="Main">
+          <a href="#/" aria-current={route.name !== "analyze" ? "page" : undefined}>
+            Queue
+          </a>
+          <a href="#/analyze" aria-current={route.name === "analyze" ? "page" : undefined}>
+            Analyze
+          </a>
+        </nav>
+        {ready?.source === "demo" && (
           <span
             className="badge"
             title="Pre-computed briefings from the sample golden set. No AI calls are made."
@@ -61,7 +106,7 @@ export default function App() {
       </header>
 
       <main className="page">
-        {state.status === "loading" && <p className="muted" aria-live="polite">Loading…</p>}
+        {state.status === "loading" && <Skeleton />}
 
         {state.status === "error" && (
           <p role="alert" className="notice">
@@ -69,28 +114,41 @@ export default function App() {
           </p>
         )}
 
-        {state.status === "ready" && openId && selected && (
-          <BriefingDetail briefing={selected} onBack={back} />
+        {ready && route.name === "analyze" && (
+          <>
+            <h1 className="large-title">Analyze</h1>
+            <p className="subtitle">Paste a ticket and get a briefing in seconds.</p>
+            <AnalyzeForm readOnly={readOnly} onCreated={created} />
+          </>
         )}
 
-        {state.status === "ready" && openId && !selected && (
+        {ready && route.name === "briefing" && selected && (
+          <BriefingDetail
+            briefing={selected}
+            onBack={() => go("")}
+            readOnly={readOnly}
+            onApproved={replace}
+          />
+        )}
+
+        {ready && route.name === "briefing" && !selected && (
           <div className="notice">
             <p className="notice__title">We couldn’t find that briefing.</p>
-            <button type="button" className="link" onClick={back}>
+            <button type="button" className="link" onClick={() => go("")}>
               Back to the queue
             </button>
           </div>
         )}
 
-        {state.status === "ready" && !openId && (
+        {ready && route.name === "queue" && (
           <>
             <h1 className="large-title">Queue</h1>
             <p className="subtitle">
-              {state.briefings.length === 0
+              {queue.length === 0
                 ? "All caught up."
-                : `${state.briefings.length} briefings prepared before you logged in.`}
+                : `${queue.length} ${queue.length === 1 ? "briefing" : "briefings"} prepared before you logged in.`}
             </p>
-            <QueueList briefings={state.briefings} onOpen={open} />
+            <QueueList briefings={queue} onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)} />
           </>
         )}
       </main>

@@ -102,6 +102,32 @@ button {
   border-bottom: 1px solid var(--hairline);
 }
 
+.nav {
+  display: flex;
+  gap: 4px;
+  margin-right: auto;
+  margin-left: 24px;
+}
+
+.nav a {
+  padding: 4px 12px;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease-out, background-color 0.15s ease-out;
+}
+
+.nav a:hover {
+  color: var(--text);
+}
+
+.nav a[aria-current="page"] {
+  color: var(--text);
+  background: rgba(118, 118, 128, 0.14);
+}
+
 .wordmark {
   font-weight: 600;
   font-size: 15px;
@@ -472,6 +498,161 @@ code {
   color: var(--text-secondary);
 }
 
+/* ── Forms and buttons ───────────────────────────────── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.field {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-secondary);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  resize: vertical;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-tint);
+}
+
+.field:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.field--tall {
+  min-height: 150px;
+}
+
+.field--mono {
+  min-height: 120px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.field--select {
+  width: auto;
+  padding: 6px 12px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.button {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  transition: opacity 0.15s ease-out, transform 0.1s ease-out;
+}
+
+.button:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.button--quiet {
+  color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.link:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error {
+  color: var(--bad);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.card > .muted + div {
+  margin-top: 12px;
+}
+
+.sent {
+  border-left: 3px solid var(--ok);
+  padding-left: 14px;
+}
+
+.nav + .badge {
+  margin-left: 12px;
+}
+
+/* ── Loading skeleton ────────────────────────────────── */
+
+.skeleton__title,
+.skeleton__line,
+.skeleton__row {
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(118, 118, 128, 0.12), rgba(118, 118, 128, 0.2), rgba(118, 118, 128, 0.12));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton__title {
+  width: 140px;
+  height: 36px;
+}
+
+.skeleton__line {
+  width: 280px;
+  height: 18px;
+  margin: 12px 0 28px;
+}
+
+.skeleton__row {
+  height: 78px;
+  border-radius: 0;
+  border-top: 1px solid var(--hairline);
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 @media (max-width: 520px) {
   .large-title {
     font-size: 30px;
@@ -486,5 +667,6 @@ code {
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
+    animation: none !important;
   }
 }

@@ -40,3 +40,5 @@ export interface Briefing {
 }
 
 export type Source = "api" | "demo";
+
+export type Plan = "unknown" | "free" | "pro" | "enterprise";

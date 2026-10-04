@@ -62,3 +62,14 @@ export function displayTitle(inquiry: string): string {
   }
   return text;
 }
+
+const SEVERITY_RANK: Record<Severity, number> = { low: 0, medium: 1, high: 2, critical: 3 };
+
+/** Most severe first, oldest first within a severity (the order the server uses). */
+export function sortQueue(briefings: Briefing[]): Briefing[] {
+  return [...briefings].sort(
+    (a, b) =>
+      SEVERITY_RANK[b.effective_severity] - SEVERITY_RANK[a.effective_severity] ||
+      a.created_at.localeCompare(b.created_at),
+  );
+}

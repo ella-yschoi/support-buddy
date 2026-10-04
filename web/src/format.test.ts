@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { categoryLabel, displayTitle, formatTime, needsAttention, verdict } from "./format";
+import { categoryLabel, displayTitle, formatTime, needsAttention, sortQueue, verdict } from "./format";
 import { makeBriefing } from "./test/fixtures";
 
 describe("verdict", () => {
@@ -72,5 +72,26 @@ describe("categoryLabel", () => {
     expect(categoryLabel("sync")).toBe("Sync");
     expect(categoryLabel("api")).toBe("API");
     expect(categoryLabel("unknown")).toBe("Unclassified");
+  });
+});
+
+describe("sortQueue", () => {
+  it("puts the most severe first and the oldest first within a severity", () => {
+    const sorted = sortQueue([
+      makeBriefing({ id: "low-old", effective_severity: "low", created_at: "2026-10-04T01:00:00" }),
+      makeBriefing({ id: "high-new", effective_severity: "high", created_at: "2026-10-04T08:00:00" }),
+      makeBriefing({ id: "crit", effective_severity: "critical", created_at: "2026-10-04T05:00:00" }),
+      makeBriefing({ id: "high-old", effective_severity: "high", created_at: "2026-10-04T02:00:00" }),
+    ]);
+    expect(sorted.map((b) => b.id)).toEqual(["crit", "high-old", "high-new", "low-old"]);
+  });
+
+  it("does not mutate its input", () => {
+    const input = [
+      makeBriefing({ id: "a", effective_severity: "low" }),
+      makeBriefing({ id: "b", effective_severity: "high" }),
+    ];
+    sortQueue(input);
+    expect(input.map((b) => b.id)).toEqual(["a", "b"]);
   });
 });
