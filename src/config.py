@@ -21,4 +21,8 @@ MODEL_STANDARD = os.getenv("ANTHROPIC_MODEL_STANDARD", "claude-sonnet-5-5")
 
 CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", str(PROJECT_ROOT / "chroma_data"))
 
+BRIEFING_DB_PATH = Path(
+    os.getenv("BRIEFING_DB_PATH", str(PROJECT_ROOT / "briefing_data" / "briefings.db"))
+)
+
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")

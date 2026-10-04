@@ -11,6 +11,7 @@ from src.core.analyzer.log_parser import LogParser
 from src.core.knowledge.engine import KnowledgeEngine
 from src.integrations.email.parser import EmailParser
 
+from src.api.briefings import router as briefings_router
 from src.api.schemas import (
     AnalyzeRequest, AnalyzeResponse,
     DraftRequest, DraftResponseModel,
@@ -26,6 +27,8 @@ app = FastAPI(
     description="AI-powered support tool for Technical Support Engineers",
     version="0.2.0",
 )
+
+app.include_router(briefings_router)
 
 # Shared engine instance
 _engine: Optional[KnowledgeEngine] = None
