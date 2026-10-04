@@ -1,0 +1,59 @@
+- id: perf-delta-sync-large-files-pro
+  inquiry: >
+    Our designers work with Photoshop files of 500MB to 2GB and syncing one file can take 30
+    minutes. Our previous tool was much faster for large files. Is there anything we can do
+    to speed this up?
+  customer: {plan: pro}
+  expected:
+    category: performance
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [Delta Sync]
+
+- id: perf-high-memory-pro
+  inquiry: >
+    The desktop client crashes after about two minutes on my Mac. Activity Monitor shows it
+    using over 2GB of RAM before it dies, and I get PERF-002. My projects folder has lots of
+    node_modules directories. Can I exclude them?
+  customer: {plan: pro}
+  expected:
+    category: performance
+    min_severity: high
+    autonomy: confirm
+    must_cite: [PERF-002]
+
+- id: perf-throttled-free
+  inquiry: >
+    I uploaded about 8,000 photos at once and now everything crawls. The app says PERF-001
+    Sync Throttled. How long will this last and can I make it faster?
+  customer: {plan: free}
+  expected:
+    category: performance
+    min_severity: low
+    autonomy: confirm
+    must_cite: [PERF-001]
+
+- id: perf-dashboard-slow-pro
+  inquiry: >
+    The web dashboard has been loading very slowly since this morning, sometimes timing out.
+    Other sites are fast for us. Is there a known problem?
+  customer: {plan: pro}
+  logs: performance_degradation.json
+  expected:
+    category: performance
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [Performance]
+
+- id: perf-company-wide-enterprise
+  inquiry: >
+    Everything has been extremely slow for all of our users since yesterday afternoon: sync,
+    the dashboard and the API. This is hurting our whole company. We have not changed
+    anything on our network.
+  customer: {plan: enterprise}
+  expected:
+    category: performance
+    min_severity: high
+    autonomy: confirm
+    must_cite: [Performance Degradation]
+  tags: [severity-floor]

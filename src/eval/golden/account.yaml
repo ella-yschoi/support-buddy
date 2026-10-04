@@ -1,0 +1,55 @@
+- id: acct-payment-failed-pro
+  inquiry: >
+    We received an email saying our payment failed. Our finance team updated the credit card
+    last week but it did not go through (ACCT-001). Also, what happens to our data if the
+    payment issue is not resolved?
+  customer: {plan: pro}
+  expected:
+    category: account
+    min_severity: low
+    autonomy: confirm
+    must_cite: [ACCT-001]
+
+- id: acct-plan-limit-pro
+  inquiry: >
+    I cannot invite new team members and the button is greyed out. The error mentions ACCT-002
+    Plan Limit Reached. We only have 25 people, so I do not understand.
+  customer: {plan: pro}
+  expected:
+    category: account
+    min_severity: low
+    autonomy: confirm
+    must_cite: [ACCT-002]
+
+- id: acct-suspended-pro
+  inquiry: >
+    Our whole account shows ACCT-003 Account Suspended and nobody can log in. We did not get
+    any warning. We need access back today.
+  customer: {plan: pro}
+  expected:
+    category: account
+    min_severity: high
+    autonomy: confirm
+    must_cite: [ACCT-003]
+
+- id: acct-trial-expired-free
+  inquiry: >
+    My trial ended and I now see ACCT-005 Trial Expired. I would like to keep using the Pro
+    features. How do I upgrade and will my files stay as they are?
+  customer: {plan: free}
+  expected:
+    category: account
+    min_severity: low
+    autonomy: confirm
+    must_cite: [ACCT-005]
+
+- id: acct-merge-conflict-pro
+  inquiry: >
+    I signed up with my work email and my personal email by mistake. When I try to merge the
+    two accounts I get ACCT-004 Account Merge Conflict. Can you help me combine them?
+  customer: {plan: pro}
+  expected:
+    category: account
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [ACCT-004]
