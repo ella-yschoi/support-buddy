@@ -15,7 +15,7 @@ SEVERITY_ORDER: tuple[Severity, ...] = (
 
 PLAN_ORDER: tuple[str, ...] = ("free", "pro", "enterprise")
 
-# Feature keyword (lowercase) -> minimum plan, mirrors data/knowledge/plan_matrix.md.
+# Plan-gated feature -> minimum plan, mirrors data/knowledge/plan_matrix.md.
 FEATURE_MIN_PLAN: dict[str, str] = {
     "sso": "enterprise",
     "saml": "enterprise",
@@ -24,6 +24,19 @@ FEATURE_MIN_PLAN: dict[str, str] = {
     "team space": "pro",
     "delta sync": "pro",
 }
+# Whole-word matchers, so "association" or "lesson" never counts as "sso".
+FEATURE_PATTERNS: dict[str, re.Pattern[str]] = {
+    "sso": re.compile(r"\bsso\b", re.IGNORECASE),
+    "saml": re.compile(r"\bsaml\b", re.IGNORECASE),
+    "audit log": re.compile(r"\baudit logs?\b", re.IGNORECASE),
+    "webhook": re.compile(r"\bwebhooks?\b", re.IGNORECASE),
+    "team space": re.compile(r"\bteam spaces?\b", re.IGNORECASE),
+    "delta sync": re.compile(r"\bdelta sync\b", re.IGNORECASE),
+}
+
+# Error-code prefixes the product defines, checked even if the KB lacks a doc for them.
+PRODUCT_ERROR_PREFIXES: frozenset[str] = frozenset({"SYNC", "AUTH", "PERF", "API", "ACCT"})
+ERROR_CODE_TOKEN_RE = re.compile(r"\b([A-Z]{2,5})-(\d{3,4})\b")
 
 COMMITMENT_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
     re.compile(p, re.IGNORECASE)
@@ -33,6 +46,9 @@ COMMITMENT_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bcompensat\w*",
         r"\bservice credits?\b",
         r"\bguarantee[sd]?\b",
+        # A time promise needs a first-person subject; "exports expire within 7 days"
+        # is a fact about the product, not a commitment.
+        r"\b(?:we|i|our (?:team|engineers?)|engineering|support)\b[^.!?\n]{0,80}?"
         r"\bwithin \d+\s*(?:minutes?|hours?|business days?|days?)\b",
     )
 )

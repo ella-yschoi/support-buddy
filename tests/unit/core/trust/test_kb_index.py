@@ -39,3 +39,8 @@ def test_real_knowledge_base_defines_known_codes():
 
     index = build_kb_index(KnowledgeLoader().load_directory(KNOWLEDGE_DIR))
     assert {"SYNC-001", "SYNC-002", "API-002"} <= index.error_codes
+
+
+def test_title_defining_several_codes_indexes_all_of_them():
+    docs = [_doc("a", "SYNC-001 / SYNC-002: Upload problems", KnowledgeCategory.ERROR_CODE)]
+    assert build_kb_index(docs).error_codes == frozenset({"SYNC-001", "SYNC-002"})

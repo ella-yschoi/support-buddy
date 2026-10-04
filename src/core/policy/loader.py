@@ -31,17 +31,33 @@ def load_policy(path: Path) -> Policy:
     auto = _section(raw, "auto")
 
     return Policy(
-        human_only_keywords=tuple(str(k).lower() for k in human.get("keywords", [])),
-        human_only_categories=_categories(human.get("categories", [])),
+        human_only_keywords=tuple(k.lower() for k in _str_list(human, "keywords")),
+        human_only_categories=_categories(_str_list(human, "categories")),
         human_only_min_severity=_severity(human.get("min_severity", "critical")),
-        human_only_score_below=float(human.get("min_score_below", 0.6)),
-        confirm_plans=tuple(str(p).lower() for p in confirm.get("plans", [])),
+        human_only_score_below=_number(human, "min_score_below", 0.6),
+        confirm_plans=tuple(p.lower() for p in _str_list(confirm, "plans")),
         confirm_min_severity=_severity(confirm.get("min_severity", "high")),
-        auto_categories=_categories(auto.get("categories", [])),
+        auto_categories=_categories(_str_list(auto, "categories")),
         auto_max_severity=_severity(auto.get("max_severity", "medium")),
-        auto_min_score=float(auto.get("min_score", 1.0)),
+        auto_min_score=_number(auto, "min_score", 1.0),
         auto_send_enabled=bool(raw.get("auto_send_enabled", False)),
     )
+
+
+def _str_list(section: dict[str, Any], key: str) -> list[str]:
+    value = section.get(key)
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise PolicyError(f"policy field '{key}' must be a list")
+    return [str(v) for v in value]
+
+
+def _number(section: dict[str, Any], key: str, default: float) -> float:
+    value = section.get(key, default)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise PolicyError(f"policy field '{key}' must be a number, got {value!r}")
+    return float(value)
 
 
 def _section(raw: dict[str, Any], name: str) -> dict[str, Any]:

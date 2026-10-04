@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
 from src.core.models import Severity
@@ -59,3 +61,13 @@ def test_check_that_raises_fails_closed_to_human_only(make_input):
 def test_verifier_runs_without_draft(make_input):
     report = Verifier().verify(make_input(with_draft=False))
     assert report.passed
+
+
+@pytest.mark.parametrize("exc", [RuntimeError("x"), re.error("bad pattern"), RecursionError()])
+def test_unexpected_exceptions_in_a_check_still_fail_closed(make_input, exc):
+    def broken(_inp) -> Check:
+        raise exc
+
+    report = Verifier(check_fns=(broken,)).verify(make_input())
+    assert not report.passed
+    assert FailEffect.FORCE_HUMAN_ONLY in report.effects

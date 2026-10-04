@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from collections.abc import Callable, Sequence
 
 from src.core.trust import checks as default_checks
@@ -14,7 +15,15 @@ logger = logging.getLogger(__name__)
 CheckFn = Callable[[TrustInput], Check]
 
 # A check that cannot run is treated as a failure, never a pass.
-_CHECK_ERRORS = (ValueError, KeyError, TypeError, AttributeError, IndexError)
+_CHECK_ERRORS = (
+    ValueError,
+    LookupError,
+    TypeError,
+    AttributeError,
+    ArithmeticError,
+    RuntimeError,  # includes RecursionError
+    re.error,
+)
 
 
 class Verifier:

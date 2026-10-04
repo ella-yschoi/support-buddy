@@ -103,6 +103,37 @@ class TestPlanEntitlement:
         assert checks.plan_entitlement(make_input(draft=draft, plan="enterprise")).passed
 
 
+class TestReviewFixes:
+    def test_sso_inside_other_words_is_not_a_feature_mention(self, make_input):
+        inp = make_input(
+            inquiry_text="Please check the associated account and the lesson notes", plan="free"
+        )
+        assert checks.plan_entitlement(inp).passed
+
+    def test_factual_retention_statement_is_not_a_commitment(self, make_input):
+        draft = make_draft(body="Exports expire within 7 days and logs are kept within 30 days.")
+        assert checks.no_commitments(make_input(draft=draft)).passed
+
+    def test_first_person_time_promise_is_still_a_commitment(self, make_input):
+        draft = make_draft(body="Our engineers will fix this within 2 hours.")
+        assert not checks.no_commitments(make_input(draft=draft)).passed
+
+    def test_hallucinated_code_with_unseen_product_prefix_fails(self, make_input):
+        draft = make_draft(body="This is AUTH-401 which means the token was revoked.")
+        index_without_auth = make_input().kb_index.__class__(
+            doc_ids=frozenset({"doc-1"}), error_codes=frozenset({"SYNC-002"})
+        )
+        inp = make_input(draft=draft)
+        inp = inp.__class__(**{**inp.__dict__, "kb_index": index_without_auth})
+        result = checks.error_codes_valid(inp)
+        assert not result.passed
+        assert "AUTH-401" in result.detail
+
+    def test_four_digit_code_with_known_prefix_fails(self, make_input):
+        draft = make_draft(body="You are hitting SYNC-1001.")
+        assert not checks.error_codes_valid(make_input(draft=draft)).passed
+
+
 class TestNoCommitments:
     def test_plain_draft_passes(self, make_input):
         assert checks.no_commitments(make_input()).passed

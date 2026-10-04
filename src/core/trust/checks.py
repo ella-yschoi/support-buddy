@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from src.core.models import Severity
 from src.core.trust import rules
-from src.core.trust.kb_index import ERROR_CODE_RE
 from src.core.trust.models import Check, FailEffect, TrustInput
 
 
@@ -47,8 +46,12 @@ def citations_retrieved(inp: TrustInput) -> Check:
 
 
 def error_codes_valid(inp: TrustInput) -> Check:
-    prefixes = inp.kb_index.error_prefixes
-    found = {m.group(0) for m in ERROR_CODE_RE.finditer(_body(inp)) if m.group(1) in prefixes}
+    prefixes = inp.kb_index.error_prefixes | rules.PRODUCT_ERROR_PREFIXES
+    found = {
+        m.group(0)
+        for m in rules.ERROR_CODE_TOKEN_RE.finditer(_body(inp))
+        if m.group(1) in prefixes
+    }
     unknown = sorted(found - inp.kb_index.error_codes)
     if unknown:
         return Check(
@@ -64,8 +67,10 @@ def error_codes_valid(inp: TrustInput) -> Check:
 def plan_entitlement(inp: TrustInput) -> Check:
     # Both the customer's question and our draft count: asking about a feature the
     # plan lacks is as much a reason for review as recommending one.
-    body = f"{inp.inquiry_text}\n{_body(inp)}".lower()
-    mentioned = {f: p for f, p in rules.FEATURE_MIN_PLAN.items() if f in body}
+    body = f"{inp.inquiry_text}\n{_body(inp)}"
+    mentioned = {
+        f: p for f, p in rules.FEATURE_MIN_PLAN.items() if rules.FEATURE_PATTERNS[f].search(body)
+    }
     if not mentioned:
         return Check("plan_entitlement", True, 1.0, "no plan-gated features mentioned")
     plan = inp.customer.plan.lower()

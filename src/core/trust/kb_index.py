@@ -26,7 +26,5 @@ def build_kb_index(docs: list[KnowledgeDoc]) -> KnowledgeIndex:
     for doc in docs:
         if doc.category.value != "error_code":
             continue
-        match = ERROR_CODE_RE.search(doc.title)
-        if match:
-            codes.add(match.group(0))
+        codes.update(m.group(0) for m in ERROR_CODE_RE.finditer(doc.title))
     return KnowledgeIndex(doc_ids=frozenset(d.id for d in docs), error_codes=frozenset(codes))

@@ -83,3 +83,20 @@ def test_shipped_policy_is_valid_and_never_auto_sends():
     policy = load_policy(DATA_DIR / "policy" / "policy.yaml")
     assert policy.auto_send_enabled is False
     assert policy.human_only_keywords
+
+
+def test_non_numeric_threshold_raises_policy_error(tmp_path):
+    bad = VALID.replace("min_score: 1.0", "min_score: lots")
+    with pytest.raises(PolicyError, match="min_score"):
+        load_policy(_write(tmp_path, bad))
+
+
+def test_keywords_must_be_a_list(tmp_path):
+    bad = VALID.replace("keywords: [breach, refund]", "keywords: breach")
+    with pytest.raises(PolicyError, match="keywords"):
+        load_policy(_write(tmp_path, bad))
+
+
+def test_null_list_is_treated_as_empty(tmp_path):
+    text = VALID.replace("keywords: [breach, refund]", "keywords:")
+    assert load_policy(_write(tmp_path, text)).human_only_keywords == ()
