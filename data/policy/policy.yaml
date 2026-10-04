@@ -1,0 +1,37 @@
+# Autonomy policy: where AI acts alone and where a human must be involved.
+# Rules are evaluated most restrictive first: human_only -> confirm -> auto.
+# Anything not explicitly allowed to be AUTO is at most CONFIRM.
+version: 1
+
+# Safety default: AUTO decisions are simulated ("would auto-send"); nothing is
+# sent to customers automatically. Do not enable without a design review.
+auto_send_enabled: false
+
+human_only:
+  # Whole-word, case-insensitive match against the customer's message.
+  keywords:
+    - breach
+    - hacked
+    - unauthorized
+    - security incident
+    - vulnerability
+    - gdpr
+    - subpoena
+    - lawsuit
+    - legal
+    - refund
+    - chargeback
+    - data loss
+    - lost files
+  categories: [unknown]
+  min_severity: critical   # effective severity (after rule-based floors)
+  min_score_below: 0.6     # verification score under this goes to a human
+
+confirm:
+  plans: [enterprise]
+  min_severity: high
+
+auto:
+  categories: [feature]
+  max_severity: medium
+  min_score: 1.0           # every deterministic check must pass

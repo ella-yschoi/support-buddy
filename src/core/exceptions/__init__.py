@@ -23,3 +23,7 @@ class AnalysisError(SupportBuddyError):
 
 class AIClientError(SupportBuddyError):
     """Error communicating with the AI provider."""
+
+
+class PolicyError(SupportBuddyError):
+    """Autonomy policy file is missing, malformed, or invalid."""
