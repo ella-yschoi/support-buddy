@@ -20,7 +20,9 @@ def policy():
     return load_policy(DATA_DIR / "policy" / "policy.yaml")
 
 
-def make_builder(kb_index, policy, *, analysis=None, draft=None, insight=None, error=None):
+def make_builder(
+    kb_index, policy, *, analysis=None, draft=None, insight=None, error=None, id_factory=None
+):
     analysis = analysis or make_analysis()
 
     def analyze(_text):
@@ -38,7 +40,7 @@ def make_builder(kb_index, policy, *, analysis=None, draft=None, insight=None, e
         analyze_logs=log_fn,
         kb_index=kb_index,
         policy=policy,
-        id_factory=lambda: "b-1",
+        id_factory=id_factory or (lambda: "b-1"),
         clock=lambda: "2026-10-04T09:00:00",
     )
 
