@@ -16,10 +16,19 @@ class AIInquiryAnalyzer:
     Falls back to the keyword-based InquiryAnalyzer if the AI call fails.
     """
 
-    def __init__(self, knowledge_engine: KnowledgeEngine, api_key: str | None = None):
+    def __init__(
+        self,
+        knowledge_engine: KnowledgeEngine,
+        api_key: str | None = None,
+        model: str | None = None,
+    ):
         self._knowledge = knowledge_engine
-        self._ai_client = AIClient(knowledge_engine, api_key=api_key)
+        self._ai_client = AIClient(knowledge_engine, api_key=api_key, model=model)
         self._fallback = InquiryAnalyzer(knowledge_engine)
+
+    @property
+    def token_usage(self) -> tuple[int, int]:
+        return self._ai_client.token_usage
 
     def analyze(self, inquiry_text: str) -> InquiryResult:
         """Analyze inquiry with Claude AI, falling back to keyword-based on failure."""

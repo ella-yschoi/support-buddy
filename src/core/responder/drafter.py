@@ -15,10 +15,21 @@ from src.core.models import DraftResponse, InquiryResult, SearchResult
 class ResponseDrafter:
     """Generate customer response drafts using Claude AI (Sonnet)."""
 
-    def __init__(self, knowledge_engine: KnowledgeEngine, api_key: str | None = None):
+    def __init__(
+        self,
+        knowledge_engine: KnowledgeEngine,
+        api_key: str | None = None,
+        model: str | None = None,
+    ):
         self._knowledge = knowledge_engine
-        # Response drafting is complex - always use Sonnet
-        self._ai_client = AIClient(knowledge_engine, api_key=api_key, model=MODEL_STANDARD)
+        # Response drafting is complex - default to the standard tier
+        self._ai_client = AIClient(
+            knowledge_engine, api_key=api_key, model=model or MODEL_STANDARD
+        )
+
+    @property
+    def token_usage(self) -> tuple[int, int]:
+        return self._ai_client.token_usage
 
     def draft(self, inquiry_text: str, analysis: InquiryResult) -> DraftResponse:
         """Generate a response draft based on inquiry and analysis results."""
@@ -92,37 +103,42 @@ class ResponseDrafter:
         self, inquiry_text: str, analysis: InquiryResult
     ) -> DraftResponse:
         """Generate a basic response without AI."""
-        checklist = "\n".join(f"  {i}. {c}" for i, c in enumerate(analysis.checklist, 1))
+        return fallback_draft(analysis)
 
-        body = (
-            f"Thank you for reaching out to CloudSync Support.\n\n"
-            f"I understand you're experiencing an issue related to "
-            f"{analysis.category.value}. I'd like to help resolve this for you.\n\n"
-            f"To investigate further, could you please check the following:\n"
-            f"{checklist}\n\n"
-        )
 
-        if analysis.follow_up_questions:
-            questions = "\n".join(f"  - {q}" for q in analysis.follow_up_questions[:3])
-            body += (
-                f"Additionally, it would help if you could provide:\n"
-                f"{questions}\n\n"
-            )
+def fallback_draft(analysis: InquiryResult) -> DraftResponse:
+    """Generate a basic response without AI."""
+    checklist = "\n".join(f"  {i}. {c}" for i, c in enumerate(analysis.checklist, 1))
 
+    body = (
+        f"Thank you for reaching out to CloudSync Support.\n\n"
+        f"I understand you're experiencing an issue related to "
+        f"{analysis.category.value}. I'd like to help resolve this for you.\n\n"
+        f"To investigate further, could you please check the following:\n"
+        f"{checklist}\n\n"
+    )
+
+    if analysis.follow_up_questions:
+        questions = "\n".join(f"  - {q}" for q in analysis.follow_up_questions[:3])
         body += (
-            "Please don't hesitate to reply with any additional information, "
-            "and I'll work to get this resolved for you as quickly as possible.\n\n"
-            "Best regards,\nCloudSync Support Team"
+            f"Additionally, it would help if you could provide:\n"
+            f"{questions}\n\n"
         )
 
-        return DraftResponse(
-            body=body,
-            citations=analysis.relevant_articles[:3],
-            confidence=0.4,
-            needs_escalation=analysis.confidence < 0.6,
-            suggested_internal_note=(
-                f"Auto-generated fallback response (AI unavailable). "
-                f"Category: {analysis.category.value}, "
-                f"Severity: {analysis.severity.value}."
-            ),
-        )
+    body += (
+        "Please don't hesitate to reply with any additional information, "
+        "and I'll work to get this resolved for you as quickly as possible.\n\n"
+        "Best regards,\nCloudSync Support Team"
+    )
+
+    return DraftResponse(
+        body=body,
+        citations=analysis.relevant_articles[:3],
+        confidence=0.4,
+        needs_escalation=analysis.confidence < 0.6,
+        suggested_internal_note=(
+            f"Auto-generated fallback response (AI unavailable). "
+            f"Category: {analysis.category.value}, "
+            f"Severity: {analysis.severity.value}."
+        ),
+    )
