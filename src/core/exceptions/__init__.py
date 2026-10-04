@@ -27,3 +27,7 @@ class AIClientError(SupportBuddyError):
 
 class PolicyError(SupportBuddyError):
     """Autonomy policy file is missing, malformed, or invalid."""
+
+
+class ConfigError(SupportBuddyError):
+    """Application configuration file is missing or invalid."""

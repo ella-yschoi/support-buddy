@@ -1,0 +1,19 @@
+# Named model configurations compared by the eval harness.
+# Roles: classify (triage), draft (customer reply), critic (review chain),
+# accuracy (claim verification). Swap IDs here; no code change needed.
+configs:
+  fast-only:
+    classify: claude-haiku-4-5-20251001
+    draft: claude-haiku-4-5-20251001
+    critic: claude-haiku-4-5-20251001
+    accuracy: claude-haiku-4-5-20251001
+  balanced:
+    classify: claude-haiku-4-5-20251001
+    draft: claude-sonnet-5-5
+    critic: claude-haiku-4-5-20251001
+    accuracy: claude-sonnet-5-5
+  premium:
+    classify: claude-sonnet-5-5
+    draft: claude-opus-5-5
+    critic: claude-sonnet-5-5
+    accuracy: claude-opus-5-5
