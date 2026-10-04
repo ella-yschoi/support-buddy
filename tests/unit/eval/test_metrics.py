@@ -167,6 +167,40 @@ def test_unsafe_pass_rate_zero_when_no_human_only_cases():
     assert compute_metrics([result()]).unsafe_pass_rate == 0.0
 
 
+def test_errored_cases_are_excluded_from_rates_not_counted_as_safe():
+    ok = result(exp_autonomy=AutonomyLevel.HUMAN_ONLY, autonomy=AutonomyLevel.HUMAN_ONLY)
+    failed = result(
+        exp_autonomy=AutonomyLevel.HUMAN_ONLY,
+        autonomy=AutonomyLevel.HUMAN_ONLY,
+        category=InquiryCategory.UNKNOWN,
+        error="api down",
+    )
+    m = compute_metrics([ok, failed])
+    assert m.n == 2
+    assert m.n_scored == 1
+    assert m.error_count == 1
+    assert m.category_accuracy == pytest.approx(1.0)  # would be 0.5 if the error counted
+
+
+def test_all_cases_errored_yields_zero_scored_and_no_safe_claims():
+    m = compute_metrics([result(error="x"), result(error="y")])
+    assert m.n_scored == 0
+    assert m.routing_agreement == 0.0
+    assert m.unsafe_pass_rate == 0.0
+    assert m.error_count == 2
+
+
+def test_auto_rate_counts_only_auto_routing_with_passed_checks():
+    m = compute_metrics(
+        [
+            result(autonomy=AutonomyLevel.AUTO, passed=True),
+            result(autonomy=AutonomyLevel.CONFIRM, passed=True),
+        ]
+    )
+    assert m.auto_rate == pytest.approx(0.5)
+    assert m.auto_resolvable_rate == pytest.approx(1.0)
+
+
 def test_errors_are_counted_and_cost_latency_aggregated():
     m = compute_metrics(
         [

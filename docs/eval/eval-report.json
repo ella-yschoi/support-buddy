@@ -6,6 +6,7 @@
       "models": "keyword + template",
       "metrics": {
         "n": 40,
+        "n_scored": 40,
         "category_accuracy": 0.725,
         "severity_under_triage_rate": 0.25,
         "effective_under_triage_rate": 0.175,
@@ -13,6 +14,7 @@
         "must_cite_rate": 0.9354838709677419,
         "must_not_say_violation_rate": 0.0,
         "routing_agreement": 1.0,
+        "auto_rate": 0.075,
         "auto_resolvable_rate": 0.6,
         "auto_resolvable_in_scope_rate": 0.7741935483870968,
         "unsafe_pass_rate": 0.0,
@@ -21,7 +23,7 @@
         "total_input_tokens": 0,
         "total_output_tokens": 0,
         "total_cost_usd": 0.0,
-        "mean_latency_s": 0.05198413855978288
+        "mean_latency_s": 0.043761440477101135
       },
       "cases": [
         {
@@ -53,7 +55,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.08415937493555248,
+            "latency_s": 0.05994662502780557,
             "cost_usd": 0.0
           },
           "error": null
@@ -87,7 +89,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.08993099979124963,
+            "latency_s": 0.058865416096523404,
             "cost_usd": 0.0
           },
           "error": null
@@ -121,7 +123,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.08793020783923566,
+            "latency_s": 0.06421816605143249,
             "cost_usd": 0.0
           },
           "error": null
@@ -155,7 +157,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.08153204200789332,
+            "latency_s": 0.061555958120152354,
             "cost_usd": 0.0
           },
           "error": null
@@ -189,7 +191,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.09164137509651482,
+            "latency_s": 0.062363583128899336,
             "cost_usd": 0.0
           },
           "error": null
@@ -223,7 +225,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.043713958002626896,
+            "latency_s": 0.030722583876922727,
             "cost_usd": 0.0
           },
           "error": null
@@ -258,7 +260,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.04183454182930291,
+            "latency_s": 0.030461707850918174,
             "cost_usd": 0.0
           },
           "error": null
@@ -293,7 +295,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.04033937491476536,
+            "latency_s": 0.03400433389469981,
             "cost_usd": 0.0
           },
           "error": null
@@ -329,7 +331,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03962774993851781,
+            "latency_s": 0.030779249966144562,
             "cost_usd": 0.0
           },
           "error": null
@@ -361,7 +363,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.036041874904185534,
+            "latency_s": 0.03081029118038714,
             "cost_usd": 0.0
           },
           "error": null
@@ -396,7 +398,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.034012791933491826,
+            "latency_s": 0.03104412485845387,
             "cost_usd": 0.0
           },
           "error": null
@@ -428,7 +430,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.031164166983217,
+            "latency_s": 0.03033541701734066,
             "cost_usd": 0.0
           },
           "error": null
@@ -462,7 +464,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.036476833978667855,
+            "latency_s": 0.0291382500436157,
             "cost_usd": 0.0
           },
           "error": null
@@ -498,7 +500,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03160975011996925,
+            "latency_s": 0.03201225004158914,
             "cost_usd": 0.0
           },
           "error": null
@@ -532,7 +534,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.06766829220578074,
+            "latency_s": 0.06294566695578396,
             "cost_usd": 0.0
           },
           "error": null
@@ -566,7 +568,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.06875974987633526,
+            "latency_s": 0.06094683287665248,
             "cost_usd": 0.0
           },
           "error": null
@@ -600,7 +602,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.031050957972183824,
+            "latency_s": 0.03258420783095062,
             "cost_usd": 0.0
           },
           "error": null
@@ -636,7 +638,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03175787487998605,
+            "latency_s": 0.031095749931409955,
             "cost_usd": 0.0
           },
           "error": null
@@ -670,7 +672,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.06747775012627244,
+            "latency_s": 0.06155316601507366,
             "cost_usd": 0.0
           },
           "error": null
@@ -704,7 +706,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.032322416082024574,
+            "latency_s": 0.030693999957293272,
             "cost_usd": 0.0
           },
           "error": null
@@ -738,7 +740,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.031183792045339942,
+            "latency_s": 0.029984042048454285,
             "cost_usd": 0.0
           },
           "error": null
@@ -772,7 +774,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03703637490980327,
+            "latency_s": 0.029785624938085675,
             "cost_usd": 0.0
           },
           "error": null
@@ -806,7 +808,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03195774997584522,
+            "latency_s": 0.0315669160336256,
             "cost_usd": 0.0
           },
           "error": null
@@ -842,7 +844,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.035328750032931566,
+            "latency_s": 0.03389958292245865,
             "cost_usd": 0.0
           },
           "error": null
@@ -876,7 +878,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03569399984553456,
+            "latency_s": 0.03021483402699232,
             "cost_usd": 0.0
           },
           "error": null
@@ -910,7 +912,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.06271720910444856,
+            "latency_s": 0.06068962509743869,
             "cost_usd": 0.0
           },
           "error": null
@@ -944,7 +946,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.0654526250436902,
+            "latency_s": 0.06169766606763005,
             "cost_usd": 0.0
           },
           "error": null
@@ -978,7 +980,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.035327000077813864,
+            "latency_s": 0.029695208882912993,
             "cost_usd": 0.0
           },
           "error": null
@@ -1014,7 +1016,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.0333946249447763,
+            "latency_s": 0.031000665854662657,
             "cost_usd": 0.0
           },
           "error": null
@@ -1050,7 +1052,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.06673200009390712,
+            "latency_s": 0.06006083288230002,
             "cost_usd": 0.0
           },
           "error": null
@@ -1086,7 +1088,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.0684932079166174,
+            "latency_s": 0.06079812487587333,
             "cost_usd": 0.0
           },
           "error": null
@@ -1120,7 +1122,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.07079820916987956,
+            "latency_s": 0.05965983308851719,
             "cost_usd": 0.0
           },
           "error": null
@@ -1156,7 +1158,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03129616705700755,
+            "latency_s": 0.029595332918688655,
             "cost_usd": 0.0
           },
           "error": null
@@ -1190,7 +1192,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.03353908285498619,
+            "latency_s": 0.031535624992102385,
             "cost_usd": 0.0
           },
           "error": null
@@ -1224,7 +1226,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.0825070000719279,
+            "latency_s": 0.06336491601541638,
             "cost_usd": 0.0
           },
           "error": null
@@ -1258,7 +1260,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.06712187500670552,
+            "latency_s": 0.0604759999550879,
             "cost_usd": 0.0
           },
           "error": null
@@ -1292,7 +1294,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.07835954078473151,
+            "latency_s": 0.0595430419780314,
             "cost_usd": 0.0
           },
           "error": null
@@ -1326,7 +1328,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.0714822500012815,
+            "latency_s": 0.0614072079770267,
             "cost_usd": 0.0
           },
           "error": null
@@ -1362,7 +1364,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.035792917013168335,
+            "latency_s": 0.02956545795314014,
             "cost_usd": 0.0
           },
           "error": null
@@ -1396,7 +1398,7 @@
           "usage": {
             "input_tokens": 0,
             "output_tokens": 0,
-            "latency_s": 0.036099083023145795,
+            "latency_s": 0.029839499853551388,
             "cost_usd": 0.0
           },
           "error": null

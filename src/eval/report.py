@@ -30,7 +30,8 @@ def _usd(value: float) -> str:
 
 # label, getter, formatter, higher_is_better (None = informational, no highlight)
 _ROWS: list[tuple[str, Callable[[Metrics], float], Callable[[float], str], bool | None]] = [
-    ("**Auto-resolvable rate (all cases)**", lambda m: m.auto_resolvable_rate, _pct, True),
+    ("Auto rate (AUTO routing only)", lambda m: m.auto_rate, _pct, True),
+    ("**Auto-resolvable rate (all scored cases)**", lambda m: m.auto_resolvable_rate, _pct, True),
     (
         "Auto-resolvable rate (in-scope cases)",
         lambda m: m.auto_resolvable_in_scope_rate,
@@ -63,6 +64,10 @@ def render_markdown(runs: list[ConfigRun], measured_on: str) -> str:
         "",
         f"Measured on {measured_on} | golden set n = {n} | configs: "
         + ", ".join(r.name for r in runs),
+        "",
+        "Errored runs are excluded from every rate and reported in the Errors row. "
+        "Auto-resolvable means every check passed and the case was routed to Auto or Confirm; "
+        "it does not mean the answer was correct.",
         "",
         "## Summary",
         "",
