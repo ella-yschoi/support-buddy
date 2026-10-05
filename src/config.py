@@ -13,6 +13,7 @@ KNOWLEDGE_DIR = DATA_DIR / "knowledge"
 SAMPLE_LOGS_DIR = DATA_DIR / "sample_logs"
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+LINEAR_API_KEY = os.getenv("LINEAR_API_KEY", "")
 
 # Haiku: fast & cheap - used for classification, simple tasks
 MODEL_FAST = os.getenv("ANTHROPIC_MODEL_FAST", "claude-haiku-4-5-20251001")
