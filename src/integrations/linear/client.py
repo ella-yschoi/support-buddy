@@ -215,6 +215,42 @@ class LinearClient:
             raise RuntimeError("Failed to add comment")
         return result.get("comment", {}).get("id", "")
 
+    def get_organization(self) -> str:
+        """Name of the workspace the API key belongs to."""
+        data = self._query("query { organization { name } }")
+        return str(data.get("organization", {}).get("name", ""))
+
+    def list_labels(self, team_id: str) -> list[dict[str, str]]:
+        """Labels usable in a team: its own and workspace-wide ones."""
+        query = """
+        query { issueLabels(first: 250) { nodes { id name team { id } } } }
+        """
+        nodes = self._query(query).get("issueLabels", {}).get("nodes", [])
+        return [
+            {"id": n["id"], "name": n["name"]}
+            for n in nodes
+            if not n.get("team") or n["team"].get("id") == team_id
+        ]
+
+    def create_label(self, team_id: str, name: str, color: str = "#6b6f76") -> str:
+        """Create a team label. Returns its id."""
+        query = """
+        mutation CreateLabel($input: IssueLabelCreateInput!) {
+            issueLabelCreate(input: $input) { success issueLabel { id } }
+        }
+        """
+        data = self._query(query, {"input": {"teamId": team_id, "name": name, "color": color}})
+        result = data.get("issueLabelCreate", {})
+        if not result.get("success"):
+            raise RuntimeError(f"Failed to create label {name}")
+        return str(result["issueLabel"]["id"])
+
+    def delete_issue(self, issue_id: str) -> None:
+        """Delete (trash) an issue."""
+        query = "mutation DeleteIssue($id: String!) { issueDelete(id: $id) { success } }"
+        if not self._query(query, {"id": issue_id}).get("issueDelete", {}).get("success"):
+            raise RuntimeError(f"Failed to delete issue {issue_id}")
+
     def get_teams(self) -> list[dict[str, str]]:
         """List all teams."""
         query = """
@@ -232,7 +268,9 @@ class LinearClient:
             state=raw.get("state", {}).get("name", "") if raw.get("state") else "",
             priority=raw.get("priority", 0),
             assignee=raw.get("assignee", {}).get("name", "") if raw.get("assignee") else "",
-            labels=[l["name"] for l in raw.get("labels", {}).get("nodes", [])] if raw.get("labels") else [],
+            labels=[l["name"] for l in raw.get("labels", {}).get("nodes", [])]
+            if raw.get("labels")
+            else [],
             url=raw.get("url", ""),
             created_at=raw.get("createdAt", ""),
             updated_at=raw.get("updatedAt", ""),
