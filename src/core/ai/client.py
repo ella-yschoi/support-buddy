@@ -35,6 +35,21 @@ class AIClient:
             raise AIClientError("ANTHROPIC_API_KEY is not set")
         self._client = anthropic.Anthropic(api_key=self._api_key)
         self._model_override = model  # If set, always use this model
+        self._input_tokens = 0
+        self._output_tokens = 0
+
+    @property
+    def token_usage(self) -> tuple[int, int]:
+        """Cumulative (input, output) tokens across all calls made by this client."""
+        return self._input_tokens, self._output_tokens
+
+    def _record_usage(self, response: Any) -> None:
+        usage = getattr(response, "usage", None)
+        input_tokens = getattr(usage, "input_tokens", 0)
+        output_tokens = getattr(usage, "output_tokens", 0)
+        if isinstance(input_tokens, int) and isinstance(output_tokens, int):
+            self._input_tokens += input_tokens
+            self._output_tokens += output_tokens
 
     def analyze_inquiry(self, inquiry_text: str) -> dict[str, Any]:
         """Analyze a customer inquiry using Claude with tool use. (Haiku)"""
@@ -81,6 +96,7 @@ class AIClient:
                 tools=ALL_TOOLS,
                 messages=messages,
             )
+            self._record_usage(response)
 
             # Collect text and tool use blocks
             tool_uses = []

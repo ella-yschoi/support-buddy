@@ -1,8 +1,8 @@
 """Pydantic schemas for API request/response models."""
 
-from typing import List, Optional
+from typing import List, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class AnalyzeRequest(BaseModel):
@@ -84,3 +84,78 @@ class EmailParseResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     knowledge_docs: int
+
+
+def _not_blank(value: str) -> str:
+    if not value.strip():
+        raise ValueError("must not be blank")
+    return value
+
+
+class BriefingRequest(BaseModel):
+    inquiry: str = Field(..., description="Customer inquiry text")
+    plan: Literal["free", "pro", "enterprise", "unknown"] = "unknown"
+    logs: str = Field("", description="Optional raw log content")
+
+    _check_inquiry = field_validator("inquiry")(_not_blank)
+
+
+class ApproveRequest(BaseModel):
+    final_body: str = Field(..., description="The text the TSE actually sent")
+
+    _check_body = field_validator("final_body")(_not_blank)
+
+
+class HypothesisModel(BaseModel):
+    statement: str
+    log_evidence: list[str]
+    kb_evidence: list[str]
+
+
+class CitationModel(BaseModel):
+    doc_id: str
+    title: str
+
+
+class CheckModel(BaseModel):
+    name: str
+    passed: bool
+    detail: str
+
+
+class BriefingResponse(BaseModel):
+    id: str
+    created_at: str
+    inquiry_text: str
+    customer_plan: str
+    summary: str
+    category: str
+    model_severity: str
+    effective_severity: str
+    hypotheses: list[HypothesisModel]
+    citations: list[CitationModel]
+    checks: list[CheckModel]
+    verification_score: float
+    verification_passed: bool
+    autonomy: str
+    autonomy_reasons: list[str]
+    simulated: bool
+    draft_body: Optional[str]
+    sufficiency: str
+    sufficiency_reasons: list[str]
+    status: str
+    approved_body: Optional[str]
+    edit_ratio: Optional[float]
+
+
+class PolicyResponse(BaseModel):
+    auto_send_enabled: bool
+    human_only_keywords: list[str]
+    human_only_categories: list[str]
+    human_only_min_severity: str
+    human_only_score_below: float
+    confirm_plans: list[str]
+    confirm_min_severity: str
+    auto_categories: list[str]
+    auto_max_severity: str
+    auto_min_score: float

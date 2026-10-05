@@ -1,0 +1,45 @@
+- id: feat-auto-backup-pro
+  inquiry: How do I set up auto-backup for my Documents folder?
+  customer: {plan: pro}
+  expected:
+    category: feature
+    min_severity: low
+    autonomy: auto
+    must_cite: [auto-backup]
+
+- id: feat-2fa-free
+  inquiry: How do I enable two-factor authentication on my account?
+  customer: {plan: free}
+  expected:
+    category: feature
+    min_severity: low
+    autonomy: auto
+    must_cite: [two-factor]
+
+- id: feat-share-folder-pro
+  inquiry: How do I share a folder with my team and choose who can edit?
+  customer: {plan: pro}
+  expected:
+    category: feature
+    min_severity: low
+    autonomy: auto
+    must_cite: [share a folder]
+
+- id: feat-delta-sync-enterprise
+  inquiry: What is Delta Sync and can I use it for our shared engineering archive?
+  customer: {plan: enterprise}
+  expected:
+    category: feature
+    min_severity: low
+    autonomy: confirm
+    must_cite: [Delta Sync]
+
+- id: feat-sso-okta-pro
+  inquiry: Can we set up SSO with Okta for our team? How do I configure it?
+  customer: {plan: pro}
+  expected:
+    category: feature
+    min_severity: low
+    autonomy: confirm
+    must_cite: [SSO]
+  tags: [entitlement]

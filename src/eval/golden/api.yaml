@@ -1,0 +1,59 @@
+- id: api-webhook-timeout-enterprise
+  inquiry: >
+    Our webhooks to https://api.bigretail.com/hooks/cloudsync stopped working about an hour
+    ago. Orders are piling up. The delivery logs in the dashboard show "Connection timed out"
+    for every attempt (API-002). Nothing changed on our end.
+  customer: {plan: enterprise}
+  logs: api_webhook_failure.json
+  expected:
+    category: api
+    min_severity: high
+    autonomy: confirm
+    must_cite: [API-002]
+
+- id: api-rate-limit-pro
+  inquiry: >
+    Our nightly export script started failing with HTTP 429 and API-001 Rate Limit Exceeded.
+    We make roughly 3,000 requests per minute during the export. What are our limits and how
+    should we handle this?
+  customer: {plan: pro}
+  expected:
+    category: api
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [API-001]
+
+- id: api-webhook-signature-pro
+  inquiry: >
+    How do we verify that a webhook request really comes from CloudSync? We want to validate
+    the signature in our Node.js endpoint before processing the payload.
+  customer: {plan: pro}
+  expected:
+    category: api
+    min_severity: low
+    autonomy: confirm
+    must_cite: [Webhook Signature Verification]
+
+- id: api-webhook-on-free-plan
+  inquiry: >
+    I want a webhook to call my script whenever a file is uploaded. I could not find where to
+    configure it in my account. Is the webhook feature available to me?
+  customer: {plan: free}
+  expected:
+    category: api
+    min_severity: low
+    autonomy: confirm
+    must_cite: [Webhooks]
+  tags: [entitlement]
+
+- id: api-ssl-renewal-pro
+  inquiry: >
+    Our webhook endpoint stopped receiving notifications after we renewed our SSL certificate
+    yesterday. We are getting API-002 errors in our logs and it is breaking our automated
+    pipeline.
+  customer: {plan: pro}
+  expected:
+    category: api
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [API-002]

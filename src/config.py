@@ -17,8 +17,12 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 # Haiku: fast & cheap - used for classification, simple tasks
 MODEL_FAST = os.getenv("ANTHROPIC_MODEL_FAST", "claude-haiku-4-5-20251001")
 # Sonnet: balanced - used for complex analysis, log insights, response drafting
-MODEL_STANDARD = os.getenv("ANTHROPIC_MODEL_STANDARD", "claude-sonnet-4-20250514")
+MODEL_STANDARD = os.getenv("ANTHROPIC_MODEL_STANDARD", "claude-sonnet-5-5")
 
 CHROMA_PERSIST_DIR = os.getenv("CHROMA_PERSIST_DIR", str(PROJECT_ROOT / "chroma_data"))
+
+BRIEFING_DB_PATH = Path(
+    os.getenv("BRIEFING_DB_PATH", str(PROJECT_ROOT / "briefing_data" / "briefings.db"))
+)
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")

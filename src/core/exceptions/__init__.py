@@ -23,3 +23,19 @@ class AnalysisError(SupportBuddyError):
 
 class AIClientError(SupportBuddyError):
     """Error communicating with the AI provider."""
+
+
+class PolicyError(SupportBuddyError):
+    """Autonomy policy file is missing, malformed, or invalid."""
+
+
+class ConfigError(SupportBuddyError):
+    """Application configuration file is missing or invalid."""
+
+
+class BriefingError(SupportBuddyError):
+    """A briefing could not be stored, found, or updated."""
+
+
+class BriefingStateError(BriefingError):
+    """The briefing is not in a state that allows this operation (e.g. already approved)."""

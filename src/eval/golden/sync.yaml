@@ -1,0 +1,71 @@
+- id: sync-quota-free
+  inquiry: >
+    Since yesterday my files are not syncing anymore. I keep seeing a SYNC-002 error in the
+    desktop app. I have a lot of photos from a recent shoot that I need to back up urgently.
+    The app says something about storage but I'm not sure what to do.
+  customer: {plan: free}
+  logs: sync_error.json
+  expected:
+    category: sync
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [SYNC-002]
+
+- id: sync-conflict-pro
+  inquiry: >
+    Two of us edited the same budget spreadsheet while one person was on a flight. Now
+    CloudSync shows SYNC-001 and we are not sure which version is the right one. How do we
+    resolve this without losing either set of changes?
+  customer: {plan: pro}
+  expected:
+    category: sync
+    min_severity: low
+    autonomy: confirm
+    must_cite: [SYNC-001]
+
+- id: sync-index-corruption-pro
+  inquiry: >
+    The desktop client has been stuck on "Indexing" for two days and now shows SYNC-004.
+    Restarting the app did not help. Some folders show up empty even though the files are
+    visible in the web dashboard.
+  customer: {plan: pro}
+  expected:
+    category: sync
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [SYNC-004]
+
+- id: sync-download-failed-enterprise
+  inquiry: >
+    Several of our engineers get SYNC-003 when downloading the shared design archive on
+    their laptops. It works for others on the same network. Can you tell us what to check?
+  customer: {plan: enterprise}
+  expected:
+    category: sync
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [SYNC-003]
+
+- id: sync-all-users-enterprise
+  inquiry: >
+    Since this morning none of our 200 employees can sync any file larger than 50MB. Everyone
+    on our team is blocked and we have a client deadline today. We already restarted the sync
+    agent on several machines.
+  customer: {plan: enterprise}
+  expected:
+    category: sync
+    min_severity: high
+    autonomy: confirm
+    must_cite: [Files Not Syncing]
+  tags: [severity-floor]
+
+- id: sync-missing-on-second-laptop-free
+  inquiry: >
+    Files I saved on my work laptop are not appearing on my home laptop. Both are logged into
+    the same account. It was working last week.
+  customer: {plan: free}
+  expected:
+    category: sync
+    min_severity: low
+    autonomy: confirm
+    must_cite: [Files Not Syncing]

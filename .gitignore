@@ -52,3 +52,6 @@ logs/
 # Node (if frontend added later)
 node_modules/
 .next/
+
+# Local briefing queue database
+briefing_data/

@@ -1,0 +1,56 @@
+- id: perm-shared-folder-denied-pro
+  inquiry: >
+    A new colleague gets AUTH-002 Permission Denied when opening the Marketing shared folder.
+    I added her to the team yesterday. She can see the folder name but not the contents.
+  customer: {plan: pro}
+  expected:
+    category: permission
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [AUTH-002]
+
+- id: perm-session-expired-free
+  inquiry: >
+    I keep getting logged out of the web app every few minutes with AUTH-001 Session Expired.
+    I have to sign in again each time. It started after I changed my password.
+  customer: {plan: free}
+  expected:
+    category: permission
+    min_severity: low
+    autonomy: confirm
+    must_cite: [AUTH-001]
+
+- id: perm-sso-config-enterprise
+  inquiry: >
+    After we renewed our Okta signing certificate, a few users see AUTH-003 SSO Configuration
+    Error when they log in. Most people can still sign in. What should we update on our side?
+  customer: {plan: enterprise}
+  expected:
+    category: permission
+    min_severity: high
+    autonomy: confirm
+    must_cite: [AUTH-003]
+
+- id: perm-role-change-pro
+  inquiry: >
+    One of our contractors lost access to the shared project folder after we changed her
+    role from Editor to Viewer. She says she cannot even open files now. Is that expected?
+  customer: {plan: pro}
+  expected:
+    category: permission
+    min_severity: medium
+    autonomy: confirm
+    must_cite: [Permission Denied]
+
+- id: perm-sso-outage-enterprise
+  inquiry: >
+    URGENT: Starting 30 minutes ago none of our employees can log into CloudSync through Okta
+    SSO. They all see "Authentication failed". This affects our entire organization of 2,300
+    users. I can still log in with my admin password. Please advise immediately.
+  customer: {plan: enterprise}
+  expected:
+    category: permission
+    min_severity: critical
+    autonomy: human_only
+    must_cite: [SSO]
+  tags: [outage]
