@@ -487,30 +487,29 @@ class Briefing:
 | `POST` | `/api/v1/eval/run` | Run golden set against a model config |
 | `GET` | `/api/v1/policy` | Current autonomy policy (read-only) |
 
-## 15. UI Design System ("Quiet Apple")
+## 15. UI Design System ("Black")
 
-The current UI ("Intelligent Ledger": Manrope/Inter, blue accent, gray container stack) reads as generic AI-dashboard styling. Phase 5 replaces it with a restrained, Apple-inspired system.
+The original Streamlit UI ("Intelligent Ledger": Manrope/Inter, blue accent, gray container stack) reads as generic AI-dashboard styling. The web app replaces it with a restrained, Vercel-inspired black system. (An Apple-style light/dark direction was tried first and dropped: the owner preferred black, and a single theme halves the design surface.)
 
 **Principles**
-1. **Content first, chrome last.** One primary task per screen; fewer borders, boxes, and badges. Whitespace and type size create hierarchy, not cards.
-2. **One accent color.** Neutral grayscale plus a single blue (`#0071e3`, system blue). Semantic color (green / orange / red) appears only for state: verification passed / warning / failed and autonomy level.
-3. **System typography.** `-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Inter, sans-serif` (no web-font import for Mac/iOS; Inter as fallback). Large light-weight titles (34-40px / 600), 15-17px body, tight tracking on titles (-0.02em).
-4. **Soft depth.** 12-16px radii, no hard borders: 1px `rgba(0,0,0,0.06)` hairlines and very soft shadows. Translucent sidebar (`backdrop-filter: blur(20px)`).
-5. **Quiet motion.** 150-250ms ease-out fades; no bouncing or gradients; skeleton shimmer only while loading.
-6. **Progressive disclosure.** Summary first; evidence, raw logs, and verification details live in expandable sections.
-7. **Dark mode** follows `prefers-color-scheme`.
+1. **Pure black canvas, thin borders.** `#000` background, near-black surfaces, 1px borders instead of shadows. Hierarchy comes from type size, weight and spacing, not from stacked boxes.
+2. **One primary action, in white.** The main button is white with black text; secondary actions are outlined. Color is reserved for state: green (ready/auto), blue (confirm), amber (needs a person), red (critical/failed).
+3. **Tight, neutral type.** Geist if installed, otherwise the system stack (`-apple-system`, Inter, Segoe UI). 14px body, 28-32px titles at weight 600 with -0.03em tracking, mono for logs.
+4. **Small radii.** 8px controls, 10-12px cards and panels.
+5. **Quiet motion.** 150ms ease-out color and border transitions; skeleton shimmer only while loading; `prefers-reduced-motion` turns it all off.
+6. **Progressive disclosure.** Summary first; evidence, raw logs and verification details sit behind explicit toggles that stay in the same place (right-aligned in the section header).
+7. **Dark only.** No light theme and no theme toggle.
 
 **Tokens**
 
-| Token | Light | Dark |
-|---|---|---|
-| `--bg` | `#ffffff` | `#000000` |
-| `--bg-secondary` | `#f5f5f7` | `#1c1c1e` |
-| `--text` | `#1d1d1f` | `#f5f5f7` |
-| `--text-secondary` | `#6e6e73` | `#a1a1a6` |
-| `--accent` | `#0071e3` | `#0a84ff` |
-| `--ok` / `--warn` / `--bad` | `#34c759` / `#ff9f0a` / `#ff3b30` | same |
-| `--hairline` | `rgba(0,0,0,.06)` | `rgba(255,255,255,.10)` |
+| Token | Value |
+|---|---|
+| `--bg` | `#000000` |
+| `--surface` / `--surface-hover` / `--raised` | `#0a0a0a` / `#111111` / `#1a1a1a` |
+| `--border` / `--border-strong` | `#262626` / `#3d3d3d` |
+| `--text` / `--text-2` / `--text-3` | `#ededed` / `#a1a1a1` / `#7d7d7d` |
+| `--accent` (links, confirm) | `#52a8ff` |
+| `--ok` / `--warn` / `--bad` | `#62c073` / `#f5a524` / `#ff6369` |
 
 **Signature components**
 - **Autonomy pill:** `Auto` / `Confirm` / `Human-only` segmented capsule with the "why" on hover/tap.
@@ -528,7 +527,7 @@ The current UI ("Intelligent Ledger": Manrope/Inter, blue accent, gray container
 
 **Hosting decision (Option C):** the production UI is a static React app (Cloudflare Pages: no sleep, no cost) talking to the FastAPI backend (Cloud Run, scale to zero, wakes on request). The public demo serves **pre-computed briefings** and never needs an API key; "run it yourself" is the only path that calls Claude and sits behind per-IP and global daily limits plus a console spend limit. Streamlit remains until the React app replaces it.
 
-**Implementation notes (Streamlit era):** Streamlit stays for the MVP; styling is centralized in `src/ui/styles.py` (tokens as CSS variables). Streamlit chrome (header, footer, default fonts) is overridden; icons use inline SVG (SF-Symbols-like, 1.5px stroke) instead of Material Symbols. React migration remains a later option, and the tokens are portable.
+**Implementation notes (Streamlit era):** Streamlit stays for the MVP; styling is centralized in `src/ui/styles.py` (tokens as CSS variables). Streamlit chrome (header, footer, default fonts) is overridden; icons use inline SVG instead of Material Symbols. React migration remains a later option, and the tokens are portable.
 
 ## 16. Phase 5 Delivery Order
 
@@ -536,7 +535,7 @@ The current UI ("Intelligent Ledger": Manrope/Inter, blue accent, gray container
 2. Autonomy Policy + `policy.yaml` **(done)**
 3. Eval harness + 40-case golden set + model registry **(done; Claude-pipeline numbers pending an API run)**
 4. Briefing pipeline, queue store, folder-drop trigger and API **(done; Overnight Queue UI is part of step 5)**
-5. UI restyle to the Quiet Apple system (can start in parallel with 4)
+5. Web UI in the black design system (can start in parallel with 4)
 6. Review chain
 7. Log correlation + PII redaction
 8. Pattern detection, change-driven forecast, batch decisions

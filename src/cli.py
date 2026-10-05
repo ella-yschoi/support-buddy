@@ -16,6 +16,7 @@ from src.core.analyzer.log_parser import LogParser
 from src.core.exceptions import ConfigError
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import InquiryResult
+from src.eval.demo import generate_demo_briefings, write_demo_file
 from src.eval.run import (
     run_claude_eval,
     run_local_eval,
@@ -326,6 +327,18 @@ def eval_command(
             f"routing agreement {m.routing_agreement:.1%}"
         )
     console.print(f"Report: {md_path}\nData:   {json_path}")
+
+
+@app.command(name="demo-data")
+def demo_data_command(
+    out: Path = typer.Option(
+        Path("web/public/demo/briefings.json"), help="Where to write the pre-computed briefings"
+    ),
+) -> None:
+    """Pre-compute briefings for the public demo (free, no API calls)."""
+    briefings = generate_demo_briefings()
+    path = write_demo_file(briefings, out)
+    console.print(f"Wrote {len(briefings)} demo briefings to {path}")
 
 
 if __name__ == "__main__":
