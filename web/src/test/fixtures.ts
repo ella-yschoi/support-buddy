@@ -33,6 +33,7 @@ export function makeBriefing(overrides: Partial<Briefing> = {}): Briefing {
     status: "ready",
     approved_body: null,
     edit_ratio: null,
+    origin: null,
     ...overrides,
   };
 }

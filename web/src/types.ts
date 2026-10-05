@@ -14,6 +14,13 @@ export interface Check {
   detail: string;
 }
 
+export interface Origin {
+  source: string;
+  external_id: string;
+  key: string;
+  url: string;
+}
+
 export interface Briefing {
   id: string;
   created_at: string;
@@ -37,6 +44,7 @@ export interface Briefing {
   status: string;
   approved_body: string | null;
   edit_ratio: number | null;
+  origin?: Origin | null;
 }
 
 export type Source = "api" | "demo";

@@ -6,6 +6,8 @@ import {
   displayTitle,
   formatTime,
   needsAttention,
+  safeTicketUrl,
+  sourceLabel,
   verdict,
 } from "../format";
 import type { Briefing, Hypothesis } from "../types";
@@ -63,6 +65,7 @@ function HypothesisItem({ hypothesis }: { hypothesis: Hypothesis }) {
 
 export function BriefingDetail({ briefing: b, onBack, readOnly = true, onApproved = () => {} }: Props) {
   const attention = needsAttention(b);
+  const ticketUrl = b.origin ? safeTicketUrl(b.origin.url) : null;
   return (
     <article className="detail">
       <button type="button" className="back" onClick={onBack}>
@@ -75,6 +78,11 @@ export function BriefingDetail({ briefing: b, onBack, readOnly = true, onApprove
           {capitalize(b.customer_plan)} · {categoryLabel(b.category)} · {SEVERITY_LABEL[b.effective_severity]}{" "}
           severity · {formatTime(b.created_at)}
         </p>
+        {ticketUrl && b.origin && (
+          <a className="ticket-link" href={ticketUrl} target="_blank" rel="noopener noreferrer">
+            Open {b.origin.key} in {sourceLabel(b.origin.source)} <span aria-hidden="true">↗</span>
+          </a>
+        )}
         <div className="detail__verdict">
           <AutonomyPill level={b.autonomy} simulated={b.simulated} />
           <span className={attention ? "row__verdict row__verdict--attention" : "row__verdict"}>

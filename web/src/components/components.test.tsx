@@ -149,3 +149,48 @@ describe("BriefingDetail", () => {
     expect(onBack).toHaveBeenCalled();
   });
 });
+
+
+describe("ticket origin", () => {
+  const origin = {
+    source: "linear",
+    external_id: "abc",
+    key: "SUP-7",
+    url: "https://linear.app/x/issue/SUP-7",
+  };
+
+  it("shows the ticket key in the queue row when the briefing came from a ticket tool", () => {
+    render(<QueueList briefings={[makeBriefing({ origin })]} onOpen={() => {}} />);
+    expect(screen.getByText(/SUP-7/)).toBeInTheDocument();
+  });
+
+  it("shows no key for pasted tickets", () => {
+    render(<QueueList briefings={[makeBriefing()]} onOpen={() => {}} />);
+    expect(screen.queryByText(/SUP-/)).not.toBeInTheDocument();
+  });
+
+  it("links to the ticket in its own tool, opening safely in a new tab", () => {
+    render(<BriefingDetail briefing={makeBriefing({ origin })} onBack={() => {}} />);
+    const link = screen.getByRole("link", { name: /open sup-7 in linear/i });
+    expect(link).toHaveAttribute("href", origin.url);
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
+  });
+
+  it("names each tool properly", () => {
+    const zendesk = { ...origin, source: "zendesk", key: "#412" };
+    render(<BriefingDetail briefing={makeBriefing({ origin: zendesk })} onBack={() => {}} />);
+    expect(screen.getByRole("link", { name: /open #412 in zendesk/i })).toBeInTheDocument();
+  });
+
+  it("has no ticket link for pasted tickets", () => {
+    render(<BriefingDetail briefing={makeBriefing()} onBack={() => {}} />);
+    expect(screen.queryByRole("link", { name: /open .* in /i })).not.toBeInTheDocument();
+  });
+
+  it("rejects non-http links rather than rendering them", () => {
+    const evil = { ...origin, url: "javascript:alert(1)" };
+    render(<BriefingDetail briefing={makeBriefing({ origin: evil })} onBack={() => {}} />);
+    expect(screen.queryByRole("link", { name: /open sup-7/i })).not.toBeInTheDocument();
+  });
+});

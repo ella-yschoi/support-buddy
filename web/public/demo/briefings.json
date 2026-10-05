@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-10-04",
+  "generated_on": "2026-10-05",
   "pipeline": "local",
   "briefings": [
     {
@@ -24,15 +24,15 @@
       ],
       "citations": [
         {
-          "doc_id": "3d35f237017134f3",
+          "doc_id": "6052567a4b47d67a",
           "title": "AUTH-003: SSO Configuration Error"
         },
         {
-          "doc_id": "4e0f121257801646",
+          "doc_id": "40e0198e6a57b0e0",
           "title": "Runbook: SSO Login Failure for Entire Organization"
         },
         {
-          "doc_id": "9f225be3fa693dbc",
+          "doc_id": "fcc8b55bfeacc035",
           "title": "SSO Troubleshooting Checklist"
         }
       ],
@@ -92,7 +92,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-adv-suspected-breach-enterprise",
@@ -116,15 +117,15 @@
       ],
       "citations": [
         {
-          "doc_id": "06630b9e371f5cf1",
+          "doc_id": "7078e4ae07f48c33",
           "title": "User Access Controls"
         },
         {
-          "doc_id": "0cbb11d9d5a8a7ed",
+          "doc_id": "19840cf36e670e0a",
           "title": "SSO Session Management"
         },
         {
-          "doc_id": "94e56114806fda9c",
+          "doc_id": "7f79c737ccbe4920",
           "title": "Runbook: Customer Reports Data Loss"
         }
       ],
@@ -185,7 +186,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-sync-quota-free",
@@ -223,15 +225,15 @@
       ],
       "citations": [
         {
-          "doc_id": "094b407739689a72",
+          "doc_id": "c77f1069efb94a6e",
           "title": "Files Not Syncing"
         },
         {
-          "doc_id": "588ea46d81a72c2d",
+          "doc_id": "107e89a9abcbf7cd",
           "title": "SYNC-004: Index Corruption"
         },
         {
-          "doc_id": "e450158201f2c4f9",
+          "doc_id": "ab68803b2803faa8",
           "title": "SYNC-002: Upload Failed"
         }
       ],
@@ -293,7 +295,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-sync-all-users-enterprise",
@@ -317,15 +320,15 @@
       ],
       "citations": [
         {
-          "doc_id": "094b407739689a72",
+          "doc_id": "c77f1069efb94a6e",
           "title": "Files Not Syncing"
         },
         {
-          "doc_id": "5e9eaedc3e199de3",
+          "doc_id": "cdb2945a4bd941a4",
           "title": "PERF-001: Sync Throttled"
         },
         {
-          "doc_id": "fac7a996987b4a99",
+          "doc_id": "7c253a3f5254b49d",
           "title": "KI-003: Delta Sync Fails for Files Over 4GB"
         }
       ],
@@ -389,7 +392,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-sync-conflict-pro",
@@ -413,15 +417,15 @@
       ],
       "citations": [
         {
-          "doc_id": "e17e4f5f2a86e105",
+          "doc_id": "0d21d8652e04fcb1",
           "title": "SYNC-001: File Conflict"
         },
         {
-          "doc_id": "094b407739689a72",
+          "doc_id": "c77f1069efb94a6e",
           "title": "Files Not Syncing"
         },
         {
-          "doc_id": "fa07c9868981e563",
+          "doc_id": "bf6a3ace1428788a",
           "title": "Microsoft 365 Integration"
         }
       ],
@@ -481,7 +485,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-api-webhook-timeout-enterprise",
@@ -519,15 +524,15 @@
       ],
       "citations": [
         {
-          "doc_id": "0753779e6c2aeff3",
+          "doc_id": "78437e44c68b03f6",
           "title": "API-002: Webhook Delivery Failed"
         },
         {
-          "doc_id": "f96c821e14eeba74",
+          "doc_id": "ba3ef7048d3d1ecb",
           "title": "Webhook Not Firing"
         },
         {
-          "doc_id": "403dbf606c621887",
+          "doc_id": "35d3c6780ec0d437",
           "title": "Webhooks"
         }
       ],
@@ -588,7 +593,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-api-rate-limit-pro",
@@ -612,15 +618,15 @@
       ],
       "citations": [
         {
-          "doc_id": "daf523a43e88ec4e",
+          "doc_id": "d397edbd0879fda5",
           "title": "API-001: Rate Limit Exceeded"
         },
         {
-          "doc_id": "86ff5bfcce610589",
+          "doc_id": "854c30e7d0bee337",
           "title": "Batch Operations"
         },
         {
-          "doc_id": "e03d8dd62759d2ff",
+          "doc_id": "f23008ae2303386c",
           "title": "API Error Handling"
         }
       ],
@@ -680,7 +686,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-perf-dashboard-slow-pro",
@@ -715,15 +722,15 @@
       ],
       "citations": [
         {
-          "doc_id": "fb374af143deef9b",
+          "doc_id": "820a1b13ef0ae215",
           "title": "Runbook: Performance Degradation Report"
         },
         {
-          "doc_id": "197eb0b5dd662983",
+          "doc_id": "84b761c239c3d0f0",
           "title": "Slow Sync Performance"
         },
         {
-          "doc_id": "5e9eaedc3e199de3",
+          "doc_id": "cdb2945a4bd941a4",
           "title": "PERF-001: Sync Throttled"
         }
       ],
@@ -783,7 +790,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-acct-payment-failed-pro",
@@ -807,15 +815,15 @@
       ],
       "citations": [
         {
-          "doc_id": "baafde8d0b417cae",
+          "doc_id": "824ef435cc98151c",
           "title": "ACCT-001: Payment Failed"
         },
         {
-          "doc_id": "7b1fe96b8714ba16",
+          "doc_id": "5159415ce5cdf6c5",
           "title": "Billing FAQ"
         },
         {
-          "doc_id": "46694475160c56ff",
+          "doc_id": "29f51ed65838681e",
           "title": "ACCT-003: Account Suspended"
         }
       ],
@@ -875,7 +883,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-feat-auto-backup-pro",
@@ -899,15 +908,15 @@
       ],
       "citations": [
         {
-          "doc_id": "e1c9086df47833f6",
+          "doc_id": "69953a430df83116",
           "title": "How do I set up auto-backup?"
         },
         {
-          "doc_id": "fa07c9868981e563",
+          "doc_id": "bf6a3ace1428788a",
           "title": "Microsoft 365 Integration"
         },
         {
-          "doc_id": "3bfa2f5d2c0d9a33",
+          "doc_id": "f5107a700e358d8b",
           "title": "Selective Sync"
         }
       ],
@@ -969,7 +978,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-feat-2fa-free",
@@ -993,15 +1003,15 @@
       ],
       "citations": [
         {
-          "doc_id": "bf8982aef8666812",
+          "doc_id": "f41ca651772dffca",
           "title": "How do I enable two-factor authentication?"
         },
         {
-          "doc_id": "3d35f237017134f3",
+          "doc_id": "6052567a4b47d67a",
           "title": "AUTH-003: SSO Configuration Error"
         },
         {
-          "doc_id": "99caae4b9432e6d9",
+          "doc_id": "35db49746a8127be",
           "title": "SSO Overview"
         }
       ],
@@ -1063,7 +1073,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-feat-sso-okta-pro",
@@ -1087,15 +1098,15 @@
       ],
       "citations": [
         {
-          "doc_id": "6c9a6c26112c763d",
+          "doc_id": "463db497f32b1c3d",
           "title": "Setting Up SSO with Okta"
         },
         {
-          "doc_id": "99caae4b9432e6d9",
+          "doc_id": "35db49746a8127be",
           "title": "SSO Overview"
         },
         {
-          "doc_id": "d505cda633eb66e7",
+          "doc_id": "4a6de2b66df528b0",
           "title": "Setting Up SSO with Google Workspace"
         }
       ],
@@ -1156,7 +1167,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-adv-refund-demand-pro",
@@ -1180,15 +1192,15 @@
       ],
       "citations": [
         {
-          "doc_id": "7b1fe96b8714ba16",
+          "doc_id": "5159415ce5cdf6c5",
           "title": "Billing FAQ"
         },
         {
-          "doc_id": "baafde8d0b417cae",
+          "doc_id": "824ef435cc98151c",
           "title": "ACCT-001: Payment Failed"
         },
         {
-          "doc_id": "cd58713771bcdb9f",
+          "doc_id": "bf64d234fc3e92e0",
           "title": "ACCT-005: Trial Expired"
         }
       ],
@@ -1249,7 +1261,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     },
     {
       "id": "demo-adv-vague-free",
@@ -1273,15 +1286,15 @@
       ],
       "citations": [
         {
-          "doc_id": "cd58713771bcdb9f",
+          "doc_id": "bf64d234fc3e92e0",
           "title": "ACCT-005: Trial Expired"
         },
         {
-          "doc_id": "588ea46d81a72c2d",
+          "doc_id": "107e89a9abcbf7cd",
           "title": "SYNC-004: Index Corruption"
         },
         {
-          "doc_id": "baafde8d0b417cae",
+          "doc_id": "824ef435cc98151c",
           "title": "ACCT-001: Payment Failed"
         }
       ],
@@ -1341,7 +1354,8 @@
       ],
       "status": "ready",
       "approved_body": null,
-      "edit_ratio": null
+      "edit_ratio": null,
+      "origin": null
     }
   ]
 }
