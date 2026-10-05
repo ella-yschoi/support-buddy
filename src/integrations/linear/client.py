@@ -23,6 +23,9 @@ class LinearIssue:
     assignee: str = ""
     labels: list[str] = field(default_factory=list)
     url: str = ""
+    created_at: str = ""
+    updated_at: str = ""
+    state_type: str = ""  # triage | backlog | unstarted | started | completed | canceled
 
 
 class LinearClient:
@@ -60,11 +63,13 @@ class LinearClient:
                 identifier
                 title
                 description
-                state { name }
+                state { name type }
                 priority
                 assignee { name }
                 labels { nodes { name } }
                 url
+                createdAt
+                updatedAt
             }
         }
         """
@@ -82,11 +87,13 @@ class LinearClient:
                     identifier
                     title
                     description
-                    state { name }
+                    state { name type }
                     priority
                     assignee { name }
                     labels { nodes { name } }
                     url
+                    createdAt
+                    updatedAt
                 }
             }
         }
@@ -103,6 +110,52 @@ class LinearClient:
         data = self._query(query, variables)
         nodes = data.get("issues", {}).get("nodes", [])
         return [self._parse_issue(n) for n in nodes]
+
+    def list_issues(
+        self,
+        updated_after: str | None = None,
+        team_key: str | None = None,
+        page_size: int = 50,
+    ) -> list[LinearIssue]:
+        """Issues changed after a timestamp (all issues when None), following every page."""
+        query = """
+        query ListIssues($filter: IssueFilter, $first: Int, $after: String) {
+            issues(filter: $filter, first: $first, after: $after, orderBy: updatedAt) {
+                nodes {
+                    id
+                    identifier
+                    title
+                    description
+                    state { name type }
+                    priority
+                    assignee { name }
+                    labels { nodes { name } }
+                    url
+                    createdAt
+                    updatedAt
+                }
+                pageInfo { hasNextPage endCursor }
+            }
+        }
+        """
+        conditions: list[dict[str, Any]] = []
+        if updated_after:
+            conditions.append({"updatedAt": {"gt": updated_after}})
+        if team_key:
+            conditions.append({"team": {"key": {"eq": team_key}}})
+
+        found: list[LinearIssue] = []
+        cursor: str | None = None
+        while True:
+            variables: dict[str, Any] = {"filter": {"and": conditions}, "first": page_size}
+            if cursor:
+                variables["after"] = cursor
+            issues = self._query(query, variables).get("issues", {})
+            found.extend(self._parse_issue(n) for n in issues.get("nodes", []))
+            page = issues.get("pageInfo", {})
+            if not page.get("hasNextPage"):
+                return found
+            cursor = page.get("endCursor")
 
     def create_issue(
         self,
@@ -122,9 +175,11 @@ class LinearClient:
                     identifier
                     title
                     description
-                    state { name }
+                    state { name type }
                     priority
                     url
+                    createdAt
+                    updatedAt
                 }
             }
         }
@@ -179,4 +234,7 @@ class LinearClient:
             assignee=raw.get("assignee", {}).get("name", "") if raw.get("assignee") else "",
             labels=[l["name"] for l in raw.get("labels", {}).get("nodes", [])] if raw.get("labels") else [],
             url=raw.get("url", ""),
+            created_at=raw.get("createdAt", ""),
+            updated_at=raw.get("updatedAt", ""),
+            state_type=raw.get("state", {}).get("type", "") if raw.get("state") else "",
         )
