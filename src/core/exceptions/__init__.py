@@ -39,3 +39,11 @@ class BriefingError(SupportBuddyError):
 
 class BriefingStateError(BriefingError):
     """The briefing is not in a state that allows this operation (e.g. already approved)."""
+
+
+class TicketSourceError(SupportBuddyError):
+    """A ticket tool could not be reached or answered unexpectedly."""
+
+
+class TicketNotFound(TicketSourceError):
+    """The requested ticket does not exist in the source."""
