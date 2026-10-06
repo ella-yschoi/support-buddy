@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { categoryLabel, displayTitle, formatTime, needsAttention, sortQueue, verdict } from "./format";
+import {
+  categoryLabel,
+  displayTitle,
+  formatTime,
+  needsAttention,
+  safeTicketUrl,
+  sortQueue,
+  sourceLabel,
+  verdict,
+} from "./format";
 import { makeBriefing } from "./test/fixtures";
 
 describe("verdict", () => {
@@ -93,5 +102,32 @@ describe("sortQueue", () => {
     ];
     sortQueue(input);
     expect(input.map((b) => b.id)).toEqual(["a", "b"]);
+  });
+});
+
+describe("sourceLabel", () => {
+  it("uses each tool's own spelling", () => {
+    expect(sourceLabel("linear")).toBe("Linear");
+    expect(sourceLabel("zendesk")).toBe("Zendesk");
+    expect(sourceLabel("jira")).toBe("Jira");
+    expect(sourceLabel("intercom")).toBe("Intercom");
+  });
+
+  it("falls back to a capitalised name for tools it does not know", () => {
+    expect(sourceLabel("helpscout")).toBe("Helpscout");
+  });
+});
+
+describe("safeTicketUrl", () => {
+  it("accepts http and https", () => {
+    expect(safeTicketUrl("https://linear.app/x")).toBe("https://linear.app/x");
+    expect(safeTicketUrl("http://localhost:8080/t/1")).toBe("http://localhost:8080/t/1");
+  });
+
+  it("rejects script and data urls and garbage", () => {
+    expect(safeTicketUrl("javascript:alert(1)")).toBeNull();
+    expect(safeTicketUrl("data:text/html,<b>x</b>")).toBeNull();
+    expect(safeTicketUrl("not a url")).toBeNull();
+    expect(safeTicketUrl("")).toBeNull();
   });
 });

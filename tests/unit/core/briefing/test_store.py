@@ -6,7 +6,14 @@ import dataclasses
 
 import pytest
 
-from src.core.briefing.models import Briefing, CheckView, Citation, Hypothesis, Sufficiency
+from src.core.briefing.models import (
+    Briefing,
+    CheckView,
+    Citation,
+    Hypothesis,
+    Origin,
+    Sufficiency,
+)
 from src.core.briefing.store import BriefingStore
 from src.core.exceptions import BriefingError, BriefingStateError
 from src.core.models import InquiryCategory, Severity
@@ -125,3 +132,26 @@ def test_approving_twice_is_rejected_and_keeps_the_first_approval(store):
     with pytest.raises(BriefingStateError):
         store.approve("b1", "second")
     assert store.get("b1").approved_body == "first"
+
+
+def test_origin_round_trips(store):
+    briefing = make_briefing()
+    with_origin = dataclasses.replace(
+        briefing, origin=Origin("linear", "abc", "SUP-7", "https://linear.app/x/SUP-7")
+    )
+    store.add(with_origin)
+    assert store.get("b1").origin == Origin("linear", "abc", "SUP-7", "https://linear.app/x/SUP-7")
+
+
+def test_briefings_stored_before_origin_existed_still_load(store):
+    import json
+    import sqlite3
+
+    store.add(make_briefing())
+    conn = sqlite3.connect(store._path)  # noqa: SLF001
+    payload = json.loads(conn.execute("SELECT payload FROM briefings").fetchone()[0])
+    payload.pop("origin", None)
+    conn.execute("UPDATE briefings SET payload = ?", (json.dumps(payload),))
+    conn.commit()
+    conn.close()
+    assert store.get("b1").origin is None

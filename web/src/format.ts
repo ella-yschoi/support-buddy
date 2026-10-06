@@ -29,6 +29,27 @@ export function formatTime(iso: string): string {
   return `${hour12}:${match[2]} ${hour24 < 12 ? "AM" : "PM"}`;
 }
 
+const SOURCE_LABEL: Record<string, string> = {
+  linear: "Linear",
+  zendesk: "Zendesk",
+  jira: "Jira",
+  intercom: "Intercom",
+};
+
+export function sourceLabel(source: string): string {
+  return SOURCE_LABEL[source] ?? capitalize(source);
+}
+
+/** Only http(s) links are rendered; anything else (javascript:, data:) is dropped. */
+export function safeTicketUrl(value: string): string | null {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
 export function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }

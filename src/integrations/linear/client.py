@@ -23,6 +23,9 @@ class LinearIssue:
     assignee: str = ""
     labels: list[str] = field(default_factory=list)
     url: str = ""
+    created_at: str = ""
+    updated_at: str = ""
+    state_type: str = ""  # triage | backlog | unstarted | started | completed | canceled
 
 
 class LinearClient:
@@ -60,11 +63,13 @@ class LinearClient:
                 identifier
                 title
                 description
-                state { name }
+                state { name type }
                 priority
                 assignee { name }
                 labels { nodes { name } }
                 url
+                createdAt
+                updatedAt
             }
         }
         """
@@ -82,11 +87,13 @@ class LinearClient:
                     identifier
                     title
                     description
-                    state { name }
+                    state { name type }
                     priority
                     assignee { name }
                     labels { nodes { name } }
                     url
+                    createdAt
+                    updatedAt
                 }
             }
         }
@@ -103,6 +110,52 @@ class LinearClient:
         data = self._query(query, variables)
         nodes = data.get("issues", {}).get("nodes", [])
         return [self._parse_issue(n) for n in nodes]
+
+    def list_issues(
+        self,
+        updated_after: str | None = None,
+        team_key: str | None = None,
+        page_size: int = 50,
+    ) -> list[LinearIssue]:
+        """Issues changed after a timestamp (all issues when None), following every page."""
+        query = """
+        query ListIssues($filter: IssueFilter, $first: Int, $after: String) {
+            issues(filter: $filter, first: $first, after: $after, orderBy: updatedAt) {
+                nodes {
+                    id
+                    identifier
+                    title
+                    description
+                    state { name type }
+                    priority
+                    assignee { name }
+                    labels { nodes { name } }
+                    url
+                    createdAt
+                    updatedAt
+                }
+                pageInfo { hasNextPage endCursor }
+            }
+        }
+        """
+        conditions: list[dict[str, Any]] = []
+        if updated_after:
+            conditions.append({"updatedAt": {"gt": updated_after}})
+        if team_key:
+            conditions.append({"team": {"key": {"eq": team_key}}})
+
+        found: list[LinearIssue] = []
+        cursor: str | None = None
+        while True:
+            variables: dict[str, Any] = {"filter": {"and": conditions}, "first": page_size}
+            if cursor:
+                variables["after"] = cursor
+            issues = self._query(query, variables).get("issues", {})
+            found.extend(self._parse_issue(n) for n in issues.get("nodes", []))
+            page = issues.get("pageInfo", {})
+            if not page.get("hasNextPage"):
+                return found
+            cursor = page.get("endCursor")
 
     def create_issue(
         self,
@@ -122,9 +175,11 @@ class LinearClient:
                     identifier
                     title
                     description
-                    state { name }
+                    state { name type }
                     priority
                     url
+                    createdAt
+                    updatedAt
                 }
             }
         }
@@ -160,6 +215,42 @@ class LinearClient:
             raise RuntimeError("Failed to add comment")
         return result.get("comment", {}).get("id", "")
 
+    def get_organization(self) -> str:
+        """Name of the workspace the API key belongs to."""
+        data = self._query("query { organization { name } }")
+        return str(data.get("organization", {}).get("name", ""))
+
+    def list_labels(self, team_id: str) -> list[dict[str, str]]:
+        """Labels usable in a team: its own and workspace-wide ones."""
+        query = """
+        query { issueLabels(first: 250) { nodes { id name team { id } } } }
+        """
+        nodes = self._query(query).get("issueLabels", {}).get("nodes", [])
+        return [
+            {"id": n["id"], "name": n["name"]}
+            for n in nodes
+            if not n.get("team") or n["team"].get("id") == team_id
+        ]
+
+    def create_label(self, team_id: str, name: str, color: str = "#6b6f76") -> str:
+        """Create a team label. Returns its id."""
+        query = """
+        mutation CreateLabel($input: IssueLabelCreateInput!) {
+            issueLabelCreate(input: $input) { success issueLabel { id } }
+        }
+        """
+        data = self._query(query, {"input": {"teamId": team_id, "name": name, "color": color}})
+        result = data.get("issueLabelCreate", {})
+        if not result.get("success"):
+            raise RuntimeError(f"Failed to create label {name}")
+        return str(result["issueLabel"]["id"])
+
+    def delete_issue(self, issue_id: str) -> None:
+        """Delete (trash) an issue."""
+        query = "mutation DeleteIssue($id: String!) { issueDelete(id: $id) { success } }"
+        if not self._query(query, {"id": issue_id}).get("issueDelete", {}).get("success"):
+            raise RuntimeError(f"Failed to delete issue {issue_id}")
+
     def get_teams(self) -> list[dict[str, str]]:
         """List all teams."""
         query = """
@@ -177,6 +268,11 @@ class LinearClient:
             state=raw.get("state", {}).get("name", "") if raw.get("state") else "",
             priority=raw.get("priority", 0),
             assignee=raw.get("assignee", {}).get("name", "") if raw.get("assignee") else "",
-            labels=[l["name"] for l in raw.get("labels", {}).get("nodes", [])] if raw.get("labels") else [],
+            labels=[l["name"] for l in raw.get("labels", {}).get("nodes", [])]
+            if raw.get("labels")
+            else [],
             url=raw.get("url", ""),
+            created_at=raw.get("createdAt", ""),
+            updated_at=raw.get("updatedAt", ""),
+            state_type=raw.get("state", {}).get("type", "") if raw.get("state") else "",
         )

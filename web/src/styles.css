@@ -369,6 +369,19 @@ button {
   color: var(--text-2);
 }
 
+.ticket-link {
+  display: inline-flex;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--accent);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.ticket-link:hover {
+  text-decoration: underline;
+}
+
 .detail__verdict {
   display: flex;
   align-items: center;

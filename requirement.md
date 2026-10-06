@@ -72,6 +72,11 @@ For development and testing, we use a fictional SaaS company:
 - **FR-5.1:** Connect to Linear to read/create/update tickets
 - **FR-5.2:** Connect to GitHub to reference issues, PRs, and code
 - **FR-5.3:** Accept email input (parse email content into structured inquiry)
+- **FR-5.4:** Ticket tools connect through one `TicketSource` interface; adding a tool means writing an adapter, not changing the pipeline
+- **FR-5.5:** Adapters are connected in this order: Linear, Zendesk. Jira and Intercom ship as adapters with contract tests against recorded fixtures and are documented as not verified live
+- **FR-5.6:** Ingestion polls by update cursor, ingests open tickets only, supports a label filter, and never briefs the same ticket twice
+- **FR-5.7:** Reading from a ticket tool never writes to it. Writing back is limited to internal notes and labels, never customer-visible, and defaults to dry-run
+- **FR-5.8:** Seed and cleanup commands operate only on labelled test tickets and require explicit confirmation
 
 ### FR-6: Response Drafting
 - **FR-6.1:** Generate a draft customer response based on analysis

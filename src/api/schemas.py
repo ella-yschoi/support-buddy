@@ -1,6 +1,6 @@
 """Pydantic schemas for API request/response models."""
 
-from typing import List, Literal, Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -123,6 +123,13 @@ class CheckModel(BaseModel):
     detail: str
 
 
+class OriginModel(BaseModel):
+    source: str
+    external_id: str
+    key: str
+    url: str
+
+
 class BriefingResponse(BaseModel):
     id: str
     created_at: str
@@ -146,6 +153,7 @@ class BriefingResponse(BaseModel):
     status: str
     approved_body: Optional[str]
     edit_ratio: Optional[float]
+    origin: Optional[OriginModel] = None
 
 
 class PolicyResponse(BaseModel):

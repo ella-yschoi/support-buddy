@@ -101,10 +101,37 @@ The app will open at `http://localhost:8501`.
 ### Run the API server
 
 ```bash
-uv run uvicorn src.api.main:app --reload
+uv run uvicorn src.api.server:app --reload
 ```
 
 API docs available at `http://localhost:8000/docs`.
+
+### Run the web app
+
+```bash
+cd web && npm install && npm run dev      # http://localhost:5173
+```
+
+Without the API running it shows pre-computed demo briefings. See `web/README.md`.
+
+### Connect a ticket tool (Linear)
+
+Put `LINEAR_API_KEY` in `.env`. Use a **sandbox** workspace while developing.
+
+```bash
+# create labelled test tickets from the golden set (needs --yes; prints the target first)
+uv run python -m src.cli seed-linear --team SUP --limit 5 --yes
+
+# read new tickets and prepare a briefing for each (read-only; nothing is written to Linear)
+uv run python -m src.cli watch --source linear --team SUP --label seed --once
+uv run python -m src.cli watch --source linear --team SUP --label seed --interval 60   # keep polling
+
+# remove only the tickets labelled `seed`
+uv run python -m src.cli cleanup-linear --team SUP --yes
+```
+
+Customer plan is read from a `plan:<free|pro|enterprise>` label. Fenced code blocks in a ticket
+are treated as logs. Briefings link back to the ticket.
 
 ### Run tests
 
@@ -159,7 +186,8 @@ The UI follows **"The Intelligent Ledger"** design system:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `ANTHROPIC_API_KEY` | No | Enables AI-powered analysis (Claude). Without it, keyword-based mode is used. |
-| `LINEAR_API_KEY` | No | Linear integration for issue tracking |
+| `LINEAR_API_KEY` | No | Reads tickets from Linear (`watch`) and seeds sandbox test tickets |
+| `BRIEFING_DB_PATH` | No | SQLite file for briefings and sync cursors (default `briefing_data/briefings.db`) |
 | `GITHUB_TOKEN` | No | GitHub integration |
 
 <br/>

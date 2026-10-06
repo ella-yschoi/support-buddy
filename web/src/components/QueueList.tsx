@@ -69,6 +69,7 @@ export function QueueList({ briefings, onOpen }: Props) {
                     {displayTitle(b.inquiry_text)}
                   </span>
                   <span className="row__meta">
+                    {b.origin ? `${b.origin.key} · ` : ""}
                     {capitalize(b.customer_plan)} · {categoryLabel(b.category)} · {formatTime(b.created_at)}
                   </span>
                   <span className={`row__verdict${needsAttention(b) ? " row__verdict--attention" : ""}`}>

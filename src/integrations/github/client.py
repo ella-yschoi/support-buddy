@@ -71,9 +71,7 @@ class GitHubClient:
         items = data.get("items", [])
         return [self._parse_issue(item) for item in items]
 
-    def search_related_issues(
-        self, error_code: str, limit: int = 5
-    ) -> list[GitHubIssue]:
+    def search_related_issues(self, error_code: str, limit: int = 5) -> list[GitHubIssue]:
         """Search for issues related to a specific error code."""
         return self.search_issues(error_code, limit=limit)
 

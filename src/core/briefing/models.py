@@ -36,6 +36,16 @@ class CheckView:
 
 
 @dataclass(frozen=True)
+class Origin:
+    """Where the ticket lives, so the queue can link back to it."""
+
+    source: str  # "linear", "zendesk", ...
+    external_id: str
+    key: str  # e.g. "SUP-7"
+    url: str
+
+
+@dataclass(frozen=True)
 class Briefing:
     id: str
     created_at: str
@@ -59,6 +69,7 @@ class Briefing:
     status: str = "ready"  # ready | approved
     approved_body: str | None = None
     edit_ratio: float | None = None  # 0.0 = sent as drafted, 1.0 = fully rewritten
+    origin: Origin | None = None  # None for pasted text
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -93,6 +104,16 @@ class Briefing:
             "status": self.status,
             "approved_body": self.approved_body,
             "edit_ratio": self.edit_ratio,
+            "origin": (
+                {
+                    "source": self.origin.source,
+                    "external_id": self.origin.external_id,
+                    "key": self.origin.key,
+                    "url": self.origin.url,
+                }
+                if self.origin
+                else None
+            ),
         }
 
     @classmethod
@@ -123,4 +144,5 @@ class Briefing:
             status=d["status"],
             approved_body=d["approved_body"],
             edit_ratio=d["edit_ratio"],
+            origin=Origin(**d["origin"]) if d.get("origin") else None,
         )

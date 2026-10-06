@@ -109,3 +109,7 @@ def test_approving_an_already_approved_briefing_is_409(client):
     url = f"/api/v1/briefings/{created['id']}/approve"
     assert client.post(url, json={"final_body": "one"}).status_code == 200
     assert client.post(url, json={"final_body": "two"}).status_code == 409
+
+
+def test_briefing_response_has_an_empty_origin_for_pasted_tickets(client):
+    assert create(client).json()["origin"] is None

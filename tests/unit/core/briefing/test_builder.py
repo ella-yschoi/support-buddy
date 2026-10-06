@@ -172,3 +172,21 @@ def test_unexpected_exception_in_analyzer_still_yields_a_briefing(kb_index, poli
 def test_explicit_briefing_id_overrides_the_factory(kb_index, policy):
     b = make_builder(kb_index, policy).build("q", Customer(plan="pro"), briefing_id="fixed-1")
     assert b.id == "fixed-1"
+
+
+def test_origin_is_attached_to_the_briefing(kb_index, policy):
+    from src.core.briefing.models import Origin
+
+    origin = Origin("linear", "abc", "SUP-7", "https://linear.app/x/SUP-7")
+    b = make_builder(kb_index, policy).build("q", Customer(plan="pro"), origin=origin)
+    assert b.origin == origin
+
+
+def test_origin_survives_a_pipeline_failure(kb_index, policy):
+    from src.core.briefing.models import Origin
+
+    origin = Origin("linear", "abc", "SUP-7", "https://linear.app/x/SUP-7")
+    b = make_builder(kb_index, policy, error=RuntimeError("boom")).build(
+        "q", Customer(plan="pro"), origin=origin
+    )
+    assert b.origin == origin

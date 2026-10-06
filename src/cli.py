@@ -10,10 +10,13 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.table import Table
 
-from src.config import ANTHROPIC_API_KEY, KNOWLEDGE_DIR
+from src.config import ANTHROPIC_API_KEY, BRIEFING_DB_PATH, KNOWLEDGE_DIR, LINEAR_API_KEY
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
-from src.core.exceptions import ConfigError
+from src.core.briefing.factory import build_local_builder
+from src.core.briefing.store import BriefingStore
+from src.core.briefing.watch import run_watch
+from src.core.exceptions import ConfigError, TicketSourceError
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import InquiryResult
 from src.eval.demo import generate_demo_briefings, write_demo_file
@@ -339,6 +342,140 @@ def demo_data_command(
     briefings = generate_demo_briefings()
     path = write_demo_file(briefings, out)
     console.print(f"Wrote {len(briefings)} demo briefings to {path}")
+
+
+def build_source(name: str, team: str | None):  # noqa: ANN201
+    """The ticket source for a tool name. Only tools that are actually connected are listed."""
+    from src.integrations.linear.client import LinearClient
+    from src.integrations.tickets.linear import LinearTicketSource
+
+    if name == "linear":
+        return LinearTicketSource(LinearClient(), team_key=team)
+    raise ValueError(f"unknown ticket source: {name}")
+
+
+SUPPORTED_SOURCES = ("linear",)
+
+
+def make_linear_admin():  # noqa: ANN201
+    from src.integrations.linear.client import LinearClient
+
+    return LinearClient()
+
+
+def _require_linear_key() -> None:
+    if not LINEAR_API_KEY:
+        console.print("[red]LINEAR_API_KEY is not set. Put it in .env[/red]")
+        raise typer.Exit(1)
+
+
+@app.command(name="seed-linear")
+def seed_linear_command(
+    team: str = typer.Option(..., help="Linear team key of the SANDBOX workspace, e.g. SUP"),
+    limit: int | None = typer.Option(None, help="Create at most this many tickets"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Show what would be created only"),
+    yes: bool = typer.Option(False, "--yes", help="Confirm writing to the workspace shown"),
+) -> None:
+    """Create labelled test tickets from the golden set in a sandbox Linear workspace."""
+    from src.eval.cases import DEFAULT_GOLDEN_DIR, load_golden
+    from src.integrations.tickets.seed import seed_linear, seed_tickets_from_cases
+
+    _require_linear_key()
+    admin = make_linear_admin()
+    tickets = seed_tickets_from_cases(load_golden(DEFAULT_GOLDEN_DIR))
+    count = min(len(tickets), limit) if limit is not None else len(tickets)
+    console.print(f"Target workspace: [bold]{admin.get_organization()}[/bold], team {team}")
+    if not yes and not dry_run:
+        console.print(
+            f"Nothing written. Up to {count} labelled test tickets would be created. "
+            "Check the workspace above is a sandbox, then re-run with --yes."
+        )
+        raise typer.Exit(1)
+    try:
+        result = seed_linear(admin, team, tickets, dry_run=dry_run, limit=limit)
+    except ValueError as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(1) from exc
+    if dry_run:
+        console.print(f"Dry run: would create {len(result.would_create)}, {result.skipped} exist")
+    else:
+        keys = ", ".join(result.created)
+        console.print(f"Created {len(result.created)} ({keys}); {result.skipped} existed")
+
+
+@app.command(name="cleanup-linear")
+def cleanup_linear_command(
+    team: str = typer.Option(..., help="Linear team key of the SANDBOX workspace"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="List what would be deleted only"),
+    yes: bool = typer.Option(False, "--yes", help="Confirm deleting the seed-labelled tickets"),
+) -> None:
+    """Delete the tickets labelled `seed` (and nothing else) from the sandbox workspace."""
+    from src.integrations.tickets.seed import cleanup_linear
+
+    _require_linear_key()
+    admin = make_linear_admin()
+    console.print(f"Target workspace: [bold]{admin.get_organization()}[/bold], team {team}")
+    if not yes and not dry_run:
+        console.print("Nothing deleted. Re-run with --yes to delete tickets labelled 'seed'.")
+        raise typer.Exit(1)
+    try:
+        deleted = cleanup_linear(admin, team, dry_run=dry_run)
+    except ValueError as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(1) from exc
+    verb = "Would delete" if dry_run else "Deleted"
+    console.print(f"{verb} {len(deleted)}: {', '.join(deleted) or 'none'}")
+
+
+@app.command(name="watch")
+def watch_command(
+    source: str = typer.Option("linear", help="Ticket tool to read from"),
+    team: str | None = typer.Option(None, help="Only this team (Linear team key, e.g. SUP)"),
+    label: str | None = typer.Option(None, help="Only tickets carrying this label"),
+    interval: float = typer.Option(60.0, help="Seconds between polls"),
+    once: bool = typer.Option(False, "--once", help="Poll one time and exit"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Show what would be created only"),
+    include_closed: bool = typer.Option(False, "--include-closed", help="Also brief closed"),
+) -> None:
+    """Read new tickets from a ticket tool and prepare a briefing for each (read-only)."""
+    if source not in SUPPORTED_SOURCES:
+        supported = ", ".join(SUPPORTED_SOURCES)
+        console.print(f"[red]Unknown source '{source}'. Supported: {supported}[/red]")
+        raise typer.Exit(1)
+    if source == "linear" and not LINEAR_API_KEY:
+        console.print("[red]LINEAR_API_KEY is not set. Put it in .env[/red]")
+        raise typer.Exit(1)
+
+    import tempfile
+
+    from src.integrations.tickets.cursors import CursorStore
+
+    ticket_source = build_source(source, team)
+    cursor_key = f"{source}:{team or 'all'}"
+    console.print(
+        f"Watching {source} (team: {team or 'all'}, label: {label or 'any'}) "
+        f"{'once' if once else f'every {interval:g}s'}{' [dry run]' if dry_run else ''}"
+    )
+    with tempfile.TemporaryDirectory() as tmp:
+        engine = KnowledgeEngine(persist_dir=tmp)
+        engine.ingest_directory(KNOWLEDGE_DIR)
+        try:
+            run_watch(
+                ticket_source,
+                build_local_builder(engine),
+                BriefingStore(BRIEFING_DB_PATH),
+                CursorStore(BRIEFING_DB_PATH),
+                interval=interval,
+                once=once,
+                cursor_key=cursor_key,
+                label=label,
+                include_closed=include_closed,
+                dry_run=dry_run,
+                report=console.print,
+            )
+        except TicketSourceError as exc:
+            console.print(f"[red]{exc}[/red]")
+            raise typer.Exit(1) from exc
 
 
 if __name__ == "__main__":

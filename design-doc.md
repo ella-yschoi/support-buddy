@@ -350,7 +350,40 @@ Ingest ─► Parse ─► Classify ─► Log analysis ─► KB search ─► 
 - **Fail-safe:** a pipeline or log-analysis failure never drops the ticket. It becomes a visible human-only briefing with effective severity HIGH.
 - Human-only briefings carry no customer-facing draft.
 - TSE approval records `edit_ratio` (0.0 = sent as drafted, 1.0 = fully rewritten).
-- Trigger modes: manual (`POST /api/v1/briefings`), folder drop (`process_inbox`: `.eml` plus optional `.log` sidecar; implemented), IMAP poll (later, reusing `integrations/email`).
+- Trigger modes: manual (`POST /api/v1/briefings`), folder drop (`process_inbox`: `.eml` plus optional `.log` sidecar), and **ticket sources** (§10.1). IMAP polling is optional and comes after the adapters.
+
+### 10.1 Ticket sources (adapters)
+
+Support Buddy is a **sidecar** to the team's ticket tool, not a second inbox. The tracker stays the source of truth for ticket state, owner and SLA. Support Buddy is the source of truth for what the tracker cannot hold: verification report, evidence, routing reasons, edit ratio and eval metrics. The web queue is a *view* of briefings that links back to the ticket.
+
+```
+integrations/tickets/
+├── models.py      # Ticket: source, external_id, key, title, body, plan, labels, urls, timestamps
+├── base.py        # TicketSource protocol
+├── linear.py      # first real adapter
+├── (zendesk.py)   # second real adapter
+└── contract.py    # shared contract tests every adapter must pass
+```
+
+**`TicketSource` protocol** (read side first):
+
+| Method | Meaning |
+|---|---|
+| `fetch_updated(since)` | Tickets changed after `since`, oldest first, already normalised to `Ticket` |
+| `get(external_id)` | One ticket by id |
+| `post_internal_note(external_id, body)` | Added in the write-back step; internal visibility only; dry-run by default |
+
+**Adapter order (decided):** Linear, then Zendesk. Jira and Intercom get an adapter and contract tests against recorded fixtures only and are labelled "not verified against a live workspace". Documentation and the resume claim only what was actually connected.
+
+**Ingest rules**
+- Polling by `updatedAt` cursor first (works without a public URL); webhooks after deployment.
+- Briefing id is derived from `source` and `external_id`, so a ticket is never briefed twice.
+- Only open tickets are ingested. An optional label filter keeps unrelated issues (for example a workspace's onboarding issues) out.
+- Customer plan comes from a `plan:<name>` label; otherwise `unknown`, which routes plan-gated topics to Confirm.
+- Fenced code blocks in the ticket body are treated as logs.
+- The briefing stores `source`, `external_id`, `external_key` and `external_url`; the web UI shows "Open in <tool>".
+- Reading never writes. Writing back (internal note and label only, never state or assignee, never customer-visible) is a separate step with dry-run as the default.
+- Seed and cleanup commands create and delete clearly labelled test tickets in a **sandbox** workspace only, and require `--yes`.
 
 ## 11. Review Chain (`src/core/review/`)
 

@@ -12,6 +12,7 @@ from src.core.briefing.models import (
     CheckView,
     Citation,
     Hypothesis,
+    Origin,
     Sufficiency,
 )
 from src.core.models import DraftResponse, InquiryCategory, InquiryResult, LogInsight, Severity
@@ -76,6 +77,7 @@ class BriefingBuilder:
         customer: Customer,
         log_text: str = "",
         briefing_id: str | None = None,
+        origin: Origin | None = None,
     ) -> Briefing:
         briefing_id = briefing_id or self._id_factory()
         try:
@@ -83,7 +85,7 @@ class BriefingBuilder:
             draft = self._draft(inquiry_text, analysis)
         except Exception as exc:  # deliberate: any analyzer/drafter failure must not lose a ticket
             logger.error("briefing pipeline failed", exc_info=True)
-            return self._failed(briefing_id, inquiry_text, customer, exc)
+            return self._failed(briefing_id, inquiry_text, customer, exc, origin)
 
         insight, log_problem = self._run_log_analysis(log_text)
 
@@ -122,6 +124,7 @@ class BriefingBuilder:
             draft_body=None if decision.level is AutonomyLevel.HUMAN_ONLY else draft.body,
             sufficiency=sufficiency,
             sufficiency_reasons=reasons,
+            origin=origin,
         )
 
     def _run_log_analysis(self, log_text: str) -> tuple[LogInsight | None, str | None]:
@@ -181,7 +184,12 @@ class BriefingBuilder:
         return Sufficiency.SUFFICIENT, ("Evidence and citations found; verification passed",)
 
     def _failed(
-        self, briefing_id: str, inquiry_text: str, customer: Customer, exc: Exception
+        self,
+        briefing_id: str,
+        inquiry_text: str,
+        customer: Customer,
+        exc: Exception,
+        origin: Origin | None,
     ) -> Briefing:
         """Never lose a ticket: a pipeline failure becomes a visible, human-only briefing."""
         return Briefing(
@@ -204,4 +212,5 @@ class BriefingBuilder:
             draft_body=None,
             sufficiency=Sufficiency.INSUFFICIENT,
             sufficiency_reasons=(f"Pipeline error: {exc}",),
+            origin=origin,
         )
