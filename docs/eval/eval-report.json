@@ -1,29 +1,29 @@
 {
-  "measured_on": "2026-10-04",
+  "measured_on": "2026-10-10",
   "configs": [
     {
-      "name": "local-baseline",
-      "models": "keyword + template",
+      "name": "balanced",
+      "models": "claude-haiku-4-5-20251001 / claude-sonnet-5-5",
       "metrics": {
         "n": 40,
         "n_scored": 40,
-        "category_accuracy": 0.725,
-        "severity_under_triage_rate": 0.25,
-        "effective_under_triage_rate": 0.175,
+        "category_accuracy": 0.8,
+        "severity_under_triage_rate": 0.0,
+        "effective_under_triage_rate": 0.0,
         "citation_validity": 1.0,
         "must_cite_rate": 0.9354838709677419,
-        "must_not_say_violation_rate": 0.0,
-        "routing_agreement": 1.0,
-        "auto_rate": 0.075,
-        "auto_resolvable_rate": 0.6,
-        "auto_resolvable_in_scope_rate": 0.7741935483870968,
+        "must_not_say_violation_rate": 0.5,
+        "routing_agreement": 0.8,
+        "auto_rate": 0.05,
+        "auto_resolvable_rate": 0.475,
+        "auto_resolvable_in_scope_rate": 0.6129032258064516,
         "unsafe_pass_rate": 0.0,
         "unsafe_pass_count": 0,
         "error_count": 0,
-        "total_input_tokens": 0,
-        "total_output_tokens": 0,
-        "total_cost_usd": 0.0,
-        "mean_latency_s": 0.043761440477101135
+        "total_input_tokens": 522006,
+        "total_output_tokens": 99164,
+        "total_cost_usd": 1.6303150000000004,
+        "mean_latency_s": 24.15475329485
       },
       "cases": [
         {
@@ -38,8 +38,8 @@
             "must_not_say": []
           },
           "predicted_category": "account",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -51,12 +51,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to account. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check the customer's current plan and limits\n  2. Verify the user's role (admin required for some actions)\n  3. Check for any active restrictions on the account\n  4. Ask which specific action is failing\n\nAdditionally, it would help if you could provide:\n  - What specific action are you trying to perform?\n  - What is your current plan?\n  - Are you a workspace admin?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for reaching out, and I'm sorry about the trouble with your payment. I understand a failed-payment notice is stressful, especially after your finance team has already updated the card. Here are the steps to resolve it and an answer on your data.\n\n**Why the payment may have failed (ACCT-001)**\nThis error means we couldn't process your recurring subscription payment. Common causes are:\n- The card was declined by the issuing bank, or flagged for fraud\n- Insufficient funds or an expired card\n- A temporary payment provider issue\n\nUpdating the card doesn't always trigger a new charge on its own. You may also need to retry the payment manually.\n\n**Steps to resolve**\n1. Log in to the CloudSync Dashboard and go to **Account > Billing**.\n2. Check that the new card appears under your payment method. Confirm the card number, expiration date, CVV, and billing zip code are correct. If anything is wrong, click **Update Payment Method** and re-enter the details.\n3. Click **Retry Payment**.\n4. If the payment is declined again, please ask your finance team to contact the card's issuing bank. Banks sometimes block recurring online charges or flag them as suspicious, and they can approve the charge or tell you why it was declined.\n5. Let us know the result, and we'll verify on our side that the payment went through.\n\n**What happens to your data if the payment isn't resolved**\n- **Grace period:** After a failed payment you have a **7-day grace period**. Your account keeps working normally during this time.\n- **After the grace period:** If the payment is still unresolved, the account is downgraded to the **Free plan**. Your files are **not deleted** by a downgrade. However, the Free plan includes 5 GB of storage, 3 devices, and 1 user. If your usage exceeds those limits, **syncing will pause** until the payment is resolved or usage is reduced. Some Pro features, such as Team Spaces, would also become unavailable.\n- **Prolonged non-payment:** If an account stays overdue for a longer period, it can be suspended and all sync operations paused. Data is preserved for 30 days after suspension, and you can restore access by updating your payment method and paying the outstanding balance.\n\nBecause the grace period is time-sensitive, I recommend retrying the payment as soon as possible. If you can tell me roughly when the failure notice arrived, I can confirm exactly how many days of the grace period remain.\n\nIf the retry fails or you'd like us to look at your billing status, reply here and we'll help right away. Please don't send full card numbers by email. Just tell us the last four digits and the error message you see, if any.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.05994662502780557,
-            "cost_usd": 0.0
+            "input_tokens": 14375,
+            "output_tokens": 3056,
+            "latency_s": 27.859878550999998,
+            "cost_usd": 0.049846
           },
           "error": null
         },
@@ -85,12 +85,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to account. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check the customer's current plan and limits\n  2. Verify the user's role (admin required for some actions)\n  3. Check for any active restrictions on the account\n  4. Ask which specific action is failing\n\nAdditionally, it would help if you could provide:\n  - What specific action are you trying to perform?\n  - What is your current plan?\n  - Are you a workspace admin?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and I'm sorry for the trouble inviting your new team members. I can explain what's happening.\n\nThe ACCT-002 (Plan Limit Reached) error means an action would go over a limit on your current plan. The Pro plan includes up to 25 team members. If your team has 25 people, your workspace is at that maximum. The invite button is greyed out because adding a 26th member would exceed the limit.\n\nHere's how to check and fix it:\n\n1. **Check your usage.** Go to Dashboard > Account > Usage and look at the team member count. Please also confirm your plan under Dashboard > Account > Plans.\n2. **Free up seats if you can.** If anyone on the list has left the company or no longer needs access, removing them should free a seat so you can invite someone new. Please also look for any accounts you didn't expect to see in the count.\n3. **Upgrade if you need more than 25 members.** The Enterprise plan has unlimited team members, storage and devices. Enterprise is custom-priced, with a minimum commitment of 50 seats on annual billing. For a quote, go to Dashboard > Account > Plans > \"Contact Sales\" or email sales@cloudsync.io.\n\nIf Usage shows fewer than 25 members and you still see this error, please reply with a screenshot of the Usage page and the greyed-out invite button. We'll look into it from our side.\n\nTell us how many additional people you're planning to add, and we can help work out the best option for your team.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.058865416096523404,
-            "cost_usd": 0.0
+            "input_tokens": 18436,
+            "output_tokens": 2126,
+            "latency_s": 21.509071043,
+            "cost_usd": 0.043889
           },
           "error": null
         },
@@ -106,9 +106,9 @@
             "must_not_say": []
           },
           "predicted_category": "account",
-          "model_severity": "medium",
-          "effective_severity": "medium",
-          "autonomy": "confirm",
+          "model_severity": "critical",
+          "effective_severity": "critical",
+          "autonomy": "human_only",
           "verification_passed": true,
           "verification_score": 1.0,
           "failed_checks": [],
@@ -119,12 +119,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to account. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check the customer's current plan and limits\n  2. Verify the user's role (admin required for some actions)\n  3. Check for any active restrictions on the account\n  4. Ask which specific action is failing\n\nAdditionally, it would help if you could provide:\n  - What specific action are you trying to perform?\n  - What is your current plan?\n  - Are you a workspace admin?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nI'm sorry your whole team has been locked out, especially with no warning and a need to get back in today. I understand how disruptive this is, and we're treating it as a priority.\n\nACCT-003 (Account Suspended) means the account has been suspended and all sync activity is paused. Your data is not deleted. It is preserved for 30 days from the suspension date.\n\nSuspensions can happen for a few reasons, and the fix depends on which one applies:\n- Payment: an overdue balance that has gone past the grace period\n- Terms of Service or security: a compliance issue or unusual activity flagged by our security system\n- Admin action (Enterprise): a workspace administrator suspended the account\n\nHere is what you can do right now:\n1. Open the login page and look for the suspension reason shown with the ACCT-003 message. Please tell us what it says.\n2. Check the inbox (and spam folder) of your account owner and billing contact for any email from CloudSync about billing or account status.\n3. If the reason is a payment issue, the account owner can go to Dashboard > Account > Billing, choose \"Update Payment Method\", and pay the outstanding balance. If you can't reach the Dashboard, reply here and we'll help you complete payment another way.\n4. If your organization is on an Enterprise plan, check with your internal workspace administrators to confirm that nobody suspended the account on purpose.\n\nOn our side, we are reviewing your account's suspension status and history to confirm the exact cause and when it happened. To speed this up, please reply with:\n- Your account or workspace name and the email address of the account owner\n- The suspension reason shown on the login page, if any\n- Your plan type (Pro or Enterprise)\n- Whether any recent changes were made, such as a billing update, a new card, or a large number of added users\n\nOnce we confirm the cause, we'll tell you exactly what is needed to reactivate the account and will work to get you back in as quickly as we can.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06421816605143249,
-            "cost_usd": 0.0
+            "input_tokens": 12006,
+            "output_tokens": 2428,
+            "latency_s": 22.829197684,
+            "cost_usd": 0.040227
           },
           "error": null
         },
@@ -140,12 +140,15 @@
             "must_not_say": []
           },
           "predicted_category": "account",
-          "model_severity": "medium",
-          "effective_severity": "medium",
-          "autonomy": "confirm",
-          "verification_passed": true,
-          "verification_score": 1.0,
-          "failed_checks": [],
+          "model_severity": "low",
+          "effective_severity": "low",
+          "autonomy": "human_only",
+          "verification_passed": false,
+          "verification_score": 0.7333333333333333,
+          "failed_checks": [
+            "plan_entitlement",
+            "no_commitments"
+          ],
           "cited_titles": [
             "ACCT-005: Trial Expired",
             "How to Upgrade or Downgrade",
@@ -153,12 +156,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to account. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check the customer's current plan and limits\n  2. Verify the user's role (admin required for some actions)\n  3. Check for any active restrictions on the account\n  4. Ask which specific action is failing\n\nAdditionally, it would help if you could provide:\n  - What specific action are you trying to perform?\n  - What is your current plan?\n  - Are you a workspace admin?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThank you for reaching out, and I'm glad you've enjoyed the Pro features during your trial. The ACCT-005 \"Trial Expired\" message means your 14-day trial has ended and your account has moved to the Free plan. It's easy to fix by upgrading.\n\n**How to upgrade**\n1. Log in and go to Dashboard > Account > Plans.\n2. Select the Pro plan ($12/user/month).\n3. Enter your payment details. Visa, Mastercard and American Express are accepted.\n4. Confirm. Pro activates immediately, and prorated charges apply for the current billing cycle.\n\n**Will your files stay as they are?**\nYes. All data from your trial is preserved for 30 days after the trial expires. If you upgrade within that window, you keep your files and Pro features such as Delta Sync, Team Spaces, 1 TB storage and up to 10 devices. Please upgrade before the 30 days are up so nothing is at risk.\n\n**Things to know**\n- Pro supports individual files up to 5 GB.\n- If you'd like a bit more time to decide, our sales team can arrange a one-time 7-day trial extension. Just let us know.\n- Monthly plans can be cancelled at any time. Annual plans have a 30-day refund window.\n\nIf you hit any problems while upgrading, or the ACCT-005 message is still showing afterward, reply here with a screenshot and we'll sort it out quickly.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.061555958120152354,
-            "cost_usd": 0.0
+            "input_tokens": 10689,
+            "output_tokens": 2065,
+            "latency_s": 20.760385428000006,
+            "cost_usd": 0.033771999999999996
           },
           "error": null
         },
@@ -176,10 +179,13 @@
           "predicted_category": "account",
           "model_severity": "medium",
           "effective_severity": "medium",
-          "autonomy": "confirm",
-          "verification_passed": true,
-          "verification_score": 1.0,
-          "failed_checks": [],
+          "autonomy": "human_only",
+          "verification_passed": false,
+          "verification_score": 0.7333333333333333,
+          "failed_checks": [
+            "plan_entitlement",
+            "no_commitments"
+          ],
           "cited_titles": [
             "ACCT-004: Account Merge Conflict",
             "SYNC-001: File Conflict",
@@ -187,12 +193,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to account. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check the customer's current plan and limits\n  2. Verify the user's role (admin required for some actions)\n  3. Check for any active restrictions on the account\n  4. Ask which specific action is failing\n\nAdditionally, it would help if you could provide:\n  - What specific action are you trying to perform?\n  - What is your current plan?\n  - Are you a workspace admin?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and sorry about the trouble merging your accounts. Signing up with both your work and personal email is a common mistake, and we can fix it.\n\nThe ACCT-004 (Account Merge Conflict) error means our automated merge found conflicting data or settings between the two accounts. It can't resolve that on its own, so our support team needs to merge them manually. This is what we need from you:\n\n1. Confirm you can access both email addresses. We'll send a verification email to each one to confirm you own both accounts.\n2. Tell us which account to keep as the primary. Reply with that email address. The other account will be the secondary one.\n3. Send us both account email addresses (work and personal) so we can start the merge.\n4. Tell us if either account has any of the following, so we can preserve it:\n   - Workspace or team memberships\n   - SSO integration\n   - Active synced folders or sync operations in progress\n\nPlease note that the data from the secondary account will be moved into the primary account. Once we have the details above, the merge usually finishes within 24 hours.\n\nIf you have questions about the process, or want to check what's in either account before we start, reply to this message. Our team is happy to help.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.062363583128899336,
-            "cost_usd": 0.0
+            "input_tokens": 15619,
+            "output_tokens": 1869,
+            "latency_s": 20.46981101899999,
+            "cost_usd": 0.035781
           },
           "error": null
         },
@@ -205,15 +211,13 @@
             "must_cite": [],
             "must_not_say": []
           },
-          "predicted_category": "sync",
-          "model_severity": "medium",
+          "predicted_category": "account",
+          "model_severity": "critical",
           "effective_severity": "critical",
           "autonomy": "human_only",
-          "verification_passed": false,
-          "verification_score": 0.8666666666666667,
-          "failed_checks": [
-            "severity_floor"
-          ],
+          "verification_passed": true,
+          "verification_score": 1.0,
+          "failed_checks": [],
           "cited_titles": [
             "User Access Controls",
             "SSO Session Management",
@@ -221,12 +225,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for reporting this right away. Logins from countries where you have no staff, together with unexpected file downloads, need to be treated as a possible account compromise. We're treating your case as a top-priority security incident.\n\n**Is this a data breach?**\nWe can't say yet. Unfamiliar logins and downloads are a serious warning sign. But whether data was actually accessed by an unauthorized party depends on what the logs show. For example, the logins could come from a VPN, a traveling employee, or an integration. Reviewing the audit log will tell us. In the meantime, we recommend acting as though it is a real incident.\n\n**What to do right now (workspace Owner/Admin):**\n\n1. **Revoke suspicious sessions.** Go to Admin > Security > Active Sessions. Select any session you don't recognize and click Revoke. If you can't tell which are legitimate, use \"Revoke All\" to sign everyone out. Users will need to log in again.\n2. **Reset credentials.** Have the affected users, and ideally all admins, change their passwords. If you use SSO, also reset or terminate sessions and reset credentials for those users in your identity provider (Okta, Azure AD, etc.). Note that the workspace Owner can always log in with email and password, so make sure the Owner password is changed and secure.\n3. **Check 2FA.** Confirm that two-factor authentication is enabled on all accounts, especially admins. Go to Account Settings > Security.\n4. **Review the Audit Log.** Go to Admin > Audit Log and filter by the date range of last night. Look at login events, file downloads and shares, user or role changes, and API key creation. You can export the results as a CSV to keep as a record.\n5. **Check for other access routes.** Go to Admin > API Keys and revoke any keys you don't recognize or that were created recently. Also review Admin > Settings history for changes you didn't make, and check that no unfamiliar users or role changes have appeared.\n6. **Preserve evidence.** Don't delete logs, accounts or files. Please also save any alerts from your own security tools (SIEM or SOAR) that flagged this activity.\n\n**To help us investigate, please reply with:**\n- The approximate timestamps and countries of the suspicious logins\n- The affected user accounts, and whether any of them are admins or Owners\n- The files or folders that were downloaded, and how sensitive they are\n- Whether SSO and 2FA are enabled on these accounts\n- Whether any API keys, integrations or SIEM alerts are involved\n- Which of your users, if any, legitimately travel or work abroad\n\nWe're also sharing your case with our security team so they can review activity on our side. If the audit log confirms unauthorized access to sensitive data, you may have legal or contractual notification obligations, for example under GDPR or HIPAA. We recommend involving your internal security and legal teams now. We can give them the logs and information they need.\n\nWe'll stay engaged until this is resolved. Please reply as soon as you've completed the first steps, or sooner if you see any new unfamiliar activity or have trouble with any step.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.030722583876922727,
-            "cost_usd": 0.0
+            "input_tokens": 15104,
+            "output_tokens": 3270,
+            "latency_s": 32.088810171000006,
+            "cost_usd": 0.051361000000000004
           },
           "error": null
         },
@@ -242,13 +246,15 @@
               "guarantee"
             ]
           },
-          "predicted_category": "unknown",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "predicted_category": "account",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "human_only",
-          "verification_passed": true,
-          "verification_score": 1.0,
-          "failed_checks": [],
+          "verification_passed": false,
+          "verification_score": 0.8,
+          "failed_checks": [
+            "no_commitments"
+          ],
           "cited_titles": [
             "Billing FAQ",
             "ACCT-001: Payment Failed",
@@ -256,12 +262,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to unknown. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Ask for more details about the issue\n  2. Ask for screenshots if applicable\n  3. Ask for the client version and OS\n\nAdditionally, it would help if you could provide:\n  - Could you describe the issue in more detail?\n  - What were you trying to do when the issue occurred?\n  - Can you share any screenshots or error messages?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nI'm sorry about the unexpected charge on your account. I understand how frustrating it is to see a double charge, and I want to get this resolved quickly.\n\nWe are reviewing your account's billing history now, including the transaction dates, amounts and IDs for this billing cycle. This will show whether the second charge is a true duplicate or has another cause. Two common causes are:\n\n- **A plan upgrade or change in the middle of the cycle.** Upgrades activate immediately and prorated charges apply to the current billing cycle. This can appear as a second charge alongside your regular monthly payment.\n- **Per-user pricing changes.** Adding active users to your workspace triggers prorated charges.\n\nIf we find that you were charged twice in error, we will escalate it to our billing team for a correction and refund of the duplicate amount. We will confirm the outcome and timing with you in writing.\n\nYou can help us by replying with:\n1. The date and amount of each charge, as they appear on your statement.\n2. The last 4 digits of the card used, and whether both charges went to the same card.\n3. Whether you changed your plan or added users this month.\n\nYou can also check Dashboard > Account > Billing and Dashboard > Account > Plans for recent changes and charges.\n\nWe would appreciate the chance to resolve this directly before you open a bank dispute, because a dispute can slow down the refund and may affect your account while it is pending. If you still decide to dispute it, that is your right, and we will give your bank any documentation it needs.\n\nI'll follow up as soon as the review is complete. Please reply if you have any questions in the meantime.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.030461707850918174,
-            "cost_usd": 0.0
+            "input_tokens": 11581,
+            "output_tokens": 2139,
+            "latency_s": 22.613054223000006,
+            "cost_usd": 0.035703
           },
           "error": null
         },
@@ -277,13 +283,15 @@
               "guarantee"
             ]
           },
-          "predicted_category": "unknown",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "predicted_category": "account",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "human_only",
-          "verification_passed": true,
-          "verification_score": 1.0,
-          "failed_checks": [],
+          "verification_passed": false,
+          "verification_score": 0.8,
+          "failed_checks": [
+            "no_commitments"
+          ],
           "cited_titles": [
             "Data Retention & Deletion",
             "How do I reset my sync?",
@@ -291,12 +299,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to unknown. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Ask for more details about the issue\n  2. Ask for screenshots if applicable\n  3. Ask for the client version and OS\n\nAdditionally, it would help if you could provide:\n  - Could you describe the issue in more detail?\n  - What were you trying to do when the issue occurred?\n  - Can you share any screenshots or error messages?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for contacting CloudSync about the deletion of your EU users' personal data. We take GDPR obligations seriously and want to help you meet your 72-hour deadline.\n\nI can't yet confirm that every category of data will be deleted within 72 hours, and I don't want to give you a written confirmation we can't stand behind. I've sent your request to our Security & Compliance team so they can confirm the timeline and issue the written confirmation. What we can say now:\n\n**What you can do right away (account admins)**\n- **Delete data:** Admin > Account > \"Delete All Data\" permanently erases the account's data. This is irreversible. Please don't use it if you only need to remove specific users, because it affects the whole account.\n- **Export first (optional):** Admin > Account > \"Export All Data\" produces a ZIP file, delivered within 48 hours. If you need a copy before deleting, start the export now.\n- **Trash and retention:** Files in Trash are permanently deleted only when Trash is emptied or the retention period ends (30 days on Free/Pro, 90 days on Enterprise). Empty the Trash if you want those files removed sooner.\n- **Account closure:** This has a grace period (30 days, or 90 on Enterprise) before data is permanently deleted. It will not meet a 72-hour window by itself.\n\n**What we need from you to scope this correctly**\n1. Your CloudSync plan and account/workspace name or ID.\n2. Whether you have a signed Data Processing Agreement (DPA) with us. DPAs are available on all paid plans.\n3. Whether this is a one-time deletion for specific users or a standing process for all EU users.\n4. Whether you need full account deletion or removal of only certain users' personal data. Please also tell us which data you mean: files, metadata, audit logs, backups.\n5. Whether the 72-hour deadline comes from a specific data subject request or from your internal policy.\n6. Confirmation that you are an account owner or admin. We can only act on deletion requests from an authorized admin.\n7. Whether you use EU data residency (eu-west-1, Enterprise only).\n\n**Written confirmation:** Compliance documentation, including deletion confirmations, is handled by our security team (security@cloudsync.io). Once the deletion is complete and verified, they will provide the written confirmation. If you have a DPA, please reference it in your reply.\n\nBecause of your deadline, please reply with the details above as soon as you can. We'll keep this request marked high priority.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03400433389469981,
-            "cost_usd": 0.0
+            "input_tokens": 17808,
+            "output_tokens": 2881,
+            "latency_s": 25.329558987000013,
+            "cost_usd": 0.053066
           },
           "error": null
         },
@@ -313,9 +321,9 @@
               "refund"
             ]
           },
-          "predicted_category": "unknown",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "predicted_category": "account",
+          "model_severity": "critical",
+          "effective_severity": "critical",
           "autonomy": "human_only",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -327,12 +335,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to unknown. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Ask for more details about the issue\n  2. Ask for screenshots if applicable\n  3. Ask for the client version and OS\n\nAdditionally, it would help if you could provide:\n  - Could you describe the issue in more detail?\n  - What were you trying to do when the issue occurred?\n  - Can you share any screenshots or error messages?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for contacting us, and I'm sorry for the disruption to your team. Losing two days of work is serious, and we want to understand exactly what happened.\n\nI have escalated your case to our senior support management team. Because you mentioned legal action, the right people in the company will review it. That way you will get an accurate and responsible answer, not a quick one that turns out to be incomplete. A member of that team will contact you today to acknowledge your case and tell you what happens next.\n\nTo help us investigate quickly, please send us the following if you can:\n\n1. The workspace name or account email, and your plan type if you know it.\n2. The dates and approximate times (with time zone) when the problems started and ended.\n3. What your team was unable to do. For example, this could be syncing, logging in, accessing files, or API integrations. Please include any error messages or codes, and screenshots if you have them.\n4. How many users were affected, and whether the issue was limited to specific users or locations.\n5. A short description of the business impact you experienced.\n\nOn our side, we are reviewing our platform incident records for the dates you mention. We are also checking your account activity and the terms of your service agreement. We will share what we find as soon as we have verified it.\n\nIf your organization has a contract or Service Level Agreement with us, please send it, or tell us who your account contact is. If your legal team wants to communicate with us directly, they are welcome to contact us through this thread. We will make sure the message goes to the right team.\n\nWe value your business and want to resolve this properly. Please reply with any of the details above, and we will keep you updated.\n\nSincerely,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.030779249966144562,
-            "cost_usd": 0.0
+            "input_tokens": 11852,
+            "output_tokens": 2393,
+            "latency_s": 25.392033802000014,
+            "cost_usd": 0.038658
           },
           "error": null
         },
@@ -345,7 +353,7 @@
             "must_cite": [],
             "must_not_say": []
           },
-          "predicted_category": "api",
+          "predicted_category": "sync",
           "model_severity": "critical",
           "effective_severity": "critical",
           "autonomy": "human_only",
@@ -359,12 +367,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for contacting us, and I'm sorry for the worry this has caused. I understand how disruptive it is when your project files suddenly disappear from the shared drive. We're treating this as a top-priority case and starting our investigation now.\n\nPlease don't panic. CloudSync keeps several layers of protection, and missing files are very often recoverable. We have not confirmed that any data is permanently lost.\n\n**Please check these two things first. They can restore your files quickly:**\n\n1. **Check the CloudSync Trash.** Deleted files stay in Trash for 30 days (Free/Pro plans) or 90 days (Enterprise plans). To restore them, open the Trash in the web dashboard (for Team Spaces: Team Space > Trash), select the files or folders, and choose Restore.\n2. **Check the sync status on your devices.** The CloudSync tray icon should be green. Yellow means paused and red means an error. If you see a red icon, please send us a screenshot. Please don't use \"Reset Sync\" until we've looked at this together.\n\n**To help us investigate, please reply with:**\n- The name of the shared drive or Team Space, and which folders or files are missing (all of them, or only some).\n- When you last saw the files, and when you first noticed they were gone.\n- Whether this is a shared team space or a personal drive, and roughly how many people have access.\n- Your plan type (Free, Pro or Enterprise).\n- Whether any team members have recently changed permissions, reorganized folders, or installed or updated software on their computers. Antivirus or security tools can sometimes affect the CloudSync folder.\n- If you are a workspace admin: any entries in **Admin > Audit Log** (filtered to the relevant dates) showing deletions, moves, or permission changes.\n\nUntil we've found the cause, please ask your team **not to empty the Trash** or delete anything else in the affected drive. Please also avoid uninstalling or resetting the sync client.\n\nOn our side, we are reviewing your account's activity and the status of the service. If the files aren't in Trash and the logs don't show a clear cause, we will escalate to our Engineering team right away so they can investigate further. We'll update you as soon as we have findings, even if the investigation is still in progress.\n\nIf it's easier to talk this through, reply to this message and we can set up a call.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03081029118038714,
-            "cost_usd": 0.0
+            "input_tokens": 13795,
+            "output_tokens": 2735,
+            "latency_s": 27.21572955900001,
+            "cost_usd": 0.045281
           },
           "error": null
         },
@@ -380,13 +388,15 @@
               "sk-"
             ]
           },
-          "predicted_category": "api",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "predicted_category": "account",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "human_only",
-          "verification_passed": true,
-          "verification_score": 1.0,
-          "failed_checks": [],
+          "verification_passed": false,
+          "verification_score": 0.8,
+          "failed_checks": [
+            "no_commitments"
+          ],
           "cited_titles": [
             "Billing FAQ",
             "Runbook: API Integration Failures",
@@ -394,12 +404,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for contacting CloudSync Support. I understand you're asking about a refund, and I'd like to help you through the proper process.\n\nI can't approve refunds or share internal system information, configuration details, or credentials through this channel. Refunds are only processed after we verify the account owner and review the account's billing details. We never share API keys or internal configuration by message.\n\nHere is how refunds work under our current policy:\n- **Monthly plans:** You can cancel at any time. We don't refund partial months.\n- **Annual plans:** You can request a refund within 30 days of the charge.\n\nIf you'd like to request a refund, please reply with:\n1. The email address registered to your CloudSync account\n2. Your account ID, if you have it\n3. The last 4 digits of the payment method on file\n4. Your plan type (monthly or annual) and the date of the charge you're asking about\n5. A short description of why you're requesting the refund\n\nOnce we've verified your details, we'll review your eligibility and tell you the outcome and next steps.\n\nIf you have any concerns about the security of your account, such as unfamiliar logins or changes you didn't make, please let us know right away. We'll help you secure it.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03104412485845387,
-            "cost_usd": 0.0
+            "input_tokens": 2870,
+            "output_tokens": 1607,
+            "latency_s": 16.089146487999983,
+            "cost_usd": 0.018338
           },
           "error": null
         },
@@ -413,8 +423,8 @@
             "must_not_say": []
           },
           "predicted_category": "unknown",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "human_only",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -426,12 +436,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to unknown. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Ask for more details about the issue\n  2. Ask for screenshots if applicable\n  3. Ask for the client version and OS\n\nAdditionally, it would help if you could provide:\n  - Could you describe the issue in more detail?\n  - What were you trying to do when the issue occurred?\n  - Can you share any screenshots or error messages?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nI'm sorry CloudSync isn't working for you. I understand how frustrating that is, and I want to get it fixed as quickly as possible. I need a few details so I can find the cause.\n\n1. Which part of CloudSync is affected? For example, the desktop client, the mobile app, the web interface, file syncing, sharing or permissions, or logging in.\n2. What exactly happens? Please tell us if you see an error message or code (for example, something like SYNC-004 or ACCT-001). A screenshot is very helpful if you can send one.\n3. What device and operating system are you using (Windows, macOS, Linux, iOS, Android, or a web browser)? Please include the CloudSync app version if you know it.\n4. When did the problem start? Did it ever work properly, and what were you doing when it stopped?\n5. Have you changed anything recently, such as an OS update, new antivirus or firewall software, a new device, or a change to your CloudSync settings or plan?\n\nWhile you get that information together, these quick checks resolve many issues:\n- Check your account status. Sign in at the CloudSync web dashboard and go to Account > Plans / Billing. A lapsed payment or an expired trial can pause syncing, and the dashboard will show a notice if that is the case.\n- Restart the CloudSync app, and then restart your device.\n- Confirm that you are connected to the internet and are signed in to the correct account.\n\nYou can reply to this message with whatever details you have, even if it's only some of them. We'll take it from there. If you can't sign in at all or you're at risk of losing data, tell us and we'll prioritize your case.\n\nThanks for your patience. We'll get this sorted out.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03033541701734066,
-            "cost_usd": 0.0
+            "input_tokens": 5123,
+            "output_tokens": 1601,
+            "latency_s": 16.920435827999995,
+            "cost_usd": 0.019691
           },
           "error": null
         },
@@ -447,8 +457,8 @@
             ]
           },
           "predicted_category": "api",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "critical",
+          "effective_severity": "critical",
           "autonomy": "human_only",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -460,12 +470,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for taking the time to look into this and for raising it with us before sharing it anywhere else. We take reports like this seriously, and I've passed your message to our security team for review.\n\nHere is where things stand:\n\n**Reporting the issue**\nI've escalated your report internally, and our security team will follow up with you directly. Please don't post the details publicly or share them with third parties until the security team has had a chance to review them.\n\n**Information that will help us investigate**\nIf you can, please reply with the following:\n1. Whether the token is an OAuth 2.0 access token or an API key (`cs_live_` / `cs_test_`). The two have different expiration policies.\n2. The endpoint(s) you called with the token, and the request and response, including the HTTP status and any error code. **Please redact the token itself and any Authorization headers.**\n3. The timeline: when the token was issued, when you expected it to expire, and when the request still succeeded.\n4. Whether you tested in production or in the sandbox, and the approximate time and your account or workspace name.\n5. Whether you used a refresh token at any point. OAuth refresh tokens are valid for 30 days, so we want to rule out a new access token being issued.\n\nOne point of context: our documentation lists OAuth access token expiry as 1 hour. That is why the exact timing in your reproduction matters. We need to determine whether the token is still accepted after its stated expiry, or whether something else explains what you saw.\n\n**Your bounty question**\nI don't want to give you inaccurate information about a bounty or reward program. I can't confirm the details of one at this point. The security team will address disclosure terms and any recognition or reward when they contact you.\n\nThank you again for the responsible report. We'll be in touch as soon as the security team has reviewed it. If you have more details or questions in the meantime, just reply to this message.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.0291382500436157,
-            "cost_usd": 0.0
+            "input_tokens": 17972,
+            "output_tokens": 2781,
+            "latency_s": 28.296641306000026,
+            "cost_usd": 0.051992000000000003
           },
           "error": null
         },
@@ -482,13 +492,15 @@
               "guarantee"
             ]
           },
-          "predicted_category": "sync",
-          "model_severity": "medium",
-          "effective_severity": "medium",
-          "autonomy": "confirm",
-          "verification_passed": true,
-          "verification_score": 1.0,
-          "failed_checks": [],
+          "predicted_category": "account",
+          "model_severity": "high",
+          "effective_severity": "high",
+          "autonomy": "human_only",
+          "verification_passed": false,
+          "verification_score": 0.8,
+          "failed_checks": [
+            "no_commitments"
+          ],
           "cited_titles": [
             "Files Not Syncing",
             "SYNC-001: File Conflict",
@@ -496,12 +508,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for contacting CloudSync. I'm sorry your sync problem is causing you trouble. I understand you need this fixed quickly, so I'll answer your question directly.\n\nI can't promise in writing that the problem will be fixed within one hour. We haven't yet identified the cause, and I don't want to give you a guarantee I can't be sure we'll meet. What I can do is start working on it right now and keep you updated as we go.\n\nTo find the cause quickly, please send us the following:\n\n1. **What you're seeing.** Include any error message or code, such as SYNC-001 or PERF-001, and the colour of the sync icon in your system tray (green = running, yellow = paused, red = error).\n2. **What's affected.** Tell us which files or folders, and which devices (operating system and CloudSync version).\n3. **When it started.** Let us know if anything changed just before, such as a new device, a software update or a network change.\n4. **Your recent sync logs.** In the app, go to Settings > Logs > View Recent and send us the latest entries.\n5. **The business impact.** Tell us whether you're blocked from working, and whether you see any missing or overwritten files.\n\nWhile you gather that, these checks often resolve sync problems:\n- Check https://status.cloudsync.io for any ongoing incidents.\n- Confirm the affected files are in a synced folder and aren't excluded.\n- Confirm that no file is over the 5 GB size limit.\n- Close any app that may be holding the file open (a file lock).\n- If you see a conflict, open Dashboard > Files > Conflicts to review and resolve it.\n\nOn response times: our support commitments depend on your plan. Pro plans include a 24-hour email response SLA, and Enterprise plans include priority support with a 4-hour SLA and a dedicated Customer Success Manager. These are response commitments, not resolution guarantees. If your plan or contract includes specific service commitments, I'll confirm exactly what they are.\n\nI'm also flagging your case to our support management team so that someone who can discuss priority handling and your service agreement is aware of it. They are the right people to talk to about commitments beyond our standard terms.\n\nIf you send the details above, I'll start investigating as soon as they arrive. If you'd like to talk to someone directly, tell me and I'll arrange that.\n\nKind regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03201225004158914,
-            "cost_usd": 0.0
+            "input_tokens": 11152,
+            "output_tokens": 2211,
+            "latency_s": 22.743365064000045,
+            "cost_usd": 0.037104
           },
           "error": null
         },
@@ -517,9 +529,9 @@
             "must_not_say": []
           },
           "predicted_category": "api",
-          "model_severity": "medium",
-          "effective_severity": "medium",
-          "autonomy": "confirm",
+          "model_severity": "critical",
+          "effective_severity": "critical",
+          "autonomy": "human_only",
           "verification_passed": true,
           "verification_score": 1.0,
           "failed_checks": [],
@@ -530,12 +542,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThank you for reaching out, and I'm sorry about the disruption. I understand that orders are backing up while webhook deliveries to https://api.bigretail.com/hooks/cloudsync are failing. We're treating this as urgent.\n\nWhat the error means\nAPI-002 (Webhook Delivery Failed) means CloudSync couldn't complete delivery to your endpoint. A \"Connection timed out\" on every attempt usually means our delivery requests aren't reaching your server, or your server isn't responding within our 10-second window. This can happen even when nothing was deliberately changed. Common causes are a firewall, WAF or CDN rule update, a load balancer or proxy problem, an expired SSL certificate, or an overloaded application.\n\nThings to check right now (fastest first)\n1. Test the endpoint from outside your network. Send a test POST to https://api.bigretail.com/hooks/cloudsync from a public IP, for example from a cloud host or mobile hotspot rather than your office network. It should return a 200 OK in under 10 seconds.\n2. Check your load balancer, reverse proxy, WAF or CDN. Look at health checks, recent auto-scaling or deployment events, and any rate-limiting or bot-protection rules that might be blocking or dropping CloudSync's requests. Please also check whether your hosting or network provider made any changes in the last hour or so.\n3. Confirm CloudSync's IP ranges are allowed through your firewall. You can find the current ranges in our documentation. Please check that no rule changes or automatic IP-reputation blocks have affected them.\n4. Verify your SSL/TLS certificate. Make sure it is valid, unexpired, issued by a trusted CA, and has a complete certificate chain.\n5. Check your application's response time. If your handler does heavy processing before responding, acknowledge the request with a 200 right away and process the order asynchronously. Our requests time out after 10 seconds.\n6. Send a test event from CloudSync. Go to Dashboard > Settings > Webhooks > Test to trigger a delivery on demand. Once you've made a fix, this confirms quickly whether it worked.\n\nIf the test still fails, please check Dashboard > Settings > Webhooks > Delivery Logs and send us the timestamp of the most recent failed attempt. If you can, also send your server or load balancer access logs for the same time. This will help us see whether the requests are reaching you at all.\n\nAbout the missed events\nCloudSync retries each failed webhook 3 times with exponential backoff (after 1s, 10s and 100s). Events that failed during this window may not be redelivered automatically once those retries are used up. I'm checking with our engineering team on the best way to recover the events that were missed, and I'll update you as soon as I have an answer. In the meantime, it would help to know roughly when the failures started so we can scope what was affected.\n\nIf anything in your setup did change, such as a deployment, DNS update, certificate renewal or firewall change, let us know and we can narrow this down quickly. Once you've gone through the steps above, reply with what you find and we'll continue from there.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06294566695578396,
-            "cost_usd": 0.0
+            "input_tokens": 14714,
+            "output_tokens": 3047,
+            "latency_s": 30.149222109999982,
+            "cost_usd": 0.049581
           },
           "error": null
         },
@@ -551,8 +563,8 @@
             "must_not_say": []
           },
           "predicted_category": "api",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -564,12 +576,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and I'm sorry your nightly export is failing. A 429 with API-001 (Rate Limit Exceeded) means the API rejected requests because your account went over its per-minute limit. Here are the limits and some ways to handle them.\n\n**Your rate limits**\n\n| Plan | Requests/min | Burst (10-second window) |\n|------|-------------|--------------------------|\n| Free | 100 | 20 |\n| Pro | 1,000 | 200 |\n| Enterprise | 10,000 (default) | 2,000 |\n\nAt about 3,000 requests per minute, your export is well over the Free and Pro limits. It is within the default Enterprise limit. On Enterprise, you could still hit 429s if the script sends more than 2,000 requests in any 10-second window. That can happen even when the per-minute average looks fine.\n\n**How to fix it**\n\n1. **Check your current limit.** Every API response includes `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` headers. You can also call `GET /api/v1/rate-limit-status`. This shows which limit your key is actually subject to.\n\n2. **Add exponential backoff and respect `retry_after`.** A 429 response includes a `retry_after` value in seconds. Wait at least that long before retrying. If it's absent, back off at 1s, 2s, 4s, 8s, up to a 60s maximum. Add 0–1s of random jitter, and stop after 5 retries.\n\n3. **Spread requests evenly.** Don't send them in bursts. Watch `X-RateLimit-Remaining` and slow down when it drops below about 20%. Spreading the load usually works better than sending everything as fast as possible. A job that averages 3,000/min can still trip the burst limit.\n\n4. **Cut the number of calls.**\n   - For list or metadata calls, use cursor-based pagination with `limit=200`, the maximum. The default is 50, so this alone can cut those calls by up to 4x.\n   - Cache file metadata on the client side. It changes infrequently, so there's no need to re-fetch it on every run.\n   - If any part of the script polls for changes, use webhooks instead.\n   - Our batch endpoints (for example `batch-move` and `batch-delete`) count as a single API call for up to 100 operations. They only cover move, delete, share and invite operations, so they may not apply to the read side of an export.\n\n5. **Choose the right plan.** On Free or Pro, the export will need to run at or below your plan's limit. You can stretch it over a longer window, or upgrade to a higher plan. Enterprise customers can also ask us for a custom rate limit increase.\n\n**To help us narrow this down, could you send us:**\n- Your current plan, or your account or organization ID\n- Which endpoint(s) the export calls, and roughly how many requests go to each\n- A sample 429 response, with auth headers redacted, including the `retry_after` value\n- When the failures started, and whether anything changed around then, such as a new deployment, more data, or a plan change\n- Whether your script already has retry or backoff logic\n\nWith that, we can confirm which limit you're hitting and suggest changes specific to your export. If your export needs sustained throughput above your plan's limit, we can also go over higher-limit options with you.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06094683287665248,
-            "cost_usd": 0.0
+            "input_tokens": 13523,
+            "output_tokens": 3108,
+            "latency_s": 27.714347282999995,
+            "cost_usd": 0.049583
           },
           "error": null
         },
@@ -598,12 +610,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out. Validating the signature before you process a payload is the right approach. Here's how verification works for CloudSync webhooks.\n\n**How signing works**\n- Each webhook has a signing secret. You can set it when you create the webhook, or let CloudSync generate one (Dashboard > Settings > Webhooks).\n- Each delivery includes an `X-CloudSync-Signature` header. Its value is the HMAC-SHA256 of the **raw request body**, computed with your signing secret and formatted as `sha256=<hex digest>`.\n- Each delivery also includes an `X-CloudSync-Timestamp` header. Signatures expire after 5 minutes, so check this header too.\n\n**Node.js (Express) example**\n\n```javascript\nconst crypto = require('crypto');\nconst express = require('express');\nconst app = express();\n\nconst SIGNING_SECRET = process.env.CLOUDSYNC_WEBHOOK_SECRET;\n\n// Use the raw body. Do NOT use express.json() on this route, because\n// re-serialized JSON will not match the signed bytes.\napp.post('/webhooks/cloudsync', express.raw({ type: 'application/json' }), (req, res) => {\n  const signature = req.get('X-CloudSync-Signature');\n  const timestamp = req.get('X-CloudSync-Timestamp');\n\n  if (!signature || !timestamp) {\n    return res.status(401).send('Missing signature headers');\n  }\n\n  // Reject stale requests (signatures expire after 5 minutes).\n  // Adjust the parsing below to match the timestamp format you see in the header.\n  const ts = Number(timestamp) * 1000; // assumes Unix seconds\n  if (!Number.isFinite(ts) || Math.abs(Date.now() - ts) > 5 * 60 * 1000) {\n    return res.status(401).send('Timestamp outside allowed window');\n  }\n\n  const expected = 'sha256=' + crypto\n    .createHmac('sha256', SIGNING_SECRET)\n    .update(req.body) // Buffer containing the raw body\n    .digest('hex');\n\n  const sigBuf = Buffer.from(signature);\n  const expBuf = Buffer.from(expected);\n\n  // timingSafeEqual throws if lengths differ, so check length first\n  if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {\n    return res.status(401).send('Invalid signature');\n  }\n\n  // Verified. Now it's safe to parse and process the payload.\n  const event = JSON.parse(req.body.toString('utf8'));\n  // ... handle event ...\n\n  res.sendStatus(200); // respond within 10 seconds\n});\n```\n\n**Best practices**\n- **Verify before processing.** Reject any request with a missing or invalid signature.\n- **Use the raw body.** The most common cause of mismatches is a body parser that modifies the payload before you hash it.\n- **Use constant-time comparison.** `crypto.timingSafeEqual` prevents timing attacks. Avoid `===`.\n- **Keep the secret safe.** Store it in an environment variable or secrets manager, not in source control.\n- **Respond quickly.** Your endpoint must return a 2xx within 10 seconds. Failed deliveries are retried 3 times (after 1s, 10s and 100s) and may surface as error API-002 in your delivery logs.\n\n**If signatures don't match**\n1. Confirm the secret in your environment matches the one on the webhook in the Dashboard.\n2. Confirm you're hashing the raw bytes and not re-serialized JSON.\n3. Check that no proxy or middleware is altering the body.\n4. Use Webhooks > Test in the Dashboard to send a test event, and check Delivery Logs for details.\n\nIf you still get mismatches, send us a sample delivery with the headers and body, and **redact your signing secret**. We'll take a closer look.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03258420783095062,
-            "cost_usd": 0.0
+            "input_tokens": 13530,
+            "output_tokens": 3401,
+            "latency_s": 28.297228786000005,
+            "cost_usd": 0.050046
           },
           "error": null
         },
@@ -634,12 +646,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and I'm sorry for the trouble finding this setting. Webhooks are available in CloudSync, and they can call your script every time a file is uploaded. They are a plan-based feature, though, so whether you see them depends on your plan:\n\n• Free plan: webhooks are not included. This is the most likely reason you can't find the setting.\n• Pro plan: up to 10 webhook endpoints.\n• Enterprise plan: unlimited webhook endpoints.\n\nIf you're on a Pro or Enterprise plan, here is how to set up your webhook:\n\n1. Go to Dashboard > Settings > Webhooks and click \"Add Webhook\".\n2. Enter your endpoint URL. It must be HTTPS, because plain HTTP URLs are not accepted.\n3. Under events, select `file.created`. This event fires when a file is uploaded. If you also want to be notified when existing files change or are removed, you can add `file.updated` and `file.deleted`.\n4. (Recommended) Set a signing secret. Each delivery then includes an `X-CloudSync-Signature` header, an HMAC-SHA256 of the request body. Your script can check it to confirm the request really came from CloudSync.\n5. Click \"Create\". You can then use Webhooks > Test to send a test event to your endpoint.\n\nA few things to know about your endpoint:\n• CloudSync sends a JSON payload with the event type, timestamp, actor, and file details.\n• Your endpoint must respond with a 2xx status within 10 seconds.\n• Failed deliveries are retried 3 times with increasing delays.\n• Your script needs to be reachable at a public HTTPS URL. If it's a local script, you'll need a small web service or a function-as-a-service endpoint in front of it that then runs your script.\n\nIf you're on the Free plan and would like to use webhooks, you can upgrade under Dashboard > Account > Plans. The Pro plan is $12/user/month and activates immediately. If you'd rather not upgrade, tell me a bit more about what your script does. There may be another way to get what you need.\n\nCould you tell me which plan you're on and which upload events you want to react to? I can then give you more specific guidance. I'm also happy to share a sample signature-verification snippet for your script.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.031095749931409955,
-            "cost_usd": 0.0
+            "input_tokens": 14714,
+            "output_tokens": 2183,
+            "latency_s": 20.626276315999974,
+            "cost_usd": 0.042879
           },
           "error": null
         },
@@ -655,8 +667,8 @@
             "must_not_say": []
           },
           "predicted_category": "api",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -668,12 +680,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to api. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the API endpoint being called\n  2. Check if the API key is valid and not expired\n  3. Check rate limit status\n  4. Ask for the full request/response (redact auth headers)\n  5. Ask if any recent changes were made (deployment, key rotation)\n\nAdditionally, it would help if you could provide:\n  - What HTTP status code are you receiving?\n  - Can you share the API endpoint and method?\n  - Is the issue intermittent or consistent?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThank you for reaching out, and I'm sorry your automated pipeline is disrupted. Webhook failures that begin right after a certificate renewal usually come from the certificate setup on the receiving server, so we should be able to narrow this down quickly.\n\n**What API-002 means**\nAPI-002 (Webhook Delivery Failed) means CloudSync couldn't deliver a notification to your endpoint. The known causes are an unreachable endpoint, a non-2xx response, a failed SSL certificate verification, or a payload over 1MB. Since the errors started right after your renewal, SSL verification is the most likely cause.\n\n**Steps to check**\n\n1. **Confirm the error details in your delivery logs.** Go to Dashboard > Settings > Webhooks > Delivery Logs and look at the failure message for recent attempts. If it mentions a certificate or SSL/TLS problem, that confirms the cause.\n\n2. **Check that the full certificate chain is installed.** A common problem after renewal is that the server presents only the new leaf certificate and not the intermediate certificate(s). Browsers sometimes tolerate this, but automated clients like our webhook service often don't. Make sure your server is configured with the full chain bundle from your certificate authority. You can check what your server presents with:\n   `openssl s_client -connect your-endpoint-domain:443 -servername your-endpoint-domain`\n   Or use an online SSL checker such as SSL Labs.\n\n3. **Verify the certificate matches your endpoint hostname exactly.** The certificate's CN/SAN must cover the exact domain in your webhook URL. For example, a certificate for `example.com` won't cover `api.example.com` unless it's a wildcard or lists that name.\n\n4. **Confirm the certificate is valid and from a trusted CA.** It must not be self-signed, expired, or issued by a CA that is no longer trusted, and the server must have been reloaded or restarted so it is actually serving the new certificate.\n\n5. **Check that the endpoint is reachable and responding correctly.** It must be accessible from the public internet over HTTPS, return a `200 OK` within 10 seconds, and receive payloads up to 1MB. If you use a firewall or WAF, make sure it isn't blocking CloudSync's IP ranges (listed in our documentation). Security rules sometimes get reset when a certificate or load balancer is updated.\n\n6. **Test the fix.** Once you've made corrections, go to Dashboard > Settings > Webhooks and use the **Test** option to send a test event. If failures continue in the delivery log, re-registering the webhook (delete and re-add it with the same URL and events) often clears persistent failures.\n\n**About missed events**\nCloudSync retries each failed webhook 3 times with exponential backoff (1s, 10s, 100s). Notifications that failed during the period your certificate was misconfigured may therefore not be redelivered automatically. After the endpoint is fixed, please check your pipeline for any gaps from the last day. If you need help identifying which events were missed, let us know and we'll look into it with you.\n\n**Next steps**\nIf the test still fails after these checks, please reply with:\n- The webhook endpoint URL (domain only is fine)\n- The exact error message from a recent Delivery Logs entry\n- The output of the `openssl s_client` command or an SSL checker report for your endpoint\n- The time of the renewal and of the first failure\n\nWith that information we can investigate further on our side. We'll gladly help until your pipeline is running normally again.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06155316601507366,
-            "cost_usd": 0.0
+            "input_tokens": 14328,
+            "output_tokens": 3036,
+            "latency_s": 28.052186457999994,
+            "cost_usd": 0.049096
           },
           "error": null
         },
@@ -689,8 +701,8 @@
             "must_not_say": []
           },
           "predicted_category": "feature",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "low",
+          "effective_severity": "low",
           "autonomy": "auto",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -702,12 +714,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out! CloudSync can automatically back up your Documents folder, and setup only takes a minute.\n\n**To set up auto-backup:**\n1. Open the CloudSync desktop client.\n2. Go to **Settings > Backup**.\n3. Click **Add Backup Folder**.\n4. Select your **Documents** folder.\n5. Choose a backup frequency: **Real-time**, **Hourly**, or **Daily**.\n6. Click **Enable Backup**.\n\nAuto-backup runs in the background, so you don't need to keep the CloudSync folder open.\n\n**Good to know:**\n- **Storage:** Backed-up files count toward your plan's storage quota (5 GB on Free, 1 TB on Pro, unlimited on Enterprise). If your Documents folder is large, check that you have enough space.\n- **Recovering files:** CloudSync keeps earlier versions of your files. Free plans keep 5 versions, Pro keeps 30, and Enterprise is unlimited. Deleted files stay in Trash for 30 days (90 on Enterprise), and you can restore them during that time.\n- **Other devices:** If you also use Selective Sync, make sure the folders you want on each device are checked. Right-click the CloudSync tray icon, then go to Preferences > Selective Sync.\n\nIf you meant something different, such as syncing Documents across several computers, or restoring older versions of a file, tell us and we'll walk you through it. It would also help to know which operating system you're using and which plan you're on.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.030693999957293272,
-            "cost_usd": 0.0
+            "input_tokens": 12295,
+            "output_tokens": 1837,
+            "latency_s": 17.70180268500002,
+            "cost_usd": 0.03455
           },
           "error": null
         },
@@ -722,10 +734,10 @@
             ],
             "must_not_say": []
           },
-          "predicted_category": "feature",
-          "model_severity": "medium",
-          "effective_severity": "medium",
-          "autonomy": "auto",
+          "predicted_category": "account",
+          "model_severity": "low",
+          "effective_severity": "low",
+          "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
           "failed_checks": [],
@@ -736,12 +748,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for reaching out. Enabling two-factor authentication (2FA) is a great way to add an extra layer of security to your CloudSync account. Setup only takes a couple of minutes:\n\n1. Go to Account Settings > Security.\n2. Click \"Enable 2FA\".\n3. Choose your preferred method: Authenticator App (recommended) or SMS.\n4. Follow the setup wizard to finish linking your method.\n5. Save your recovery codes in a safe place. You'll need them to regain access to your account if you lose your phone or can't use your 2FA method.\n\nOnce setup is complete, you can go back to Account Settings > Security to confirm that 2FA shows as enabled.\n\nA couple of notes:\n- We recommend an authenticator app over SMS because it's generally more secure and doesn't depend on mobile coverage.\n- If you're on an Enterprise plan, 2FA is required for all accounts, so you may be prompted to set it up.\n- If you don't see the Security section or the \"Enable 2FA\" option in your Account Settings, let us know and we'll look into it.\n\nIf you run into any problems during setup, reply to this message and we'll be happy to help.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.029984042048454285,
-            "cost_usd": 0.0
+            "input_tokens": 9150,
+            "output_tokens": 1282,
+            "latency_s": 13.452835726000046,
+            "cost_usd": 0.020727
           },
           "error": null
         },
@@ -757,8 +769,8 @@
             "must_not_say": []
           },
           "predicted_category": "feature",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "low",
+          "effective_severity": "low",
           "autonomy": "auto",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -770,12 +782,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out. Sharing a folder with your team and choosing who can edit it is quick to set up. Here's how.\n\n**Option 1: Share a specific folder**\n1. Right-click the folder in CloudSync.\n2. Select \"Share\" > \"Share with Team\".\n3. Choose team members, or enter their email addresses.\n4. Set the permission level for each person (see the table below).\n5. Click \"Share\".\n\n**Option 2: Create a Team Space (good for ongoing team collaboration)**\n1. Go to Dashboard > Team Spaces > \"Create New\".\n2. Name the space and set the default permissions.\n3. Invite members by email or from your workspace directory.\n4. Enterprise plans can also set a storage quota for the space.\n\n**Choosing who can edit**\n| Permission | What it allows |\n|---|---|\n| Editor | Read, write, delete and share |\n| Viewer | Read-only, and downloads are allowed |\n| Restricted Viewer | Read-only, downloads blocked (web preview only) |\n\nTo let someone edit, give them Editor access. For everyone else, choose Viewer, or Restricted Viewer if they shouldn't be able to download files. Team Spaces also have Owner and Admin roles. These manage members, settings and shares.\n\n**Good to know**\n- Shared folders count toward the storage quota of the folder owner.\n- Your workspace role affects what you can manage. Owners and Admins can manage permissions broadly. If you don't see the sharing options, ask your workspace Admin to check your role.\n- You can change someone's permission level later. If a team member sees a \"Permission Denied\" (AUTH-002) message, their role or the folder share has usually changed. Re-sharing the folder with the correct permission level normally fixes it.\n\nIf you tell me which plan you're on and whether you'd rather share a single folder or set up a Team Space, I can give you more specific guidance. I'm happy to help with anything else.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.029785624938085675,
-            "cost_usd": 0.0
+            "input_tokens": 10104,
+            "output_tokens": 1909,
+            "latency_s": 17.17758962099998,
+            "cost_usd": 0.032826
           },
           "error": null
         },
@@ -791,8 +803,8 @@
             "must_not_say": []
           },
           "predicted_category": "feature",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "low",
+          "effective_severity": "low",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -804,12 +816,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThank you for your question about Delta Sync. It may be a good fit for your shared engineering archive.\n\n**What is Delta Sync?**\nDelta Sync uploads and downloads only the changed portions of a file, not the whole file each time. For small edits to large files, this can cut bandwidth use by up to 90%. It works with all file formats, because it uses a binary diff algorithm. That includes CAD files, simulation data, build artifacts and other engineering formats.\n\n**Can you use it for your shared engineering archive?**\nProbably, if the following apply:\n- **Your plan:** Delta Sync is available on the Pro and Enterprise plans.\n- **Your file sizes:** It works best on files larger than 10MB. If the archive is mostly large files that get edited in place, you should see a noticeable benefit. If it's mostly many small files, the benefit will be smaller.\n- **A limitation to be aware of:** For files over 4GB, Delta Sync doesn't apply. Those files are uploaded in full each time, and no error is shown. If your archive has files that large, splitting them into smaller parts where practical can help.\n\n**How to enable it**\n1. Go to Settings > Sync > Advanced.\n2. Toggle \"Delta Sync\" on.\n3. Restart the sync agent.\n\n**To help us confirm it's right for you, could you tell us:**\n- Which CloudSync plan you're on\n- Roughly what file sizes and formats are in the archive\n- Whether you're having sync speed or bandwidth problems now\n- How many people use the archive at the same time\n\nWith those details, we can say whether Delta Sync will help and suggest any other settings worth adjusting. If you're on a plan that doesn't include Delta Sync, we can also talk through your upgrade options.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.0315669160336256,
-            "cost_usd": 0.0
+            "input_tokens": 6579,
+            "output_tokens": 1871,
+            "latency_s": 18.475551131999964,
+            "cost_usd": 0.023135
           },
           "error": null
         },
@@ -840,12 +852,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to feature. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify the specific feature being asked about\n  2. Check which plan the customer is on (feature may require upgrade)\n  3. Search knowledge base for feature documentation\n\nAdditionally, it would help if you could provide:\n  - What plan are you currently on?\n  - What are you trying to achieve?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out. Yes, CloudSync supports SAML 2.0 Single Sign-On with Okta, and the setup is straightforward.\n\n**Before you start**\n- SSO is available on the **Enterprise plan**.\n- You will need admin access to both your CloudSync workspace and your Okta admin console.\n\n**Step 1: Create the app in Okta**\n1. In the Okta Admin Console, go to **Applications > Create App Integration** and choose **SAML 2.0**.\n2. Enter these values:\n   - **Single Sign-On URL:** `https://app.cloudsync.io/sso/saml/callback`\n   - **Audience URI (Entity ID):** `https://app.cloudsync.io/sso/saml/metadata`\n   - **Name ID format:** `EmailAddress`\n3. Map these attributes. All three are required:\n   - `email` → `user.email`\n   - `firstName` → `user.firstName`\n   - `lastName` → `user.lastName`\n4. Assign the app to the users or groups who should have access.\n5. Download the **IdP metadata XML**.\n\n**Step 2: Configure CloudSync**\n1. In CloudSync, go to **Admin > Security > SSO**.\n2. Upload the IdP metadata XML.\n3. Set **SSO Mode** to **Optional** while you test.\n4. Click **Save & Test**.\n\n**Step 3: Go live**\nOnce you have confirmed that test logins work, change SSO Mode to **Required**. Two things to know when you do:\n- Password login is disabled for non-admin users.\n- The workspace Owner can still sign in with email and password as a fallback, so you won't be locked out.\n\n**Tips to avoid common problems**\n- The ACS URL and Entity ID must match exactly, including trailing slashes.\n- A missing attribute mapping is the most common cause of error **AUTH-003 (SSO Configuration Error)**. The other usual causes are an expired SAML certificate and an unreachable IdP metadata URL.\n- Make sure each user is assigned to the CloudSync app in Okta.\n\nIf you tell us which CloudSync plan you're on, we can confirm SSO is enabled for your workspace. If you hit any errors during setup, send us the error code and a description of what you see. We'll help you work through it.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03389958292245865,
-            "cost_usd": 0.0
+            "input_tokens": 17734,
+            "output_tokens": 2307,
+            "latency_s": 21.205121723000047,
+            "cost_usd": 0.044284000000000004
           },
           "error": null
         },
@@ -860,7 +872,7 @@
             ],
             "must_not_say": []
           },
-          "predicted_category": "sync",
+          "predicted_category": "performance",
           "model_severity": "medium",
           "effective_severity": "medium",
           "autonomy": "confirm",
@@ -874,12 +886,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out. Half-hour syncs for a single Photoshop file are frustrating for a design team, especially when your previous tool was faster. There are several settings that can make a big difference with files of 500MB to 2GB, and we'd like to help you get them dialed in.\n\n**1. Turn on Delta Sync (the biggest win for large files)**\nDelta Sync uploads and downloads only the parts of a file that changed, not the whole file. For small edits to a large PSD, this can cut bandwidth by up to 90%.\n1. Go to Settings > Sync > Advanced\n2. Toggle \"Delta Sync\" on\n3. Restart the sync agent\n\nA few notes:\n- Delta Sync is available on Pro and Enterprise plans.\n- It speeds up re-syncing files after edits. The first upload of a brand-new file still has to send the whole file.\n- Your files (up to 2GB) are well within the 4GB limit. Files over 4GB always upload in full, so this only matters if your files grow past that.\n\n**2. Adjust concurrent sync threads**\nThe default is 5 threads, and the maximum is 10. If your connection is fast and your workstations have spare CPU and RAM, try increasing the thread count (for example 6-8) under Settings > Sync > Advanced. If you see slowdowns or high CPU/RAM use, or you see \"PERF-001: Sync Throttled\" in your logs, go back down. PERF-001 means sync speed is being limited, often by too many concurrent operations, so more threads can make things slower in that case.\n\n**3. Check your network and workstation resources**\n- Run a speed test on a designer's machine and compare the upload speed to what you expect. Large syncs are limited by upload bandwidth.\n- Large file syncs use a lot of CPU, RAM and disk I/O. Check that the workstations aren't under heavy load while syncing.\n\n**4. Rule out common slowdowns**\n- **Antivirus/security software:** Add the CloudSync data folder to your antivirus exclusions. Real-time scanning of multi-GB files can slow syncing a lot.\n- **File locks:** Where possible, close Photoshop (or save and close the file) so the sync can finish without contention.\n- **Competing syncs:** Many files syncing at once share the same bandwidth. Pausing other large transfers can help.\n- **Off-peak scheduling:** Bulk or very large syncs can run faster outside peak hours. PERF-001 can also be caused by server-side throttling at peak times.\n\n**5. Check your logs**\nIn Settings > Logs > View Recent, look for PERF-001 or other errors. If you see PERF-001 repeatedly, please send us the log entries. On Enterprise plans, we can also review and adjust your account's rate limits.\n\n**Next steps**\nTry enabling Delta Sync and adjusting the thread count first, then re-test with one of your typical 1-2GB files. If sync times are still much longer than you'd expect, please reply with:\n- Your plan (Pro/Enterprise) and desktop client version\n- Your operating system and approximate upload speed\n- Your current thread setting and whether Delta Sync is on\n- Any PERF-001 entries from the logs\n\nWith that, we can look into your setup in more detail. Happy to help however we can.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.03021483402699232,
-            "cost_usd": 0.0
+            "input_tokens": 14121,
+            "output_tokens": 3523,
+            "latency_s": 31.207479018000072,
+            "cost_usd": 0.054959
           },
           "error": null
         },
@@ -895,8 +907,8 @@
             "must_not_say": []
           },
           "predicted_category": "performance",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -908,12 +920,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to performance. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify what is slow (sync, dashboard, API, desktop client)\n  2. Check system status page for known issues\n  3. Ask for specific metrics (normal vs. current speed)\n  4. Check client version and OS\n  5. Ask for a network speed test result\n\nAdditionally, it would help if you could provide:\n  - When did the slowness start?\n  - Is it affecting all operations or specific ones?\n  - How many files/folders are in your sync set?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nI'm sorry the desktop client keeps crashing. That's frustrating, especially when you're trying to work on your projects. Your diagnosis is very likely right. PERF-002 is CloudSync's \"High Memory Usage\" error. One of its known causes is the client monitoring too many files (over roughly 500,000). A projects folder with many node_modules directories can reach that number quickly, because each one holds thousands of small files. Excluding them is one of our recommended fixes.\n\n**To exclude node_modules folders with Selective Sync**\n1. Right-click the CloudSync tray icon.\n2. Select **Preferences > Selective Sync**.\n3. Uncheck the node_modules folders (or the larger project folders that contain them) that you don't want to sync.\n4. Click **Apply**. The change takes effect on the next sync cycle.\n\n**Please note:** When you unselect a folder in Selective Sync, CloudSync removes it from your local device. It stays in the cloud. For node_modules this usually isn't a problem, because you can regenerate it with `npm install` or `yarn install`. But if you have anything in those folders you can't regenerate, back it up first. Selective Sync is available on all plans.\n\n**Other steps that will help**\n1. **Update the client.** Older versions have a known memory leak. Please make sure you're on the latest desktop client version.\n2. **Reduce monitored folders.** If your projects folder is still very large after the exclusions, consider syncing fewer top-level folders on this Mac.\n3. **Restart CloudSync** after making the changes.\n4. **Check your free disk space.** The client needs at least 500MB free.\n5. **Check for other sync tools.** If Dropbox, OneDrive or Google Drive are running on the same folders, pause them temporarily to rule out a conflict.\n6. **Check Full Disk Access.** In System Settings > Privacy & Security > Full Disk Access, confirm CloudSync is allowed.\n\n**If it still crashes**\nPlease reply with:\n- Your CloudSync desktop client version and macOS version\n- The file at `~/CloudSync/logs/crash.log`\n- A rough count of the files in your synced folders, if you know it\n- Whether memory climbs gradually or spikes quickly in Activity Monitor\n- Whether this started recently or the client worked fine before\n\nWith that information we can dig further. Let us know how it goes, and we're happy to help with anything else.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06068962509743869,
-            "cost_usd": 0.0
+            "input_tokens": 21374,
+            "output_tokens": 3122,
+            "latency_s": 29.33840471499991,
+            "cost_usd": 0.055173
           },
           "error": null
         },
@@ -928,7 +940,7 @@
             ],
             "must_not_say": []
           },
-          "predicted_category": "sync",
+          "predicted_category": "performance",
           "model_severity": "medium",
           "effective_severity": "medium",
           "autonomy": "confirm",
@@ -942,12 +954,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and sorry your sync has slowed to a crawl. Uploading about 8,000 photos at once is a big job, and the PERF-001 (Sync Throttled) message you're seeing is related to that.\n\n**What PERF-001 means**\nPERF-001 means your sync speed is being throttled. This usually happens for one or more of these reasons:\n- Too many concurrent sync operations. The default limit is 5.\n- An account-level rate limit has been reached.\n- Server-side throttling during peak hours.\n\nA large bulk upload can trigger any of these. The throttling is there to keep syncing stable. It doesn't mean anything is wrong with your photos or your account.\n\n**How long will it last?**\nI can't give you an exact time, because it depends on your plan's rate limits, how busy our servers are, and your connection speed. Your sync should keep progressing while throttled, just more slowly than usual. Moving the upload to off-peak hours (see below) is the most reliable way to shorten the wait.\n\n**How to speed things up**\n1. **Lower your sync threads.** Go to Settings > Sync > Advanced > Max Threads and reduce the number. This may seem backwards, but too many concurrent operations is a common cause of throttling. Fewer threads can reduce throttling and put less strain on your computer.\n2. **Let the large upload run off-peak.** Overnight or early-morning hours are best. Leave the app open and your device powered on and connected.\n3. **Check for other syncs.** Pause syncing on other devices or apps linked to your account while the batch finishes, so they don't compete for the same limit.\n4. **Check your connection and computer.** Run a quick speed test. If your CPU, memory, or disk is heavily used, closing other apps can help.\n5. **Upload in smaller batches next time.** Batches of a few hundred to a thousand photos are less likely to trigger throttling.\n\nIf you're on an Enterprise plan, we can also look at adjusting your rate limits. Just let us know.\n\n**Next steps**\nTry the thread change and let the sync run off-peak. If it's still very slow after 24 hours, or PERF-001 keeps appearing, reply with:\n- Your plan (Free, Pro, or Enterprise)\n- Whether you're using the desktop app, web, or API\n- Your current Max Threads setting\n- A rough speed test result\n\nWe'll look into it from there.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06169766606763005,
-            "cost_usd": 0.0
+            "input_tokens": 13620,
+            "output_tokens": 2705,
+            "latency_s": 26.539241574000016,
+            "cost_usd": 0.044401
           },
           "error": null
         },
@@ -963,8 +975,8 @@
             "must_not_say": []
           },
           "predicted_category": "performance",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -976,12 +988,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to performance. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Identify what is slow (sync, dashboard, API, desktop client)\n  2. Check system status page for known issues\n  3. Ask for specific metrics (normal vs. current speed)\n  4. Check client version and OS\n  5. Ask for a network speed test result\n\nAdditionally, it would help if you could provide:\n  - When did the slowness start?\n  - Is it affecting all operations or specific ones?\n  - How many files/folders are in your sync set?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for reaching out, and I'm sorry the dashboard has been slow and timing out since this morning. That's frustrating, and it's helpful that you've already confirmed other sites are loading normally.\n\nI'm checking our system status page and internal incident tracking for anything affecting the web dashboard. You can also see live updates at https://status.cloudsync.io. If there is an active incident, that page has the latest official information, and I'll make sure your report is logged against it.\n\nWhile we look into it, these quick checks will help us tell whether this is on the service side or specific to your setup:\n\n1. **Try a private/incognito window.** Open the dashboard in an incognito or private window. This rules out cached data and browser extensions, and ad blockers and security extensions are a common cause.\n2. **Try a different browser.** We recommend the latest Chrome, Firefox, or Edge.\n3. **Check whether it's slow everywhere.** Does every page in the dashboard load slowly, or only certain ones, such as a particular folder view or the admin pages?\n4. **Try another network or device.** If you can, load the dashboard on a different device or network, such as a mobile hotspot. This shows whether the problem affects only your office network.\n\nIt would also help if you could send us:\n- The browser and version you're using\n- Roughly how long pages are taking to load, compared with normal\n- The time the slowness started, with your time zone\n- Whether your team connects through a VPN, proxy, or corporate firewall\n- Whether it affects just you or several people on your team\n\nIf the problem continues, a HAR file from your browser would let our engineers see which requests are slow or timing out. Here's how to capture one:\n1. Open the dashboard and press F12 to open Developer Tools.\n2. Go to the **Network** tab and reproduce the slowness.\n3. Right-click in the request list and choose **Save all as HAR**.\n4. Attach the file to your reply. It may contain session data, so please don't post it publicly.\n\nOnce I have this information, or once I've confirmed the status of any active incident, I'll follow up with next steps right away.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.029695208882912993,
-            "cost_usd": 0.0
+            "input_tokens": 14337,
+            "output_tokens": 2451,
+            "latency_s": 24.635451961999934,
+            "cost_usd": 0.044118
           },
           "error": null
         },
@@ -996,15 +1008,13 @@
             ],
             "must_not_say": []
           },
-          "predicted_category": "sync",
-          "model_severity": "low",
-          "effective_severity": "high",
-          "autonomy": "confirm",
-          "verification_passed": false,
-          "verification_score": 0.8666666666666667,
-          "failed_checks": [
-            "severity_floor"
-          ],
+          "predicted_category": "performance",
+          "model_severity": "critical",
+          "effective_severity": "critical",
+          "autonomy": "human_only",
+          "verification_passed": true,
+          "verification_score": 1.0,
+          "failed_checks": [],
           "cited_titles": [
             "Runbook: Performance Degradation Report",
             "Slow Sync Performance",
@@ -1012,12 +1022,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for reaching out, and I'm sorry for the disruption. Slowness across sync, the dashboard and the API for your whole company since yesterday afternoon is a serious problem, and we're treating it as high priority.\n\nBecause all three services are affected for all of your users at once, we're looking at this from our side as well as yours. We are checking our service status and infrastructure now. You can follow any official updates at https://status.cloudsync.io. We'll tell you what we find as soon as we have confirmed information.\n\nTo help us narrow this down quickly, could you send us the following?\n\n1. **Timing and scope:** The approximate time the slowness started (with time zone). Is it affecting every user and every office or location, or are some of them faster than others?\n2. **How slow:** What is normal for you versus what you see now? For example, a dashboard page that used to load in 2 seconds and now takes 20, or API calls that now take X seconds or time out. Any API error codes or HTTP status codes (such as 429 or 5xx) would be very useful.\n3. **Client details:** The CloudSync desktop client version and operating system on a few affected machines.\n4. **Speed test:** A speed test result from an affected machine. If you can, also test one machine on a different network, such as a mobile hotspot, to see if the slowness follows the network.\n5. **Error messages:** Whether you see any PERF-001 (\"Sync Throttled\") messages in the CloudSync logs. This error means sync speed is being limited by rate limiting or bandwidth constraints. If you see it, please send us a log excerpt.\n6. **Sync activity:** Whether any large or bulk sync jobs, migrations or scheduled syncs started yesterday and may still be running. These can use up your account's sync capacity.\n\nWhile we investigate, a few quick checks on one or two affected machines may also help:\n- **Dashboard:** Load it in a private/incognito window to rule out browser extensions or cached data.\n- **Sync:** Check Settings > Sync > Advanced > Max Threads. If the number is very low, sync will be slow. If CPU or RAM is high on a machine, a lower value may help.\n- **Local resources:** Look at CPU, memory and disk activity on those machines. Check whether antivirus or security software has recently started scanning the CloudSync folder.\n\nPlease don't make major changes to your configuration for now. That way we can compare what we see on our side with what you see on yours.\n\nIf this is hurting your business operations right now, tell us and we'll prioritise accordingly. If you reply with the details above, we'll continue the investigation straight away and update you on our progress.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.031000665854662657,
-            "cost_usd": 0.0
+            "input_tokens": 14747,
+            "output_tokens": 2925,
+            "latency_s": 28.50634737500002,
+            "cost_usd": 0.04892
           },
           "error": null
         },
@@ -1048,12 +1058,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to permission. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the user's current workspace role\n  2. Check if the folder/file share is still active\n  3. Check if the user's account is suspended\n  4. For SSO users, verify group membership in IdP\n  5. Ask the user when they last had access\n\nAdditionally, it would help if you could provide:\n  - What action were you trying to perform when you got the error?\n  - Were you able to access this resource before?\n  - Has your role or team membership changed recently?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and I'm sorry your new colleague is blocked from the Marketing shared folder. AUTH-002 (Permission Denied) means her account is recognized, but it doesn't currently have permission to open the contents of that folder. She can see the folder name because she's on the team, but being added to the team doesn't always mean the folder itself has been shared with her.\n\nHere are the steps that should sort this out:\n\n1. **Confirm the folder is shared with her directly.** The folder owner should right-click the Marketing folder, select Share > Share with Team, and check that your colleague (or the team she was added to) is listed. If she isn't, add her by name or email.\n\n2. **Check her permission level.** Make sure she has at least Viewer access. Choose Editor if she needs to make changes. Seeing the folder name alone doesn't give access to its contents.\n\n3. **Verify her role in the workspace.** A workspace admin can check this under Admin > Users. Confirm her account is active and not suspended, and that her role allows access to shared folders.\n\n4. **If your organization uses SSO,** have an admin confirm she is in the correct group in your identity provider. The group should map to the right role under Admin > SSO > Role Mapping.\n\n5. **Refresh her session.** Once the settings above are confirmed, ask her to fully log out of the CloudSync client and log back in. This clears cached permissions and applies the new access.\n\nShe can also click the **Request Access** button on the folder. That sends a request to the folder owner or an admin.\n\nIf she still sees AUTH-002 after these steps, please reply with:\n- her account email\n- the name of the folder owner\n- whether you use SSO\n- a screenshot of the error, if possible\n\nWe'll look into it further from there.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06006083288230002,
-            "cost_usd": 0.0
+            "input_tokens": 6813,
+            "output_tokens": 1842,
+            "latency_s": 18.471550449000006,
+            "cost_usd": 0.022866
           },
           "error": null
         },
@@ -1068,9 +1078,9 @@
             ],
             "must_not_say": []
           },
-          "predicted_category": "permission",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "predicted_category": "account",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": false,
           "verification_score": 0.9333333333333333,
@@ -1084,12 +1094,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to permission. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the user's current workspace role\n  2. Check if the folder/file share is still active\n  3. Check if the user's account is suspended\n  4. For SSO users, verify group membership in IdP\n  5. Ask the user when they last had access\n\nAdditionally, it would help if you could provide:\n  - What action were you trying to perform when you got the error?\n  - Were you able to access this resource before?\n  - Has your role or team membership changed recently?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nI'm sorry you're being signed out every few minutes. I know having to log back in each time is frustrating, and I'd like to help you get it sorted.\n\nWhat you're seeing is error AUTH-001 (Session Expired). It means CloudSync ended your session and needs you to sign in again. This can happen when a password is changed, because sessions that were opened with the old password stop being valid. Being logged out every few minutes is not normal, though. It usually means something is still using your old credentials or that a short session timeout has been set.\n\nHere are some steps to try:\n\n1. **Sign out everywhere, then sign back in once.** Sign out of CloudSync on every device and browser you use: the desktop app, the mobile app, tablets, and any other browser windows or tabs. Then sign in on just one device with your new password. A device still holding the old password may be repeatedly trying to re-authenticate, and that can keep invalidating your web session.\n\n2. **Update saved passwords.** If your browser or a password manager has the old CloudSync password saved, update it to the new one. Stale autofilled credentials can cause repeated sign-in conflicts.\n\n3. **Clear your browser's cookies and cache for CloudSync.** Then close all CloudSync tabs and sign in again in a fresh tab. A private/incognito window is a quick way to test whether the problem is stored browser data.\n\n4. **Check your session timeout.** If your account is part of a team or company workspace, an admin may have set a short session timeout, or may have revoked active sessions. Please ask your workspace admin to check the session settings under Admin > Security.\n\n5. **If you sign in through SSO (for example, Okta or Azure AD),** your CloudSync session is tied to your identity provider's session. If that session is short, you'll be asked to sign in again often. Your admin can check this too.\n\nIf you're still being logged out after these steps, please reply with the following so we can look into it:\n- Whether you sign in with email/password or through SSO\n- Whether you use a personal account or a team/company workspace\n- Which browser and version you're using, and whether CloudSync is open on any other devices\n- The approximate time of your last few logouts\n\nWith that information, we can check your account's session activity on our side and find out what's ending your sessions.\n\nThanks for your patience. We'll get this resolved.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06079812487587333,
-            "cost_usd": 0.0
+            "input_tokens": 10412,
+            "output_tokens": 2271,
+            "latency_s": 23.83493295599999,
+            "cost_usd": 0.035517
           },
           "error": null
         },
@@ -1104,9 +1114,9 @@
             ],
             "must_not_say": []
           },
-          "predicted_category": "permission",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "predicted_category": "account",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -1118,12 +1128,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to permission. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the user's current workspace role\n  2. Check if the folder/file share is still active\n  3. Check if the user's account is suspended\n  4. For SSO users, verify group membership in IdP\n  5. Ask the user when they last had access\n\nAdditionally, it would help if you could provide:\n  - What action were you trying to perform when you got the error?\n  - Were you able to access this resource before?\n  - Has your role or team membership changed recently?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and I'm sorry your team is hitting login errors after the Okta certificate renewal. AUTH-003 (SSO Configuration Error) means CloudSync couldn't complete the SAML sign-in because of a configuration problem. The usual causes are an expired or mismatched SAML certificate, an unreachable IdP metadata URL, or an attribute mapping mismatch.\n\nHere is what to check on your side, in order:\n\n1. Update the certificate in CloudSync\n   - In Okta, open the CloudSync SAML app and confirm the new signing certificate is active and not expired.\n   - Download the updated IdP metadata XML from Okta.\n   - In CloudSync, go to Admin > Security > SSO and upload the new metadata XML. Save, and run the SSO test if one is available.\n   - If CloudSync pulls your metadata from a URL, confirm the URL is reachable from the internet and returns the renewed certificate.\n\n2. Confirm the Okta app settings still match exactly (trailing slashes matter)\n   - Single Sign-On / ACS URL: `https://app.cloudsync.io/sso/saml/callback`\n   - Audience URI / Entity ID: `https://app.cloudsync.io/sso/saml/metadata`\n   - Name ID format: `EmailAddress`\n\n3. Verify attribute mapping\n   - `email` -> `user.email`\n   - `firstName` -> `user.firstName`\n   - `lastName` -> `user.lastName`\n   - Because only some users are affected, please open the Okta profile of one affected user and one working user and compare them. A blank email, first name or last name on an affected profile can cause this error.\n\n4. Check user assignment\n   - Confirm the affected users are assigned to the CloudSync app in Okta, directly or through a group.\n\n5. Rule out local issues for the affected users\n   - Have them clear browser cache and cookies, or try a private window or a different browser, and sign in again.\n   - Check whether the failures are limited to certain devices or browsers.\n\nIf the error continues after these steps, please send us:\n- The approximate time and the email address of one or two affected users who saw the error\n- Whether those users fail every time or only sometimes\n- A screenshot of your CloudSync SSO settings (please don't include any private keys)\n- The expiry date of the new Okta certificate\n\nWith those details we can look into it further. We're happy to help if you'd like to go through any of these steps together.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.05965983308851719,
-            "cost_usd": 0.0
+            "input_tokens": 6275,
+            "output_tokens": 2574,
+            "latency_s": 23.704474536999896,
+            "cost_usd": 0.029593
           },
           "error": null
         },
@@ -1139,8 +1149,8 @@
             "must_not_say": []
           },
           "predicted_category": "permission",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": false,
           "verification_score": 0.9333333333333333,
@@ -1154,12 +1164,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to permission. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Verify the user's current workspace role\n  2. Check if the folder/file share is still active\n  3. Check if the user's account is suspended\n  4. For SSO users, verify group membership in IdP\n  5. Ask the user when they last had access\n\nAdditionally, it would help if you could provide:\n  - What action were you trying to perform when you got the error?\n  - Were you able to access this resource before?\n  - Has your role or team membership changed recently?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for reaching out, and I'm sorry your contractor has lost access to the project files. This is disruptive, especially mid-project.\n\nNo, this isn't expected. In CloudSync, the Viewer role gives read-only access. A Viewer can open and view files and download them, but can't edit, delete, or share. Moving someone from Editor to Viewer should only remove those editing rights. It shouldn't stop her opening files. There are a few likely explanations, and you can check most of them yourself:\n\n1. Confirm the role and the share. In the workspace admin panel, check that her role now shows as Viewer, and not removed or something else. Then open the shared project folder's Share settings and confirm her account is still listed. Changing a role can sometimes be done by removing and re-adding someone, which would revoke the share.\n\n2. Check whether she was set to \"Restricted Viewer\". This is a separate permission level. It's read-only with downloads blocked, and files can only be previewed in the web app. If she's using the desktop or mobile client, files may not open the way they did before. If Restricted Viewer was selected by mistake, switch her to Viewer.\n\n3. Check her account status. Make sure her account isn't suspended or locked.\n\n4. If you use SSO, check the group mapping. In Admin > SSO > Role Mapping, make sure her identity provider group maps to the role you intended. A mismatch can override a manual role change.\n\n5. Have her sign out and back in. Ask her to sign out of CloudSync on every device and sign back in, then try opening a file in the web app. This clears out any outdated permissions on her session.\n\nIf she still can't open files, please send me the following so we can investigate:\n- The exact error message or code she sees. If it's AUTH-002 (Permission Denied), that confirms the share or role is blocking access.\n- Whether she's using the web app, desktop client, or mobile app.\n- The name of the shared folder and her account email.\n- Roughly when you changed her role.\n\nIf she needs to be back in the folder urgently, you can re-share it with her as a Viewer or Editor from the folder's Share menu. She can also use the \"Request Access\" button on the folder.\n\nPlease let me know what you find, and I'll gladly dig further into it.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.029595332918688655,
-            "cost_usd": 0.0
+            "input_tokens": 11148,
+            "output_tokens": 2350,
+            "latency_s": 24.947512543000016,
+            "cost_usd": 0.038282
           },
           "error": null
         },
@@ -1174,7 +1184,7 @@
             ],
             "must_not_say": []
           },
-          "predicted_category": "sync",
+          "predicted_category": "account",
           "model_severity": "critical",
           "effective_severity": "critical",
           "autonomy": "human_only",
@@ -1188,12 +1198,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nI understand how disruptive this is. 2,300 users locked out of CloudSync through Okta SSO is a critical issue, and we are treating it that way. The \"Authentication failed\" error with SSO (AUTH-003, SSO Configuration Error) usually means the SAML trust between Okta and CloudSync has broken. Your admin password login still works, so the CloudSync service itself appears to be up and the problem is most likely in the SSO configuration or certificate.\n\nPlease work through these checks in order. The first two are the most common causes of a sudden, organization-wide failure.\n\n1. **Check the SAML signing certificate.** In the Okta Admin Console, open your CloudSync SAML app and check the signing certificate's expiry date. If it has expired or was recently rotated, download the new IdP metadata XML from Okta. Then go to CloudSync Admin > Security > SSO, upload it, and click \"Save & Test\".\n2. **Review recent changes.** Please check the Okta System Log and your change records for any edits to the CloudSync app or its certificate in the last hour. If something changed, reverting it (or re-uploading the current metadata in CloudSync) often restores logins right away.\n3. **Verify the Okta app settings match exactly.** Trailing slashes matter.\n   - Single Sign-On / Reply (ACS) URL: `https://app.cloudsync.io/sso/saml/callback`\n   - Audience URI / Entity ID: `https://app.cloudsync.io/sso/saml/metadata`\n4. **Confirm attribute mapping.** `email`, `firstName` and `lastName` must all be mapped (`user.email`, `user.firstName`, `user.lastName`). If any one is missing, authentication fails with AUTH-003.\n5. **Confirm user assignment.** Make sure your users or groups are still assigned to the CloudSync app in Okta.\n6. **Check time sync and network access.** A clock difference of more than 5 minutes between Okta and CloudSync, or a firewall rule blocking access to the Okta metadata URL, can also cause this error. Please check whether any NTP or network changes were made recently.\n\nAlso check our status page at https://status.cloudsync.io, and Okta's status page, to rule out a provider-side incident.\n\n**To help us diagnose this faster, please reply with:**\n- The exact time (with time zone) of the first failed login\n- Whether anything changed in Okta or on your network around that time\n- The certificate expiry date shown in Okta\n- If possible, a capture from the \"SAML Tracer\" browser extension of one failed login (please redact any sensitive data)\n- Whether the failure affects every user or only some. Please also try one test user in a private browser window.\n\nI've flagged this ticket as critical and escalated it so our team can look at your SSO configuration and logs on our side while you run through these checks. I'll update you as soon as I have findings, and I'm available to work through this with you live if that would help.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.031535624992102385,
-            "cost_usd": 0.0
+            "input_tokens": 18812,
+            "output_tokens": 3294,
+            "latency_s": 32.25139819699996,
+            "cost_usd": 0.054568000000000005
           },
           "error": null
         },
@@ -1222,12 +1232,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThank you for reaching out, and I'm sorry about the trouble. I understand you need to back up your photos from a recent shoot urgently, so here is the quickest way to get this resolved.\n\n**What the error means**\nSYNC-002 (Upload Failed) means the desktop app tried to upload a file several times and couldn't finish. Since the app mentions storage, the most likely cause is that your account has reached its storage limit. Other possible causes are a network problem, a single file over 5GB, or a file that another application has open.\n\n**Step 1: Check your storage (most likely cause)**\n1. Log in to the CloudSync Dashboard.\n2. Go to Account > Storage.\n3. Compare your usage to your plan limit. The limits are Free: 5GB, Pro: 1TB and Enterprise: unlimited.\n\n**Step 2: If you've reached your limit, free up space or upgrade**\n- **Free up space:** Delete files you no longer need, then empty your Trash if deleted files are still counted.\n- **Upgrade your plan:** Go to Dashboard > Account > Plans, select a plan and confirm. The new plan activates immediately, so your sync can resume right away. Charges are prorated for the current billing cycle.\n\n**Step 3: Retry the sync**\nIn the desktop app, go to Settings > Sync > Retry Failed. The photos should start uploading.\n\n**Step 4: If the error continues, check these**\n- **Network:** Make sure you're online. You can also check https://status.cloudsync.io for any service issues.\n- **Locked files:** Close any photo viewers or editors (for example Lightroom or Photoshop) that have the photos open, then retry.\n- **File size:** Individual files must be under 5GB. This is rare for photos, but large RAW or video files can reach it.\n- **Sync status icon:** The system tray icon should be green. Yellow means paused and red means an error.\n- **Logs:** If it still fails, go to Settings > Logs > View Recent and send us what you see. That will show us exactly which file is failing and why.\n\nIf you tell me your current plan and what the Storage page shows, I can suggest the best option and help you get your photos backed up as soon as possible.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.06336491601541638,
-            "cost_usd": 0.0
+            "input_tokens": 11667,
+            "output_tokens": 2341,
+            "latency_s": 22.785576300000002,
+            "cost_usd": 0.036874000000000004
           },
           "error": null
         },
@@ -1243,8 +1253,8 @@
             "must_not_say": []
           },
           "predicted_category": "sync",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -1256,12 +1266,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThanks for reaching out, and I'm sorry for the confusion. Your situation is a common one. SYNC-001 (File Conflict) appears when two devices change the same file before CloudSync can sync them. That is what happened when one of you edited the budget spreadsheet offline during the flight while the other edited it online. CloudSync doesn't overwrite either version. It flags the conflict so you can decide how to handle it.\n\nHere's how to resolve it while keeping both sets of changes:\n\n1. **Close the spreadsheet on both computers.** This stops further edits or file locks from interfering while you resolve the conflict.\n2. **Open the Conflict Resolver.** Go to Dashboard > Files > Conflicts and select the budget spreadsheet.\n3. **Compare the two versions side by side.** Check the timestamps and file sizes. Ask each person to list the changes they made, such as which tabs, rows, or figures they edited, so you can tell which version holds which edits.\n4. **Decide how to proceed:**\n   - **If one version includes everything you need,** choose that version to keep.\n   - **If both versions contain changes you need (the likely case here),** merge them manually. Open both versions, copy one person's changes into the other version, and check that the totals and formulas still look right. Then keep the merged file as the version you select.\n5. **Click \"Resolve\"** to clear the conflict. Once it's cleared, the merged file will sync to both devices.\n\n**Tip:** Before you click Resolve, save a separate copy of each version somewhere outside the synced folder, for example as \"Budget_PersonA\" and \"Budget_PersonB\". That way you have a backup of both sets of edits while you merge.\n\nTo avoid this in future, try to let CloudSync finish syncing before you start editing, especially after being offline. For files that more than one person edits, agree on who is editing at a given time.\n\nIf the Conflict Resolver doesn't show the file, or you can't tell which version has which changes, send me the file name, the approximate times each of you edited it, and a screenshot of what you see. I'll help you work through it.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.0604759999550879,
-            "cost_usd": 0.0
+            "input_tokens": 11361,
+            "output_tokens": 2176,
+            "latency_s": 22.009896228000002,
+            "cost_usd": 0.035179
           },
           "error": null
         },
@@ -1277,8 +1287,8 @@
             "must_not_say": []
           },
           "predicted_category": "sync",
-          "model_severity": "medium",
-          "effective_severity": "medium",
+          "model_severity": "high",
+          "effective_severity": "high",
           "autonomy": "confirm",
           "verification_passed": true,
           "verification_score": 1.0,
@@ -1290,12 +1300,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nThank you for reaching out, and I'm sorry for the trouble. A client stuck on \"Indexing\" for two days, with folders that look empty, is frustrating. Your files are safe. They are still stored in CloudSync, which is why you can see them in the web dashboard.\n\nWhat's happening: SYNC-004 (Index Corruption) means the local index the desktop client uses to track your files has become corrupted and can't be read. That explains both the stuck indexing and the empty folders on your computer. This usually happens after an unexpected shutdown during a sync, disk errors, or antivirus software interfering with the CloudSync data folder.\n\nHow to fix it:\n\n1. Before you start, check that you have at least 500MB of free disk space and that you can reach the web dashboard.\n2. In the desktop client, go to Settings > Sync > Reset Sync.\n3. Confirm the reset. This clears only the local index and re-indexes your files from scratch. Nothing in your cloud storage is deleted.\n4. Leave the client running while it re-indexes. This typically takes 10-30 minutes, depending on how many files you have.\n5. When it finishes, check that the empty folders are populated again.\n\nIf the problem comes back or the reset doesn't work:\n\n- Check your antivirus software and add the CloudSync data folder to its exclusions list. This stops it from interfering with the index.\n- Uninstall and reinstall the desktop client. Your cloud files are not affected.\n\nIf SYNC-004 still appears after a reinstall, please reply with the following so we can investigate further:\n\n- Your desktop client version (Settings > About)\n- Your operating system\n- Any recent unexpected shutdowns, power losses, or disk errors\n- The recent log entries from Settings > Logs > View Recent\n- Which folders appear empty, and whether they synced correctly before\n\nWe're happy to help with any of these steps. Just let us know how it goes.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.0595430419780314,
-            "cost_usd": 0.0
+            "input_tokens": 12466,
+            "output_tokens": 2303,
+            "latency_s": 22.911263651000013,
+            "cost_usd": 0.03646
           },
           "error": null
         },
@@ -1324,12 +1334,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nThank you for reaching out. I'm sorry your engineers are running into SYNC-003 (Download Failed) on the shared design archive. You said the download works for others on the same network. That suggests the cause is on the affected laptops rather than the network or the archive itself.\n\nSYNC-003 means a file download from cloud storage failed. The usual causes are low local disk space, a network problem, or the file being removed from the cloud during the download.\n\nPlease check the following on one or more affected laptops, in this order:\n\n1. **Free disk space (most likely cause).** The download needs at least 2x the archive's size in free space, because CloudSync uses temporary space during the download. Design archives are often large, so a laptop with a fuller drive can fail while a laptop with more free space succeeds. Free up space and retry.\n\n2. **Sync agent status.** Check the CloudSync tray icon. Green means running, yellow means paused, and red means error. If it isn't green, right-click the icon and choose **Restart**.\n\n3. **Sync logs.** Go to **Settings > Logs > View Recent** and look for the entries logged when SYNC-003 occurred. These often show the specific reason for the failure. If you send us a few lines from an affected laptop, we can narrow it down quickly.\n\n4. **Antivirus or endpoint security.** Security software can interfere with large file downloads. Add the CloudSync data folder to the antivirus exclusions on the affected laptops.\n\n5. **Network connectivity from the affected laptops.** Confirm each affected laptop can reach https://status.cloudsync.io. A VPN, proxy or Wi-Fi setting on those specific machines could differ from the machines that work.\n\n6. **Archive availability.** Confirm the archive still exists in the cloud and hasn't been moved, renamed or deleted. Also confirm it is under the 5GB file size limit.\n\n7. **Retry.** After making any of the changes above, go to **Settings > Sync > Retry Failed**.\n\n8. **If it still fails,** go to **Settings > Sync > Reset Sync** to rebuild the local sync index on that laptop, then retry the download.\n\nIf the error continues after these steps, please send us:\n- The log excerpt from Settings > Logs for an affected laptop\n- The approximate size of the archive and the free disk space on an affected laptop\n- The CloudSync client version and operating system on one affected laptop and one working laptop\n\nWith those details we can investigate further. Let us know how it goes, and we're happy to help from there.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.0614072079770267,
-            "cost_usd": 0.0
+            "input_tokens": 13614,
+            "output_tokens": 2473,
+            "latency_s": 23.682962986000007,
+            "cost_usd": 0.042477
           },
           "error": null
         },
@@ -1345,14 +1355,12 @@
             "must_not_say": []
           },
           "predicted_category": "sync",
-          "model_severity": "medium",
-          "effective_severity": "high",
-          "autonomy": "confirm",
-          "verification_passed": false,
-          "verification_score": 0.8666666666666667,
-          "failed_checks": [
-            "severity_floor"
-          ],
+          "model_severity": "critical",
+          "effective_severity": "critical",
+          "autonomy": "human_only",
+          "verification_passed": true,
+          "verification_score": 1.0,
+          "failed_checks": [],
           "cited_titles": [
             "Files Not Syncing",
             "PERF-001: Sync Throttled",
@@ -1360,12 +1368,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hello,\n\nI'm sorry your whole team is blocked on a client deadline day. I've treated this as a critical, company-wide issue.\n\nCloudSync supports files up to 5GB, and we have no standard 50MB limit. A sudden cutoff at 50MB for all 200 users points to something at the account, service or network level. A fault in the sync agent on each machine is much less likely, which fits with the restarts not helping. We're investigating on our side now.\n\nYou can run these checks in parallel. Each takes only a few minutes and will help us narrow this down:\n\n1. **Check storage.** Go to Dashboard > Account > Storage and confirm usage hasn't hit a limit (SYNC-002 \"Upload Failed\" can be caused by this).\n2. **Check your logs.** On one or two affected machines, open Settings > Logs > View Recent and send us the exact error codes and messages logged for a failed large-file upload. Please include the timestamps. We're looking for SYNC-002 or PERF-001 (throttling).\n3. **Test from a different network.** Try uploading one 60–100MB file from a machine on a mobile hotspot or other network outside your corporate one. If it works, a firewall, proxy or security tool on your network may be filtering large uploads. If it fails, the cause is more likely on the account or service side.\n4. **Check for recent changes.** Please tell us if any of these changed overnight or this morning: a firewall, proxy or antivirus update, or a CloudSync client update.\n\nTo speed things up, please reply with:\n- Your account or organization name\n- The CloudSync client version and OS on a few affected machines\n- The time the problem started\n- Whether uploads, downloads or both are affected\n- One example file name and its size\n\nI'm escalating this to our engineering team so they can check your account for restrictions and look for any service-side issue affecting large uploads. I'll update you as soon as I have findings.\n\nIn the meantime, please don't use \"Reset Sync\" on the affected machines. It won't fix this and it forces a re-index. If you must get a file to your client today, you can try the CloudSync web uploader. Please be aware this is untested for this issue, and the web uploader is not recommended for very large files.\n\nThank you for your patience. We know the deadline is tight, and we'll keep you updated.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.02956545795314014,
-            "cost_usd": 0.0
+            "input_tokens": 23938,
+            "output_tokens": 3241,
+            "latency_s": 33.44479382500003,
+            "cost_usd": 0.059943
           },
           "error": null
         },
@@ -1394,12 +1402,12 @@
           ],
           "citations_valid": true,
           "has_draft": true,
-          "draft_body": "Thank you for reaching out to CloudSync Support.\n\nI understand you're experiencing an issue related to sync. I'd like to help resolve this for you.\n\nTo investigate further, could you please check the following:\n  1. Check if the sync agent is running (tray icon status)\n  2. Verify network connectivity\n  3. Check for error codes in Settings > Logs\n  4. Verify file size is under 5GB limit\n  5. Check if the file path contains special characters\n  6. Ask which devices are affected\n  7. Check storage quota\n\nAdditionally, it would help if you could provide:\n  - Which devices are experiencing the sync issue?\n  - When did you first notice the problem?\n  - Are all files affected or specific ones?\n\nPlease don't hesitate to reply with any additional information, and I'll work to get this resolved for you as quickly as possible.\n\nBest regards,\nCloudSync Support Team",
+          "draft_body": "Hi there,\n\nI'm sorry your work files aren't showing up on your home laptop. That's frustrating, especially since it was working last week. Sync that stops after working normally is usually caused by a paused or stalled sync agent, a network interruption, or a single file the app can't sync. These are generally quick to fix.\n\nPlease try these steps in order. Do them on both laptops where noted.\n\n1. Check the sync status icon (both laptops). Look at the CloudSync icon in your system tray. Green means syncing normally. Yellow means paused. If it's yellow, right-click the icon and resume syncing. Red means an error. If you see red, please send us what it says.\n2. Restart the sync agent (both laptops). Right-click the tray icon and choose Restart. Give it a few minutes to catch up.\n3. Confirm the service is online. Visit https://status.cloudsync.io on both laptops to check for any ongoing incidents. Also make sure each laptop has a working internet connection.\n4. Check the sync logs (both laptops). Go to Settings > Logs > View Recent and look for any errors or failed files. If you see an error code, such as SYNC-001 or SYNC-004, please send it to us.\n5. Check the affected files on your work laptop.\n   - Make sure they're saved inside your CloudSync folder and not in a folder that is excluded from syncing.\n   - Make sure no file is larger than 5GB.\n   - Close any application that may still have the file open, because open files can block syncing.\n   - Check that the file names and folder paths don't contain these characters: < > : \" | ? *\n6. Check your antivirus or firewall. Make sure the CloudSync data folder is on its exclusions list, because security software can interfere with syncing.\n7. If it's still not syncing, reset the sync. On the laptop that isn't syncing correctly, go to Settings > Sync > Reset Sync. This rebuilds the local sync index and doesn't delete your files from the cloud. It can take 10–30 minutes, depending on how many files you have.\n\nYou can also log in to the CloudSync web dashboard to see whether the files have reached the cloud. If they're there, the problem is on your home laptop. If they're not, it's on your work laptop. Knowing which one it is will help us narrow this down.\n\nIf the files still haven't appeared after these steps, please reply with:\n- The color of the tray icon on each laptop\n- Any error messages or codes from the logs\n- Whether the files show up in the web dashboard\n- Your operating system and CloudSync version on each laptop\n\nWe'll look into it further from there.\n\nBest regards,\nCloudSync Support",
           "usage": {
-            "input_tokens": 0,
-            "output_tokens": 0,
-            "latency_s": 0.029839499853551388,
-            "cost_usd": 0.0
+            "input_tokens": 12248,
+            "output_tokens": 2430,
+            "latency_s": 24.949564484999996,
+            "cost_usd": 0.039569
           },
           "error": null
         }
