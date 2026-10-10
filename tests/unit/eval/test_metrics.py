@@ -118,6 +118,44 @@ def test_must_not_say_violation_rate():
     assert m.must_not_say_violation_rate == pytest.approx(0.5)
 
 
+def test_must_not_say_negated_phrase_is_not_a_violation():
+    # "I cannot guarantee" — phrase appears but is negated; should NOT count
+    m = compute_metrics(
+        [result(must_not_say=("guarantee",), body="I cannot guarantee this outcome")]
+    )
+    assert m.must_not_say_violation_rate == 0.0
+
+
+def test_must_not_say_negation_variants_are_recognised():
+    for negated in [
+        "I can't promise a refund",
+        "We won't refund",
+        "We will not refund under these terms",
+        "I don't want to guarantee",
+        "We do not offer a refund here",
+        "we never refund",
+        "unable to refund",
+    ]:
+        m = compute_metrics([result(must_not_say=("refund",), body=negated)])
+        assert m.must_not_say_violation_rate == 0.0, f"expected no violation for: {negated!r}"
+
+
+def test_must_not_say_flags_unnegated_phrase():
+    m = compute_metrics(
+        [result(must_not_say=("guarantee",), body="We guarantee delivery by tomorrow")]
+    )
+    assert m.must_not_say_violation_rate == 1.0
+
+
+def test_must_not_say_negation_too_far_away_still_flags():
+    # The negation is more than 80 chars before the phrase; should still count
+    prefix = "x" * 90
+    m = compute_metrics(
+        [result(must_not_say=("guarantee",), body=f"not {prefix} guarantee this")]
+    )
+    assert m.must_not_say_violation_rate == 1.0
+
+
 def test_routing_agreement():
     m = compute_metrics(
         [

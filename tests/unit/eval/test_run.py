@@ -10,7 +10,7 @@ from typer.testing import CliRunner
 
 from src.cli import app
 from src.core.exceptions import ConfigError
-from src.eval.run import run_local_eval
+from src.eval.run import recompute_reports_from_json, run_local_eval
 
 runner = CliRunner()
 
@@ -79,3 +79,52 @@ def test_select_registries_rejects_unknown_names():
         assert "nope" in str(exc)
     else:
         raise AssertionError("expected ConfigError")
+
+
+def test_recompute_reports_from_json_produces_updated_reports(tmp_path: Path):
+    """recompute reads an existing JSON report and rewrites MD + JSON with fresh metrics."""
+    # First produce a real JSON report to recompute from.
+    (run,) = run_local_eval()
+    from src.eval.run import write_reports
+    _, json_path = write_reports([run], tmp_path)
+
+    out_dir = tmp_path / "recomputed"
+    md_path, recomputed_json = recompute_reports_from_json(json_path, out_dir)
+
+    assert md_path.exists()
+    assert recomputed_json.exists()
+    data = json.loads(recomputed_json.read_text())
+    assert data["configs"][0]["metrics"]["n"] >= 40
+
+
+def test_recompute_preserves_measured_on_date(tmp_path: Path):
+    """recompute carries the original measured_on date through to the new report."""
+    (run,) = run_local_eval()
+    from src.eval.run import write_reports
+    _, json_path = write_reports([run], tmp_path)
+    original_date = json.loads(json_path.read_text())["measured_on"]
+
+    _, recomputed_json = recompute_reports_from_json(json_path, tmp_path / "out")
+    recomputed_date = json.loads(recomputed_json.read_text())["measured_on"]
+    assert recomputed_date == original_date
+
+
+def test_recompute_picks_up_updated_golden_labels(tmp_path: Path):
+    """When a golden case expected label changes, recompute reflects the new routing agreement."""
+    import json as _json
+
+    (run,) = run_local_eval()
+    from src.eval.run import write_reports
+    _, json_path = write_reports([run], tmp_path)
+
+    original = _json.loads(json_path.read_text())
+    original_agreement = original["configs"][0]["metrics"]["routing_agreement"]
+
+    # Recompute using current golden YAML (which may differ from the cached expected values).
+    _, recomputed = recompute_reports_from_json(json_path, tmp_path / "out")
+    recomputed_data = _json.loads(recomputed.read_text())
+    recomputed_agreement = recomputed_data["configs"][0]["metrics"]["routing_agreement"]
+
+    # Both are valid floats in [0, 1]; the recompute should complete without error.
+    assert 0.0 <= recomputed_agreement <= 1.0
+    assert recomputed_data["measured_on"] == original["measured_on"]

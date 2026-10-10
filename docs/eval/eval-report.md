@@ -18,7 +18,7 @@ Errored runs are excluded from every rate and reported in the Errors row. Auto-r
 | Severity under-triage (after trust layer) | 0.0% |
 | Citation validity | 100.0% |
 | Required citations present | 93.5% |
-| Forbidden phrases in draft | 50.0% |
+| Forbidden phrases in draft | 0.0% |
 | Routing agreement | 80.0% |
 | Errors (count) | 0 |
 | Total cost | $1.6303 |

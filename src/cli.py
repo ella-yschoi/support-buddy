@@ -21,6 +21,7 @@ from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import InquiryResult
 from src.eval.demo import generate_demo_briefings, write_demo_file
 from src.eval.run import (
+    recompute_reports_from_json,
     run_claude_eval,
     run_local_eval,
     select_registries,
@@ -329,6 +330,23 @@ def eval_command(
             f"(n={m.n}), unsafe passes {m.unsafe_pass_count}, "
             f"routing agreement {m.routing_agreement:.1%}"
         )
+    console.print(f"Report: {md_path}\nData:   {json_path}")
+
+
+@app.command(name="eval-recompute")
+def eval_recompute_command(
+    input: Path = typer.Option(..., help="Path to an existing eval-report.json"),
+    out: Path = typer.Option(Path("reports/eval"), help="Directory for updated report files"),
+) -> None:
+    """Recompute metrics from an existing JSON report without calling the API.
+
+    Reloads golden expected labels from the YAML files so that label corrections
+    are picked up without spending money on a full re-run.
+    """
+    if not input.exists():
+        console.print(f"[red]File not found: {input}[/red]")
+        raise typer.Exit(1)
+    md_path, json_path = recompute_reports_from_json(input, out)
     console.print(f"Report: {md_path}\nData:   {json_path}")
 
 

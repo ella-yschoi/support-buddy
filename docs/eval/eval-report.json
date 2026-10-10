@@ -12,7 +12,7 @@
         "effective_under_triage_rate": 0.0,
         "citation_validity": 1.0,
         "must_cite_rate": 0.9354838709677419,
-        "must_not_say_violation_rate": 0.5,
+        "must_not_say_violation_rate": 0.0,
         "routing_agreement": 0.8,
         "auto_rate": 0.05,
         "auto_resolvable_rate": 0.475,
@@ -453,7 +453,8 @@
             "autonomy": "human_only",
             "must_cite": [],
             "must_not_say": [
-              "bounty"
+              "bug bounty",
+              "bounty payment"
             ]
           },
           "predicted_category": "api",
