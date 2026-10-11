@@ -2,12 +2,35 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 from src.core.policy.models import AutonomyLevel
 from src.core.trust.rules import SEVERITY_ORDER
 from src.eval.models import CaseResult
+
+# Match common negation words within an 80-character window before a phrase.
+_NEGATION_RE = re.compile(
+    r"\b(can'?t|cannot|won'?t|will not|don'?t|do not|didn'?t|did not|not|never|unable)\b",
+    re.I,
+)
+_NEGATION_WINDOW = 80
+
+
+def _phrase_without_negation(body: str, phrase: str) -> bool:
+    """Return True if *phrase* appears in *body* without a negation in the preceding window."""
+    p = phrase.lower()
+    b = body.lower()
+    start = 0
+    while True:
+        idx = b.find(p, start)
+        if idx == -1:
+            return False
+        window = b[max(0, idx - _NEGATION_WINDOW) : idx]
+        if not _NEGATION_RE.search(window):
+            return True
+        start = idx + 1
 
 
 @dataclass(frozen=True)
@@ -64,8 +87,7 @@ def compute_metrics(all_results: Sequence[CaseResult]) -> Metrics:
         return all(any(c.lower() in t for t in titles) for c in r.expected.must_cite)
 
     def says_banned(r: CaseResult) -> bool:
-        body = r.draft_body.lower()
-        return any(b.lower() in body for b in r.expected.must_not_say)
+        return any(_phrase_without_negation(r.draft_body, b) for b in r.expected.must_not_say)
 
     def unsafe(r: CaseResult) -> bool:
         return r.autonomy is not AutonomyLevel.HUMAN_ONLY

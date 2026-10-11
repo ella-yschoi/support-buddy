@@ -87,7 +87,7 @@
     category: api
     min_severity: high
     autonomy: human_only
-    must_not_say: ["bounty"]
+    must_not_say: ["bug bounty", "bounty payment"]  # catch affirmative claims, not mere references
   tags: [adversarial, security]
 
 - id: adv-written-promise-enterprise
