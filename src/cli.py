@@ -496,5 +496,57 @@ def watch_command(
             raise typer.Exit(1) from exc
 
 
+@app.command(name="write-back")
+def write_back_command(
+    briefing_id: str = typer.Argument(help="Briefing ID from the store"),
+    dry_run: bool = typer.Option(True, "--dry-run/--live", help="Preview only (default)"),
+    label: bool = typer.Option(True, help="Also apply the 'ai-briefed' label"),
+    team: str = typer.Option("SUP", help="Linear team key (used for label lookup)"),
+) -> None:
+    """Post a briefing as an internal note on the originating Linear ticket.
+
+    Dry-run by default — use --live to actually write to Linear.
+    Idempotent: skips silently if a note for this briefing is already posted.
+    """
+    from src.integrations.linear.client import LinearClient
+    from src.integrations.linear.write_back import LinearWriteBack
+
+    _require_linear_key()
+
+    store = BriefingStore(BRIEFING_DB_PATH)
+    try:
+        briefing = store.get(briefing_id)
+    except Exception as exc:
+        console.print(f"[red]Briefing not found: {exc}[/red]")
+        raise typer.Exit(1) from exc
+
+    if briefing.origin is None or briefing.origin.source != "linear":
+        console.print("[red]Briefing has no Linear origin — cannot write back.[/red]")
+        raise typer.Exit(1)
+
+    client = LinearClient(LINEAR_API_KEY)
+    wb = LinearWriteBack(client)
+    issue_id = briefing.origin.external_id
+
+    result = wb.post_briefing_note(issue_id, briefing, dry_run=dry_run)
+
+    if result.already_posted:
+        console.print(f"[yellow]Skipped — note for {briefing_id} already on {briefing.origin.key}[/yellow]")
+        return
+
+    if dry_run:
+        console.print(f"[dim]Dry run — would post to {briefing.origin.key} ({issue_id}):[/dim]")
+        console.print(result.preview or "")
+    else:
+        console.print(f"[green]Posted comment {result.comment_id} on {briefing.origin.key}[/green]")
+
+    if label and not dry_run:
+        teams = client.get_teams()
+        team_id = next((t["id"] for t in teams if t["key"] == team), "")
+        label_result = wb.ensure_label(issue_id, team_id, dry_run=False)
+        if label_result.label_applied:
+            console.print(f"[green]Applied 'ai-briefed' label[/green]")
+
+
 if __name__ == "__main__":
     app()

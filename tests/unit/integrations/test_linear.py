@@ -162,6 +162,47 @@ class TestLinearAdminCalls:
         with pytest.raises(RuntimeError, match="i1"):
             LinearClient(api_key="k").delete_issue("i1")
 
+    def test_get_comments_returns_comment_list(self, mock_httpx):
+        self._post(mock_httpx).return_value = _make_response({
+            "issue": {"comments": {"nodes": [
+                {"id": "c1", "body": "hello", "createdAt": "2026-10-11T10:00:00Z",
+                 "user": {"id": "u1", "name": "Alice"}},
+                {"id": "c2", "body": "world", "createdAt": "2026-10-11T11:00:00Z",
+                 "user": None},
+            ]}}
+        })
+        comments = LinearClient(api_key="k").get_comments("issue-1")
+        assert len(comments) == 2
+        assert comments[0]["id"] == "c1"
+        assert comments[0]["body"] == "hello"
+        assert comments[0]["user_id"] == "u1"
+        assert comments[1]["user_id"] is None
+
+    def test_get_viewer_returns_current_user(self, mock_httpx):
+        self._post(mock_httpx).return_value = _make_response(
+            {"viewer": {"id": "user-bot", "name": "Support Buddy Bot"}}
+        )
+        viewer = LinearClient(api_key="k").get_viewer()
+        assert viewer["id"] == "user-bot"
+        assert viewer["name"] == "Support Buddy Bot"
+
+    def test_add_label_to_issue_succeeds(self, mock_httpx):
+        post = self._post(mock_httpx)
+        post.return_value = _make_response({
+            "issueUpdate": {"success": True, "issue": {"id": "i1"}}
+        })
+        LinearClient(api_key="k").add_label_to_issue("i1", "label-99")
+        sent = post.call_args.kwargs["json"]["variables"]
+        assert sent["id"] == "i1"
+        assert "label-99" in sent["input"]["labelIds"]
+
+    def test_add_label_to_issue_failure_raises(self, mock_httpx):
+        self._post(mock_httpx).return_value = _make_response(
+            {"issueUpdate": {"success": False}}
+        )
+        with pytest.raises(RuntimeError, match="label"):
+            LinearClient(api_key="k").add_label_to_issue("i1", "label-x")
+
     def test_list_issues_sends_the_filters_and_parses_timestamps(self, mock_httpx):
         post = self._post(mock_httpx)
         post.return_value = _make_response({"issues": {

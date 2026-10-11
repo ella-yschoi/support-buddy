@@ -251,6 +251,50 @@ class LinearClient:
         if not self._query(query, {"id": issue_id}).get("issueDelete", {}).get("success"):
             raise RuntimeError(f"Failed to delete issue {issue_id}")
 
+    def get_comments(self, issue_id: str) -> list[dict[str, Any]]:
+        """Comments on an issue, oldest first. Each dict has id, body, created_at, user_id."""
+        query = """
+        query GetComments($id: String!) {
+            issue(id: $id) {
+                comments(orderBy: createdAt) {
+                    nodes { id body createdAt user { id name } }
+                }
+            }
+        }
+        """
+        nodes = (
+            self._query(query, {"id": issue_id})
+            .get("issue", {})
+            .get("comments", {})
+            .get("nodes", [])
+        )
+        return [
+            {
+                "id": n["id"],
+                "body": n["body"],
+                "created_at": n["createdAt"],
+                "user_id": n["user"]["id"] if n.get("user") else None,
+                "user_name": n["user"]["name"] if n.get("user") else None,
+            }
+            for n in nodes
+        ]
+
+    def get_viewer(self) -> dict[str, str]:
+        """The authenticated user (the bot identity)."""
+        data = self._query("query { viewer { id name } }")
+        return dict(data.get("viewer", {}))
+
+    def add_label_to_issue(self, issue_id: str, label_id: str) -> None:
+        """Append *label_id* to an issue's label list (does not remove existing labels)."""
+        query = """
+        mutation UpdateIssueLabels($id: String!, $input: IssueUpdateInput!) {
+            issueUpdate(id: $id, input: $input) { success issue { id } }
+        }
+        """
+        result = self._query(query, {"id": issue_id, "input": {"labelIds": [label_id]}})
+        if not result.get("issueUpdate", {}).get("success"):
+            raise RuntimeError(f"Failed to add label {label_id} to issue {issue_id}")
+
     def get_teams(self) -> list[dict[str, str]]:
         """List all teams."""
         query = """
