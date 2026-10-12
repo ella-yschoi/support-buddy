@@ -2,8 +2,15 @@ import type { Briefing, Plan, Source } from "./types";
 
 const API_BASE: string = import.meta.env.VITE_API_URL ?? "";
 
+// Optional Bearer token — set VITE_API_SECRET_KEY at build time for deployed envs.
+const API_KEY: string = import.meta.env.VITE_API_SECRET_KEY ?? "";
+
+function authHeaders(): Record<string, string> {
+  return API_KEY ? { Authorization: `Bearer ${API_KEY}` } : {};
+}
+
 async function getJson(url: string): Promise<unknown> {
-  const response = await fetch(url);
+  const response = await fetch(url, { headers: authHeaders() });
   if (!response.ok) throw new Error(`${url} answered ${response.status}`);
   return response.json();
 }
@@ -60,7 +67,7 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   try {
     response = await fetch(`${API_BASE}${path}`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", ...authHeaders() },
       body: JSON.stringify(body),
     });
   } catch {
