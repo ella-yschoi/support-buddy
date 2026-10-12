@@ -16,18 +16,14 @@ RUN uv sync --frozen --no-dev --extra knowledge
 COPY src/ ./src/
 COPY data/ ./data/
 
-# Pre-download the chromadb ONNX embedding model at build time so it is
-# baked into the image. Without this the 79 MB download happens on first
-# request and spikes memory enough to OOM-kill the process on small VMs.
-RUN .venv/bin/python - <<'EOF'
-from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
-ONNXMiniLM_L6_V2()  # triggers model download into ~/.cache/chroma
-EOF
-
-# Non-root user — created after the model download so the cache is owned by root
-# and readable by all (chromadb only reads it at runtime).
+# Non-root user
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
+
+# Pre-download the chromadb ONNX embedding model as appuser so the cache lands
+# in /home/appuser/.cache/chroma — exactly where it will be looked up at runtime.
+# Without this the 79 MB download happens on first request and OOM-kills the process.
+RUN .venv/bin/python -c "from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2; ONNXMiniLM_L6_V2()"
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
