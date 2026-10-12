@@ -19,7 +19,7 @@ primary_region = "nrt"  # Tokyo — closest to Korea
     soft_limit = 20
 
 [[vm]]
-  memory = "512mb"
+  memory = "1gb"
   cpu_kind = "shared"
   cpus = 1
 
