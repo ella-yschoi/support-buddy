@@ -74,6 +74,25 @@ class BriefingStore:
             ).fetchall()
         return [Briefing.from_dict(json.loads(r[0])) for r in rows]
 
+    def list_archive(self) -> list[Briefing]:
+        """Approved briefings, most recent first."""
+        with closing(self._connect()) as conn:
+            rows = conn.execute(
+                "SELECT payload FROM briefings WHERE status = 'approved' "
+                "ORDER BY created_at DESC"
+            ).fetchall()
+        return [Briefing.from_dict(json.loads(r[0])) for r in rows]
+
+    def delete(self, briefing_id: str) -> None:
+        """Permanently remove an approved briefing."""
+        with closing(self._connect()) as conn, conn:
+            cursor = conn.execute(
+                "DELETE FROM briefings WHERE id = ? AND status = 'approved'",
+                (briefing_id,),
+            )
+            if cursor.rowcount != 1:
+                raise BriefingError(f"briefing {briefing_id} not found or not approved")
+
     def approve(self, briefing_id: str, final_body: str) -> Briefing:
         """Record what the TSE actually sent and how far it moved from the draft."""
         current = self.get(briefing_id)

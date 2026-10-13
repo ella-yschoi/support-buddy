@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { loadBriefings } from "./api";
+import { loadArchive, loadBriefings } from "./api";
 import { AnalyzeForm } from "./components/AnalyzeForm";
+import { ArchiveList } from "./components/ArchiveList";
 import { BriefingDetail } from "./components/BriefingDetail";
 import { Logo } from "./components/Logo";
 import { QueueList } from "./components/QueueList";
@@ -12,13 +13,20 @@ type LoadState =
   | { status: "error" }
   | { status: "ready"; briefings: Briefing[]; source: Source };
 
-type Route = { name: "queue" } | { name: "analyze" } | { name: "briefing"; id: string };
+type ArchiveState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "ready"; briefings: Briefing[] }
+  | { status: "error" };
+
+type Route = { name: "queue" } | { name: "analyze" } | { name: "archive" } | { name: "briefing"; id: string };
 
 function readRoute(): Route {
   const hash = window.location.hash;
   const briefing = /^#\/b\/(.+)$/.exec(hash);
   if (briefing) return { name: "briefing", id: decodeURIComponent(briefing[1]) };
   if (hash === "#/analyze") return { name: "analyze" };
+  if (hash === "#/archive") return { name: "archive" };
   return { name: "queue" };
 }
 
@@ -39,6 +47,7 @@ function Skeleton() {
 export default function App() {
   const [state, setState] = useState<LoadState>({ status: "loading" });
   const [route, setRoute] = useState<Route>(readRoute);
+  const [archiveState, setArchiveState] = useState<ArchiveState>({ status: "idle" });
 
   useEffect(() => {
     let cancelled = false;
@@ -55,6 +64,18 @@ export default function App() {
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
+
+  useEffect(() => {
+    if (route.name !== "archive" || archiveState.status !== "idle") return;
+    let cancelled = false;
+    setArchiveState({ status: "loading" });
+    loadArchive()
+      .then((briefings) => !cancelled && setArchiveState({ status: "ready", briefings }))
+      .catch(() => !cancelled && setArchiveState({ status: "error" }));
+    return () => {
+      cancelled = true;
+    };
+  }, [route.name, archiveState.status]);
 
   const go = useCallback((hash: string) => {
     window.location.hash = hash;
@@ -79,10 +100,20 @@ export default function App() {
     [go],
   );
 
+  const archivedDeleted = useCallback((id: string) => {
+    setArchiveState((s) =>
+      s.status === "ready" ? { ...s, briefings: s.briefings.filter((b) => b.id !== id) } : s,
+    );
+  }, []);
+
   const ready = state.status === "ready" ? state : null;
   const readOnly = ready?.source !== "api";
   const queue = ready ? ready.briefings.filter((b) => b.status === "ready") : [];
-  const selected = ready && route.name === "briefing" ? ready.briefings.find((b) => b.id === route.id) : undefined;
+  const archiveBriefings = archiveState.status === "ready" ? archiveState.briefings : [];
+  const selected =
+    ready && route.name === "briefing"
+      ? (ready.briefings.find((b) => b.id === route.id) ?? archiveBriefings.find((b) => b.id === route.id))
+      : undefined;
 
   return (
     <>
@@ -92,11 +123,14 @@ export default function App() {
           Support Buddy
         </span>
         <nav className="nav" aria-label="Main">
-          <a href="#/" aria-current={route.name !== "analyze" ? "page" : undefined}>
+          <a href="#/" aria-current={route.name === "queue" ? "page" : undefined}>
             Queue
           </a>
           <a href="#/analyze" aria-current={route.name === "analyze" ? "page" : undefined}>
             Analyze
+          </a>
+          <a href="#/archive" aria-current={route.name === "archive" ? "page" : undefined}>
+            Archive
           </a>
         </nav>
         {ready?.source === "demo" && (
@@ -114,7 +148,7 @@ export default function App() {
 
         {state.status === "error" && (
           <p role="alert" className="notice">
-            We couldn’t load the queue. Check your connection and try again.
+            We couldn't load the queue. Check your connection and try again.
           </p>
         )}
 
@@ -137,7 +171,7 @@ export default function App() {
 
         {ready && route.name === "briefing" && !selected && (
           <div className="notice">
-            <p className="notice__title">We couldn’t find that briefing.</p>
+            <p className="notice__title">We couldn't find that briefing.</p>
             <button type="button" className="link" onClick={() => go("")}>
               Back to the queue
             </button>
@@ -153,6 +187,26 @@ export default function App() {
                 : `${queue.length} ${queue.length === 1 ? "briefing" : "briefings"} prepared before you logged in.`}
             </p>
             <QueueList briefings={queue} onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)} />
+          </>
+        )}
+
+        {ready && route.name === "archive" && (
+          <>
+            <h1 className="large-title">Archive</h1>
+            <p className="subtitle">Sent replies. Delete permanently to remove.</p>
+            {archiveState.status === "loading" && <Skeleton />}
+            {archiveState.status === "error" && (
+              <p role="alert" className="notice">
+                Couldn't load the archive. Check your connection and try again.
+              </p>
+            )}
+            {archiveState.status === "ready" && (
+              <ArchiveList
+                briefings={archiveBriefings}
+                onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)}
+                onDeleted={archivedDeleted}
+              />
+            )}
           </>
         )}
       </main>

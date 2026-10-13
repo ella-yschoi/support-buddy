@@ -86,3 +86,22 @@ export function approveBriefing(id: string, finalBody: string): Promise<Briefing
     final_body: finalBody,
   });
 }
+
+export async function loadArchive(): Promise<Briefing[]> {
+  const data = await getJson(`${API_BASE}/api/v1/briefings/archive`);
+  if (!Array.isArray(data)) throw new Error("unexpected API payload");
+  return data as Briefing[];
+}
+
+export async function deleteBriefing(id: string): Promise<void> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE}/api/v1/briefings/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+  } catch {
+    throw new ApiError("We couldn't reach the server.", 0);
+  }
+  if (!response.ok) throw new ApiError(friendlyMessage(response.status), response.status);
+}
