@@ -1,20 +1,29 @@
-app = "support-buddy-api"
-primary_region = "nrt"  # Tokyo — closest to Korea
+# fly.toml app configuration file generated for support-buddy-api on 2026-10-12T13:39:46Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'support-buddy-api'
+primary_region = 'sjc'
 
 [build]
 
 [env]
-  LOG_LEVEL = "INFO"
+  LOG_LEVEL = 'INFO'
+
+[[mounts]]
+  source = 'support_buddy_data'
+  destination = '/app/data/db'
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
 
   [http_service.concurrency]
-    type = "connections"
+    type = 'connections'
     hard_limit = 25
     soft_limit = 20
 
@@ -22,7 +31,3 @@ primary_region = "nrt"  # Tokyo — closest to Korea
   memory = "1gb"
   cpu_kind = "shared"
   cpus = 1
-
-[mounts]
-  source = "support_buddy_data"
-  destination = "/app/data/db"
