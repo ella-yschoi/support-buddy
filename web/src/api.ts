@@ -9,10 +9,16 @@ function authHeaders(): Record<string, string> {
   return API_KEY ? { Authorization: `Bearer ${API_KEY}` } : {};
 }
 
-async function getJson(url: string): Promise<unknown> {
-  const response = await fetch(url, { headers: authHeaders() });
-  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
-  return response.json();
+async function getJson(url: string, timeoutMs?: number): Promise<unknown> {
+  const controller = timeoutMs !== undefined ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+  try {
+    const response = await fetch(url, { headers: authHeaders(), signal: controller?.signal });
+    if (!response.ok) throw new Error(`${url} answered ${response.status}`);
+    return response.json();
+  } finally {
+    if (timer !== null) clearTimeout(timer);
+  }
 }
 
 export interface LoadedQueue {
@@ -27,7 +33,7 @@ export interface LoadedQueue {
  */
 export async function loadBriefings(): Promise<LoadedQueue> {
   try {
-    const data = await getJson(`${API_BASE}/api/v1/briefings`);
+    const data = await getJson(`${API_BASE}/api/v1/briefings`, 5000);
     if (!Array.isArray(data)) throw new Error("unexpected API payload");
     return { briefings: data as Briefing[], source: "api" };
   } catch {
