@@ -10,6 +10,8 @@ primary_region = 'sjc'
 
 [env]
   LOG_LEVEL = 'INFO'
+  BRIEFING_DB_PATH = '/app/data/db/briefings.db'
+  CHROMA_PERSIST_DIR = '/app/data/db/chroma'
 
 [[mounts]]
   source = 'support_buddy_data'
