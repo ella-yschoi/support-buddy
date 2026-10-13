@@ -39,7 +39,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://support-buddy.pages.dev"],
+    allow_origins=["https://support-buddy.pages.dev", "http://localhost:5173"],
     allow_methods=["GET", "POST"],
     allow_headers=["Authorization", "Content-Type"],
 )
