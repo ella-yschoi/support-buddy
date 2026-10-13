@@ -20,6 +20,11 @@ COPY data/ ./data/
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
+# Pre-download the chromadb ONNX embedding model as appuser so the cache lands
+# in /home/appuser/.cache/chroma — exactly where it will be looked up at runtime.
+# Without this the 79 MB download happens on first request and OOM-kills the process.
+RUN .venv/bin/python -c "from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2; ONNXMiniLM_L6_V2()"
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
