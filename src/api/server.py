@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import ANTHROPIC_API_KEY, KNOWLEDGE_DIR
 from src.core.analyzer.inquiry import InquiryAnalyzer
@@ -27,6 +28,14 @@ app = FastAPI(
     description="AI-powered support tool for Technical Support Engineers",
     version="0.2.0",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://support-buddy.pages.dev"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type"],
+)
+
 
 app.include_router(briefings_router)
 
