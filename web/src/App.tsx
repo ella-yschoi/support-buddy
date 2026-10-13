@@ -65,17 +65,22 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
+  // Trigger: navigate to archive → start loading (if idle)
   useEffect(() => {
-    if (route.name !== "archive" || archiveState.status !== "idle") return;
+    if (route.name === "archive") {
+      setArchiveState((prev) => (prev.status === "idle" ? { status: "loading" } : prev));
+    }
+  }, [route.name]);
+
+  // Load: once status is "loading", fetch archive data
+  useEffect(() => {
+    if (archiveState.status !== "loading") return;
     let cancelled = false;
-    setArchiveState({ status: "loading" });
     loadArchive()
-      .then((briefings) => !cancelled && setArchiveState({ status: "ready", briefings }))
-      .catch(() => !cancelled && setArchiveState({ status: "error" }));
-    return () => {
-      cancelled = true;
-    };
-  }, [route.name, archiveState.status]);
+      .then((briefings) => { if (!cancelled) setArchiveState({ status: "ready", briefings }); })
+      .catch(() => { if (!cancelled) setArchiveState({ status: "error" }); });
+    return () => { cancelled = true; };
+  }, [archiveState.status]);
 
   const go = useCallback((hash: string) => {
     window.location.hash = hash;
