@@ -13,6 +13,8 @@ KNOWLEDGE_DIR = DATA_DIR / "knowledge"
 SAMPLE_LOGS_DIR = DATA_DIR / "sample_logs"
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+# When set, all API requests must supply: Authorization: Bearer <key>
+# Leave empty to disable auth (local dev only).
 API_SECRET_KEY = os.getenv("API_SECRET_KEY", "")
 LINEAR_API_KEY = os.getenv("LINEAR_API_KEY", "")
 

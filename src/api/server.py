@@ -8,10 +8,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from src.config import ANTHROPIC_API_KEY, API_SECRET_KEY, KNOWLEDGE_DIR
-from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
-from src.core.knowledge.engine import KnowledgeEngine
 from src.integrations.email.parser import EmailParser
+
+try:
+    from src.core.knowledge.engine import KnowledgeEngine as _KnowledgeEngine
+    from src.core.analyzer.inquiry import InquiryAnalyzer
+    _KNOWLEDGE_AVAILABLE = True
+except ImportError:
+    _KnowledgeEngine = None  # type: ignore[assignment,misc]
+    InquiryAnalyzer = None  # type: ignore[assignment,misc]
+    _KNOWLEDGE_AVAILABLE = False
 
 from src.api.briefings import router as briefings_router
 from src.api.schemas import (
@@ -37,6 +44,7 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
+
 _PUBLIC_PATHS = {"/api/v1/health"}
 
 
@@ -52,15 +60,18 @@ async def auth_middleware(request: Request, call_next):
 app.include_router(briefings_router)
 
 # Shared engine instance
-_engine: Optional[KnowledgeEngine] = None
+_engine: Optional[object] = None
 
 
-def get_engine() -> KnowledgeEngine:
+def get_engine():  # type: ignore[return]
     global _engine
     if _engine is None:
-        _engine = KnowledgeEngine()
-        if KNOWLEDGE_DIR.is_dir():
-            _engine.ingest_directory(KNOWLEDGE_DIR)
+        try:
+            _engine = _KnowledgeEngine()
+            if KNOWLEDGE_DIR.is_dir():
+                _engine.ingest_directory(KNOWLEDGE_DIR)
+        except (RuntimeError, Exception) as exc:
+            raise HTTPException(503, f"Knowledge engine unavailable: {exc}") from exc
     return _engine
 
 
@@ -73,8 +84,11 @@ def _to_search_result_response(r) -> SearchResultResponse:
 
 @app.get("/api/v1/health", response_model=HealthResponse)
 def health():
-    engine = get_engine()
-    return HealthResponse(status="ok", knowledge_docs=engine.doc_count())
+    try:
+        engine = get_engine()
+        return HealthResponse(status="ok", knowledge_docs=engine.doc_count())
+    except HTTPException:
+        return HealthResponse(status="ok", knowledge_docs=0)
 
 
 @app.post("/api/v1/analyze", response_model=AnalyzeResponse)

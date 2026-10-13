@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
-import chromadb
-from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
+try:
+    import chromadb
+    from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
+    _CHROMADB_AVAILABLE = True
+except ImportError:
+    _CHROMADB_AVAILABLE = False
 
 from src.core.models import KnowledgeDoc, SearchResult
 
@@ -14,6 +18,10 @@ class KnowledgeStore:
     COLLECTION_NAME = "support_knowledge"
 
     def __init__(self, persist_dir: str | None = None):
+        if not _CHROMADB_AVAILABLE:
+            raise RuntimeError(
+                "chromadb is not installed. Run: uv sync --extra knowledge"
+            )
         if persist_dir:
             self._client = chromadb.PersistentClient(path=persist_dir)
         else:
