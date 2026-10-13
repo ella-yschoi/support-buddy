@@ -50,7 +50,7 @@ _PUBLIC_PATHS = {"/api/v1/health"}
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
-    if API_SECRET_KEY and request.url.path not in _PUBLIC_PATHS:
+    if API_SECRET_KEY and request.method != "OPTIONS" and request.url.path not in _PUBLIC_PATHS:
         auth = request.headers.get("Authorization", "")
         if auth != f"Bearer {API_SECRET_KEY}":
             return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
