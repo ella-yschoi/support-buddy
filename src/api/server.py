@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from src.config import ANTHROPIC_API_KEY, API_SECRET_KEY, KNOWLEDGE_DIR
@@ -35,6 +36,14 @@ app = FastAPI(
     description="AI-powered support tool for Technical Support Engineers",
     version="0.2.0",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://support-buddy.pages.dev"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type"],
+)
+
 
 _PUBLIC_PATHS = {"/api/v1/health"}
 
