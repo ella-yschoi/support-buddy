@@ -3,10 +3,11 @@
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
-from src.config import ANTHROPIC_API_KEY, KNOWLEDGE_DIR
+from src.config import ANTHROPIC_API_KEY, API_SECRET_KEY, KNOWLEDGE_DIR
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
 from src.core.knowledge.engine import KnowledgeEngine
@@ -35,6 +36,17 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["Authorization", "Content-Type"],
 )
+
+_PUBLIC_PATHS = {"/api/v1/health"}
+
+
+@app.middleware("http")
+async def auth_middleware(request: Request, call_next):
+    if API_SECRET_KEY and request.url.path not in _PUBLIC_PATHS:
+        auth = request.headers.get("Authorization", "")
+        if auth != f"Bearer {API_SECRET_KEY}":
+            return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+    return await call_next(request)
 
 
 app.include_router(briefings_router)
