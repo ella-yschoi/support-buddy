@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 
 from src.api.schemas import ApproveRequest, BriefingRequest, BriefingResponse, PolicyResponse
 from src.config import BRIEFING_DB_PATH
@@ -54,6 +54,22 @@ def create_briefing(
 @router.get("/briefings", response_model=list[BriefingResponse])
 def list_briefings(store: BriefingStore = Depends(get_store)) -> list[BriefingResponse]:
     return [_response(b) for b in store.list_queue()]
+
+
+@router.get("/briefings/archive", response_model=list[BriefingResponse])
+def list_archive(store: BriefingStore = Depends(get_store)) -> list[BriefingResponse]:
+    return [_response(b) for b in store.list_archive()]
+
+
+@router.delete("/briefings/{briefing_id}", status_code=204)
+def delete_briefing(
+    briefing_id: str, store: BriefingStore = Depends(get_store)
+) -> Response:
+    try:
+        store.delete(briefing_id)
+    except BriefingError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    return Response(status_code=204)
 
 
 @router.get("/briefings/{briefing_id}", response_model=BriefingResponse)

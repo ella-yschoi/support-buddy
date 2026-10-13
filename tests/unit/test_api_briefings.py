@@ -113,3 +113,34 @@ def test_approving_an_already_approved_briefing_is_409(client):
 
 def test_briefing_response_has_an_empty_origin_for_pasted_tickets(client):
     assert create(client).json()["origin"] is None
+
+
+def test_list_archive_returns_approved_briefings(client):
+    created = create(client).json()
+    client.post(f"/api/v1/briefings/{created['id']}/approve", json={"final_body": "Sent reply."})
+    archive = client.get("/api/v1/briefings/archive").json()
+    assert len(archive) == 1
+    assert archive[0]["id"] == created["id"]
+    assert archive[0]["status"] == "approved"
+
+
+def test_list_archive_does_not_include_ready_briefings(client):
+    create(client)
+    assert client.get("/api/v1/briefings/archive").json() == []
+
+
+def test_delete_briefing_removes_from_archive(client):
+    created = create(client).json()
+    client.post(f"/api/v1/briefings/{created['id']}/approve", json={"final_body": "Done."})
+    resp = client.delete(f"/api/v1/briefings/{created['id']}")
+    assert resp.status_code == 204
+    assert client.get("/api/v1/briefings/archive").json() == []
+
+
+def test_delete_ready_briefing_is_404(client):
+    created = create(client).json()
+    assert client.delete(f"/api/v1/briefings/{created['id']}").status_code == 404
+
+
+def test_delete_unknown_briefing_is_404(client):
+    assert client.delete("/api/v1/briefings/nope").status_code == 404

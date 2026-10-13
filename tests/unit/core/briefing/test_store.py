@@ -155,3 +155,45 @@ def test_briefings_stored_before_origin_existed_still_load(store):
     conn.commit()
     conn.close()
     assert store.get("b1").origin is None
+
+
+def test_list_archive_returns_only_approved_briefings(store):
+    store.add(make_briefing("b1"))
+    store.add(make_briefing("b2"))
+    store.approve("b1", "Sent reply.")
+    archive = store.list_archive()
+    assert len(archive) == 1
+    assert archive[0].id == "b1"
+    assert archive[0].status == "approved"
+
+
+def test_list_archive_empty_when_none_approved(store):
+    store.add(make_briefing("b1"))
+    assert store.list_archive() == []
+
+
+def test_list_archive_orders_most_recent_first(store):
+    store.add(make_briefing("b1", created_at="2026-10-01T09:00:00"))
+    store.add(make_briefing("b2", created_at="2026-10-02T09:00:00"))
+    store.approve("b1", "First.")
+    store.approve("b2", "Second.")
+    ids = [b.id for b in store.list_archive()]
+    assert ids == ["b2", "b1"]
+
+
+def test_delete_removes_approved_briefing(store):
+    store.add(make_briefing("b1"))
+    store.approve("b1", "Done.")
+    store.delete("b1")
+    assert store.list_archive() == []
+
+
+def test_delete_unknown_id_raises(store):
+    with pytest.raises(BriefingError):
+        store.delete("nope")
+
+
+def test_delete_ready_briefing_raises(store):
+    store.add(make_briefing("b1"))
+    with pytest.raises(BriefingError):
+        store.delete("b1")
