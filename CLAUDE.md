@@ -63,3 +63,9 @@ support-buddy/
 - Domain knowledge files go in `data/knowledge/` as Markdown or JSON
 - Log analysis must handle arbitrary log formats gracefully
 - AI responses must always cite their source from the knowledge base
+
+## Git & PR Rules
+
+- PR bodies and titles must always be written in English
+- Always create PRs with `gh pr create --title "..." --body "..."` — never push a branch without opening a PR
+- PR body must include: Summary (what changed and why), Test plan (checklist)
