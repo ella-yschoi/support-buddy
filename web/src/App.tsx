@@ -6,7 +6,8 @@ import { BriefingDetail } from "./components/BriefingDetail";
 import { Logo } from "./components/Logo";
 import { QueueList } from "./components/QueueList";
 import { sortQueue } from "./format";
-import type { Briefing, Source } from "./types";
+import { AUTONOMY_LABEL } from "./format";
+import type { Autonomy, Briefing, Source } from "./types";
 
 type LoadState =
   | { status: "loading" }
@@ -19,7 +20,8 @@ type ArchiveState =
   | { status: "ready"; briefings: Briefing[] }
   | { status: "error" };
 
-type QueueTab = "pending" | "sent";
+type Filter = "all" | Autonomy | "sent";
+const FILTERS: Filter[] = ["all", "auto", "confirm", "human_only", "sent"];
 
 type Route = { name: "queue" } | { name: "analyze" } | { name: "briefing"; id: string };
 
@@ -29,6 +31,12 @@ function readRoute(): Route {
   if (briefing) return { name: "briefing", id: decodeURIComponent(briefing[1]) };
   if (hash === "#/analyze") return { name: "analyze" };
   return { name: "queue" };
+}
+
+function filterLabel(f: Filter): string {
+  if (f === "all") return "All";
+  if (f === "sent") return "Sent";
+  return AUTONOMY_LABEL[f];
 }
 
 function Skeleton() {
@@ -48,7 +56,7 @@ function Skeleton() {
 export default function App() {
   const [state, setState] = useState<LoadState>({ status: "loading" });
   const [route, setRoute] = useState<Route>(readRoute);
-  const [queueTab, setQueueTab] = useState<QueueTab>("pending");
+  const [filter, setFilter] = useState<Filter>("all");
   const [archiveState, setArchiveState] = useState<ArchiveState>({ status: "idle" });
 
   useEffect(() => {
@@ -67,14 +75,14 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  // Trigger: switch to Sent tab → start loading (if idle)
+  // Trigger archive load when Sent filter is selected
   useEffect(() => {
-    if (queueTab === "sent") {
+    if (filter === "sent") {
       setArchiveState((prev) => (prev.status === "idle" ? { status: "loading" } : prev));
     }
-  }, [queueTab]);
+  }, [filter]);
 
-  // Load: once status is "loading", fetch archive data
+  // Load archive data once triggered
   useEffect(() => {
     if (archiveState.status !== "loading") return;
     let cancelled = false;
@@ -115,12 +123,22 @@ export default function App() {
 
   const ready = state.status === "ready" ? state : null;
   const readOnly = ready?.source !== "api";
-  const queue = ready ? ready.briefings.filter((b) => b.status === "ready") : [];
+  const allPending = ready ? ready.briefings.filter((b) => b.status === "ready") : [];
+  const visiblePending =
+    filter === "all" || filter === "sent"
+      ? allPending
+      : allPending.filter((b) => b.autonomy === filter);
   const archiveBriefings = archiveState.status === "ready" ? archiveState.briefings : [];
   const selected =
     ready && route.name === "briefing"
       ? (ready.briefings.find((b) => b.id === route.id) ?? archiveBriefings.find((b) => b.id === route.id))
       : undefined;
+
+  function countFor(f: Filter): number | null {
+    if (f === "sent") return null;
+    if (f === "all") return allPending.length;
+    return allPending.filter((b) => b.autonomy === f).length;
+  }
 
   return (
     <>
@@ -185,32 +203,38 @@ export default function App() {
         {ready && route.name === "queue" && (
           <>
             <h1 className="large-title">Queue</h1>
-            <div className="segmented" role="tablist" aria-label="Queue view">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={queueTab === "pending"}
-                className="segmented__item"
-                onClick={() => setQueueTab("pending")}
-              >
-                Pending <span className="segmented__count">{queue.length}</span>
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={queueTab === "sent"}
-                className="segmented__item"
-                onClick={() => setQueueTab("sent")}
-              >
-                Sent
-              </button>
+            <p className="subtitle">
+              {allPending.length === 0
+                ? "All caught up."
+                : `${allPending.length} ${allPending.length === 1 ? "briefing" : "briefings"} prepared before you logged in.`}
+            </p>
+            <div className="segmented" role="tablist" aria-label="Filter queue">
+              {FILTERS.map((f) => {
+                const n = countFor(f);
+                return (
+                  <button
+                    key={f}
+                    type="button"
+                    role="tab"
+                    aria-selected={filter === f}
+                    className="segmented__item"
+                    onClick={() => setFilter(f)}
+                  >
+                    {filterLabel(f)}
+                    {n !== null && <span className="segmented__count">{n}</span>}
+                  </button>
+                );
+              })}
             </div>
 
-            {queueTab === "pending" && (
-              <QueueList briefings={queue} onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)} />
+            {filter !== "sent" && (
+              <QueueList
+                briefings={visiblePending}
+                onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)}
+              />
             )}
 
-            {queueTab === "sent" && (
+            {filter === "sent" && (
               <>
                 {archiveState.status === "loading" && <Skeleton />}
                 {archiveState.status === "error" && (
