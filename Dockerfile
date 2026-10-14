@@ -30,4 +30,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 EXPOSE 8080
 
-CMD [".venv/bin/uvicorn", "src.api.server:app", "--host", "0.0.0.0", "--port", "8080"]
+COPY start.sh ./start.sh
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]
