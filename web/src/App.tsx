@@ -19,14 +19,15 @@ type ArchiveState =
   | { status: "ready"; briefings: Briefing[] }
   | { status: "error" };
 
-type Route = { name: "queue" } | { name: "analyze" } | { name: "archive" } | { name: "briefing"; id: string };
+type QueueTab = "pending" | "sent";
+
+type Route = { name: "queue" } | { name: "analyze" } | { name: "briefing"; id: string };
 
 function readRoute(): Route {
   const hash = window.location.hash;
   const briefing = /^#\/b\/(.+)$/.exec(hash);
   if (briefing) return { name: "briefing", id: decodeURIComponent(briefing[1]) };
   if (hash === "#/analyze") return { name: "analyze" };
-  if (hash === "#/archive") return { name: "archive" };
   return { name: "queue" };
 }
 
@@ -47,6 +48,7 @@ function Skeleton() {
 export default function App() {
   const [state, setState] = useState<LoadState>({ status: "loading" });
   const [route, setRoute] = useState<Route>(readRoute);
+  const [queueTab, setQueueTab] = useState<QueueTab>("pending");
   const [archiveState, setArchiveState] = useState<ArchiveState>({ status: "idle" });
 
   useEffect(() => {
@@ -65,12 +67,12 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  // Trigger: navigate to archive → start loading (if idle)
+  // Trigger: switch to Sent tab → start loading (if idle)
   useEffect(() => {
-    if (route.name === "archive") {
+    if (queueTab === "sent") {
       setArchiveState((prev) => (prev.status === "idle" ? { status: "loading" } : prev));
     }
-  }, [route.name]);
+  }, [queueTab]);
 
   // Load: once status is "loading", fetch archive data
   useEffect(() => {
@@ -128,14 +130,11 @@ export default function App() {
           Support Buddy
         </span>
         <nav className="nav" aria-label="Main">
-          <a href="#/" aria-current={route.name === "queue" ? "page" : undefined}>
+          <a href="#/" aria-current={route.name !== "analyze" ? "page" : undefined}>
             Queue
           </a>
           <a href="#/analyze" aria-current={route.name === "analyze" ? "page" : undefined}>
             Analyze
-          </a>
-          <a href="#/archive" aria-current={route.name === "archive" ? "page" : undefined}>
-            Archive
           </a>
         </nav>
         {ready?.source === "demo" && (
@@ -186,31 +185,47 @@ export default function App() {
         {ready && route.name === "queue" && (
           <>
             <h1 className="large-title">Queue</h1>
-            <p className="subtitle">
-              {queue.length === 0
-                ? "All caught up."
-                : `${queue.length} ${queue.length === 1 ? "briefing" : "briefings"} prepared before you logged in.`}
-            </p>
-            <QueueList briefings={queue} onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)} />
-          </>
-        )}
+            <div className="segmented" role="tablist" aria-label="Queue view">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={queueTab === "pending"}
+                className="segmented__item"
+                onClick={() => setQueueTab("pending")}
+              >
+                Pending <span className="segmented__count">{queue.length}</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={queueTab === "sent"}
+                className="segmented__item"
+                onClick={() => setQueueTab("sent")}
+              >
+                Sent
+              </button>
+            </div>
 
-        {ready && route.name === "archive" && (
-          <>
-            <h1 className="large-title">Archive</h1>
-            <p className="subtitle">Sent replies. Delete permanently to remove.</p>
-            {archiveState.status === "loading" && <Skeleton />}
-            {archiveState.status === "error" && (
-              <p role="alert" className="notice">
-                Couldn't load the archive. Check your connection and try again.
-              </p>
+            {queueTab === "pending" && (
+              <QueueList briefings={queue} onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)} />
             )}
-            {archiveState.status === "ready" && (
-              <ArchiveList
-                briefings={archiveBriefings}
-                onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)}
-                onDeleted={archivedDeleted}
-              />
+
+            {queueTab === "sent" && (
+              <>
+                {archiveState.status === "loading" && <Skeleton />}
+                {archiveState.status === "error" && (
+                  <p role="alert" className="notice">
+                    Couldn't load sent briefings. Check your connection and try again.
+                  </p>
+                )}
+                {archiveState.status === "ready" && (
+                  <ArchiveList
+                    briefings={archiveBriefings}
+                    onOpen={(id) => go(`#/b/${encodeURIComponent(id)}`)}
+                    onDeleted={archivedDeleted}
+                  />
+                )}
+              </>
             )}
           </>
         )}
