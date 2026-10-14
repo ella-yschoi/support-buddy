@@ -30,7 +30,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 EXPOSE 8080
 
-COPY start.sh ./start.sh
+COPY --chown=appuser:appuser start.sh ./start.sh
 RUN chmod +x start.sh
 
 CMD ["./start.sh"]
