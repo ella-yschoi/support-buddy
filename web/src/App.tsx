@@ -75,6 +75,20 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
+  // Auto-refresh every 30s, paused when tab is hidden
+  useEffect(() => {
+    const refresh = () => {
+      if (document.hidden) return;
+      loadBriefings()
+        .then(({ briefings, source }) =>
+          setState((s) => (s.status === "ready" ? { status: "ready", briefings, source } : s)),
+        )
+        .catch(() => {});
+    };
+    const id = setInterval(refresh, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
   // Trigger archive load when Sent filter is selected
   useEffect(() => {
     if (filter === "sent") {
