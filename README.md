@@ -22,6 +22,12 @@ Each briefing shows the customer message, routing reason, likely causes with kno
 
 ![Briefing Detail](docs/images/briefing-detail.png)
 
+### Analyze
+
+Paste any customer inquiry to generate a briefing on demand — no Linear ticket needed.
+
+![Analyze](docs/images/analyze.png)
+
 <br/>
 
 ## How it works
