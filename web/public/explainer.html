@@ -1,0 +1,568 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Support Buddy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one reading column; diagrams and tables break out to full column width.
+     Single dark world on purpose, matching the product UI, so every color is set explicitly. */
+  :root {
+    --bg: #050505;
+    --surface: #0d0d0d;
+    --raised: #171717;
+    --border: #262626;
+    --border-strong: #3d3d3d;
+    --text: #ededed;
+    --text-2: #a8a8a8;
+    --text-3: #858585;
+    --accent: #52a8ff;
+    --ok: #62c073;
+    --warn: #f5a524;
+    --bad: #ff6369;
+    --display: "Geist", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --body: "Geist", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding-inline: 20px;
+    padding-block: 0 96px;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 16px/1.75 var(--body);
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; }
+
+  h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+  h1, h2, h3 { text-wrap: balance; }
+
+  /* ── Hero ───────────────────────────────────────── */
+  .hero { padding-block: 72px 40px; }
+  .eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+  h1 { margin-top: 16px; font: 700 clamp(36px, 7vw, 56px)/1.1 var(--display); letter-spacing: -0.04em; }
+  .lead { margin-top: 20px; max-width: 40em; font-size: 19px; line-height: 1.7; color: var(--text-2); }
+  .lead strong { color: var(--text); font-weight: 600; }
+
+  .nots { margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .not { padding: 16px 18px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+  .not b { display: block; font-weight: 600; margin-bottom: 4px; }
+  .not span { color: var(--text-2); font-size: 14.5px; line-height: 1.65; }
+
+  .toc { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+  .toc a { display: block; padding: 4px 12px; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--text-2); font-size: 13.5px; text-decoration: none; }
+  .toc a:hover { color: var(--text); border-color: var(--text-3); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ── Sections ───────────────────────────────────── */
+  section { padding-block: 56px 8px; border-top: 1px solid var(--border); margin-top: 48px; scroll-margin-top: 16px; }
+  h2 { font: 600 clamp(26px, 4.5vw, 32px)/1.25 var(--display); letter-spacing: -0.03em; }
+  .intro { margin-top: 12px; max-width: 40em; color: var(--text-2); }
+  .intro strong, td strong { color: var(--text); font-weight: 600; }
+  h3 { margin-top: 36px; font: 600 18px/1.4 var(--display); letter-spacing: -0.02em; }
+
+  /* ── Tables ─────────────────────────────────────── */
+  .table-wrap { margin-top: 24px; overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; line-height: 1.65; min-width: 620px; }
+  th { text-align: left; font: 500 12px/1.4 var(--mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-3); padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg); white-space: nowrap; }
+  td { padding: 14px 16px; vertical-align: top; border-bottom: 1px solid var(--border); color: var(--text-2); }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { color: var(--text); font-weight: 500; width: 22%; }
+  code, .mono { font-family: var(--mono); font-size: 0.88em; color: var(--text); background: var(--raised); padding: 1px 6px; border-radius: 5px; }
+
+  /* ── Chips ──────────────────────────────────────── */
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 1px 9px; border-radius: 999px; border: 1px solid currentColor; font-size: 12px; font-weight: 500; line-height: 20px; white-space: nowrap; }
+  .chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .chip--done { color: var(--ok); }
+  .chip--part { color: var(--warn); }
+  .chip--todo { color: var(--text-3); }
+  .chip--auto { color: var(--ok); }
+  .chip--confirm { color: var(--accent); }
+  .chip--human { color: var(--warn); }
+
+  /* ── Swimlane diagram ───────────────────────────── */
+  .lanes { margin-top: 28px; display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 16px; align-items: stretch; }
+  .lane { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .lane--core { border-color: var(--border-strong); background: var(--raised); }
+  .lane h4 { font: 500 12px/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  .node { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); font-size: 14px; line-height: 1.55; }
+  .node b { font-weight: 600; display: block; }
+  .node small { display: block; margin-top: 2px; color: var(--text-3); font-size: 12.5px; }
+  .node .chip { margin-top: 6px; }
+  .down { align-self: center; color: var(--text-3); font: 400 14px/1 var(--mono); }
+  .lane-note { margin-top: 12px; color: var(--text-3); font-size: 13.5px; }
+
+  /* ── Briefing mock ──────────────────────────────── */
+  .anatomy { margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .row { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .mock { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); padding: 14px 16px; font-size: 14px; line-height: 1.6; }
+  .mock .t { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  .mock .m { color: var(--text-3); font-size: 13px; }
+  .mock .sev { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); margin-right: 8px; }
+  .mock ul { margin: 6px 0 0; padding-left: 18px; color: var(--text-2); }
+  .mock .quote { padding: 8px 10px; margin-top: 6px; border-left: 2px solid var(--border-strong); color: var(--text-2); font-size: 13.5px; }
+  .mock .dots { display: inline-flex; gap: 5px; vertical-align: middle; }
+  .mock .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); display: block; }
+  .mock .dots i.f { background: var(--bad); }
+  .mock .banner { padding: 8px 10px; border: 1px solid rgba(245,165,36,.4); border-radius: 8px; background: rgba(245,165,36,.08); color: var(--text); font-size: 13.5px; }
+  .why h4 { font: 600 15px/1.5 var(--display); }
+  .why p { margin-top: 2px; color: var(--text-2); font-size: 14.5px; line-height: 1.7; }
+
+  /* ── Spectrum (levels) ──────────────────────────── */
+  .spectrum { margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .level { padding: 18px 18px 20px; border-right: 1px solid var(--border); }
+  .level:last-child { border-right: 0; }
+  .level h3 { margin: 10px 0 6px; font-size: 20px; }
+  .level p { color: var(--text-2); font-size: 14.5px; line-height: 1.7; }
+  .level .who { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 13.5px; color: var(--text-3); }
+  .arrow-line { margin-top: 10px; display: flex; justify-content: space-between; font: 400 12px/1 var(--mono); color: var(--text-3); letter-spacing: .04em; }
+
+  /* ── Scenes ─────────────────────────────────────── */
+  .scenes { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; }
+  .scene { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 20px 22px; }
+  .scene header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+  .scene h3 { margin: 0; font-size: 19px; }
+  .scene .when { margin-top: 6px; color: var(--text-2); font-size: 15px; }
+  .scene dl { margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .scene dt { font: 500 12px/1.4 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+  .scene dd { color: var(--text-2); font-size: 14.5px; line-height: 1.7; }
+  .scene dd strong { color: var(--text); font-weight: 600; }
+
+  /* ── Timeline ───────────────────────────────────── */
+  .timeline { margin: 28px 0 0; padding: 0; list-style: none; border-left: 1px solid var(--border-strong); display: flex; flex-direction: column; gap: 4px; }
+  .timeline li { position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; padding: 10px 0 10px 24px; }
+  .timeline li::before { content: ""; position: absolute; left: -5px; top: 18px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--text-3); }
+  .timeline li.who-human::before { border-color: var(--accent); background: var(--accent); }
+  .timeline time { font: 500 13px/1.9 var(--mono); color: var(--text-3); }
+  .timeline b { font-weight: 600; }
+  .timeline span { color: var(--text-2); }
+  .legend { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--text-3); font-size: 13.5px; }
+  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+  /* ── Status / roadmap ───────────────────────────── */
+  .two { margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 18px 20px; }
+  .panel h3 { margin: 0 0 10px; font-size: 16px; }
+  .panel ul { margin: 0; padding-left: 18px; color: var(--text-2); font-size: 14.5px; line-height: 1.75; }
+  .note { margin-top: 16px; padding: 14px 16px; border: 1px solid rgba(245,165,36,.35); border-radius: 10px; background: rgba(245,165,36,.07); color: var(--text-2); font-size: 14.5px; line-height: 1.7; }
+  .note strong { color: var(--text); }
+
+  .steps { margin: 28px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; counter-reset: step; }
+  .steps li { counter-increment: step; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); padding: 14px 16px; font-size: 14.5px; line-height: 1.65; color: var(--text-2); }
+  .steps li::before { content: "단계 " counter(step); display: block; margin-bottom: 4px; font: 500 12px/1.4 var(--mono); letter-spacing: .05em; color: var(--text-3); }
+  .steps li b { color: var(--text); font-weight: 600; display: block; margin-bottom: 2px; }
+  .steps li.now { border-color: var(--border-strong); background: var(--raised); }
+  .steps li.now::before { content: "지금"; color: var(--ok); }
+
+  /* ── Glossary / FAQ ─────────────────────────────── */
+  .gloss { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .gloss div { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; background: var(--surface); }
+  .gloss dt { font-weight: 600; margin-bottom: 4px; }
+  .gloss dd { color: var(--text-2); font-size: 14.5px; line-height: 1.7; }
+  .faq { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+  .faq div { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; background: var(--surface); }
+  .faq h3 { margin: 0 0 6px; font-size: 16px; }
+  .faq p { color: var(--text-2); font-size: 15px; line-height: 1.75; }
+
+  footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-3); font-size: 13.5px; }
+
+  @media (max-width: 820px) {
+    .lanes { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr; gap: 8px; }
+    .spectrum { grid-template-columns: 1fr; }
+    .level { border-right: 0; border-bottom: 1px solid var(--border); }
+    .level:last-child { border-bottom: 0; }
+    .scene dl { grid-template-columns: 1fr; gap: 12px; }
+    .two, .gloss { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .hero { padding-block: 48px 24px; }
+    .timeline li { grid-template-columns: 1fr; gap: 0; }
+    .scene { padding: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">TSE를 위한 안내서</p>
+    <h1>Support Buddy</h1>
+    <p class="lead">티켓을 열기 전에 <strong>조사가 먼저 끝나 있게</strong> 해 주는 도구입니다. 분류, 로그 확인, 관련 문서 찾기, 답변 초안, 그리고 그 초안을 믿어도 되는지 검사하는 일까지 미리 해 둡니다. <strong>마지막 판단과 발송은 사람</strong>이 합니다.</p>
+
+    <p style="margin-top:20px">
+      <a href="https://support-buddy.pages.dev" style="color:var(--accent);text-decoration:none;font-weight:600;border:1px solid var(--accent);padding:6px 16px;border-radius:6px;font-size:14.5px">라이브 데모 →</a>
+      <span style="color:var(--text-3);font-size:14px;margin-left:14px">API 키 없이 예시 브리핑 14건을 둘러볼 수 있습니다.</span>
+    </p>
+
+    <div class="nots">
+      <div class="not"><b>티켓 도구를 대체하지 않습니다</b><span>Zendesk, Jira, Linear는 그대로 씁니다. 티켓 옆에 붙는 조수입니다.</span></div>
+      <div class="not"><b>고객에게 자동 발송하지 않습니다</b><span>답변은 항상 TSE가 읽고, 고치고, 직접 보냅니다.</span></div>
+      <div class="not"><b>AI의 말을 그대로 믿지 않습니다</b><span>AI와 별개인 규칙 기반 검사가 모든 초안을 다시 확인합니다.</span></div>
+    </div>
+
+    <ul class="toc" aria-label="목차">
+      <li><a href="#why">언제 도움이 되나</a></li>
+      <li><a href="#flow">전체 흐름</a></li>
+      <li><a href="#briefing">브리핑 읽는 법</a></li>
+      <li><a href="#levels">처리 등급 3가지</a></li>
+      <li><a href="#trust">믿을 수 있나</a></li>
+      <li><a href="#scenes">장면별 사용법</a></li>
+      <li><a href="#day">하루 예시</a></li>
+      <li><a href="#status">지금 상태</a></li>
+      <li><a href="#roadmap">앞으로</a></li>
+      <li><a href="#terms">용어와 질문</a></li>
+    </ul>
+  </header>
+
+  <!-- ───────────── 1. 언제 도움이 되나 ───────────── -->
+  <section id="why">
+    <h2>TSE의 하루에서 시간이 새는 순간</h2>
+    <p class="intro">Support Buddy는 새로운 일을 만들지 않습니다. 티켓마다 <strong>반복되는 준비 작업</strong>을 앞으로 당겨 놓는 도구입니다. 아래 표는 그 순간들입니다.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>순간</th><th>지금은</th><th>Support Buddy가 있으면</th></tr></thead>
+        <tbody>
+          <tr><td>새 티켓을 열었을 때</td><td>에러코드를 찾고, 문서를 검색하고, 비슷한 과거 건을 뒤집니다.</td><td>관련 문서, 에러코드 설명, 확인할 체크리스트가 이미 붙어 있습니다.</td></tr>
+          <tr><td>고객이 로그를 보냈을 때</td><td>파일을 열어 훑고, 필요한 줄을 복사해 붙여 가며 읽습니다.</td><td>오류와 느린 작업이 추려지고, 원인 가설마다 <strong>근거가 되는 로그 줄</strong>이 달립니다.</td></tr>
+          <tr><td>답장을 쓸 때</td><td>빈 화면에서 시작해 비슷한 문장을 매번 새로 씁니다.</td><td>문서 출처가 달린 초안에서 시작해 고칩니다.</td></tr>
+          <tr><td>얼마나 심각한지 판단할 때</td><td>경험에 의존합니다. 신입은 놓치기 쉽습니다.</td><td>규칙이 심각도의 <strong>하한</strong>을 정해 줍니다. 예를 들어 엔터프라이즈 고객이고 "전 직원"이 영향을 받는다면 최소 High입니다.</td></tr>
+          <tr><td>보안, 환불, 법적 요구가 왔을 때</td><td>급한 마음에 약속하는 문장을 쓸 위험이 있습니다.</td><td>초안을 <strong>아예 만들지 않고</strong> 사람에게 넘깁니다.</td></tr>
+          <tr><td>새벽에 호출받았을 때</td><td>노트북을 켠 뒤에 로그를 읽기 시작합니다.</td><td>로그인하기 전에 1차 가설이 준비되어 있습니다. 부족하면 원본 로그로 바로 갑니다.</td></tr>
+          <tr><td>신입 TSE의 첫 주</td><td>선배에게 "뭘 확인해야 해요?"를 묻습니다.</td><td>티켓마다 확인 항목과 근거 문서가 붙어 있습니다.</td></tr>
+          <tr><td>같은 질문이 반복될 때</td><td>매번 새로 답합니다.</td><td><span class="chip chip--todo">예정</span> 반복 문의를 묶어 문서 보강 후보로 보여 줍니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ───────────── 2. 전체 흐름 ───────────── -->
+  <section id="flow">
+    <h2>티켓이 들어와서 답변이 나갈 때까지</h2>
+    <p class="intro">왼쪽에서 오른쪽으로 읽습니다. 가운데가 Support Buddy가 미리 해 두는 일이고, 오른쪽은 항상 사람의 몫입니다. 각 칸의 표시는 <strong>지금 실제로 되는지</strong>를 뜻합니다.</p>
+
+    <div class="lanes">
+      <div class="lane">
+        <h4>1. 티켓이 들어오는 곳</h4>
+        <div class="node"><b>웹 화면에 붙여넣기</b><small>Analyze 화면</small><span class="chip chip--done">구현됨</span></div>
+        <div class="node"><b>이메일 파일(.eml) 폴더</b><small>폴더에 넣으면 브리핑 생성</small><span class="chip chip--part">부분</span></div>
+        <div class="node"><b>Linear</b><small>60초마다 새 이슈 자동 수집, 큐 30초마다 자동 갱신</small><span class="chip chip--done">구현됨</span></div>
+        <div class="node"><b>Zendesk</b><small>내부 노트가 있어 잘 맞음</small><span class="chip chip--todo">예정 · 2순위</span></div>
+        <div class="node"><b>Jira, Intercom</b><small>같은 규격의 어댑터만</small><span class="chip chip--todo">예정</span></div>
+      </div>
+
+      <div class="lane lane--core">
+        <h4>2. Support Buddy가 미리 하는 일</h4>
+        <div class="node"><b>분류와 심각도</b><small>지금은 키워드 방식. Claude 연결 예정</small><span class="chip chip--part">부분</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>로그 분석과 관련 문서 검색</b><small>오류, 느린 작업, 에러코드, 문서 근거</small><span class="chip chip--done">구현됨</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>답변 초안</b><small>지금은 템플릿. Claude 연결 예정</small><span class="chip chip--part">부분</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>검사 8가지 (AI와 별개의 규칙)</b><small>인용, 에러코드, 플랜, 약속 문구 등</small><span class="chip chip--done">구현됨</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>처리 등급 결정</b><small>Auto, Confirm, Human-only</small><span class="chip chip--done">구현됨</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>브리핑으로 저장</b><small>큐에 심각도순으로 쌓임</small><span class="chip chip--done">구현됨</span></div>
+      </div>
+
+      <div class="lane">
+        <h4>3. 사람(TSE)</h4>
+        <div class="node"><b>큐에서 브리핑 확인</b><small>"Needs your eyes"부터</small><span class="chip chip--done">구현됨</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>티켓 안의 내부 노트로 확인</b><small>티켓 도구를 떠나지 않고</small><span class="chip chip--todo">예정</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>초안을 고치거나 직접 작성</b><small>복사 버튼 제공</small><span class="chip chip--done">구현됨</span></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>티켓 도구에서 직접 발송</b><small>Support Buddy는 보내지 않음</small></div>
+        <div class="down" aria-hidden="true">↓</div>
+        <div class="node"><b>"발송함" 기록과 편집 비율</b><small>지금은 수동. 자동 측정 예정</small><span class="chip chip--part">부분</span></div>
+      </div>
+    </div>
+    <p class="lane-note">편집 비율은 "초안을 얼마나 고쳐서 보냈는지"입니다. 0%면 그대로 보냈다는 뜻이고, 값이 크면 초안이 별로였다는 신호입니다. 이 숫자가 도구가 실제로 도움이 되는지 판단하는 가장 현실적인 지표입니다.</p>
+  </section>
+
+  <!-- ───────────── 3. 브리핑 읽는 법 ───────────── -->
+  <section id="briefing">
+    <h2>브리핑은 이렇게 생겼습니다</h2>
+    <p class="intro">브리핑은 티켓 하나에 대해 Support Buddy가 준비한 한 장짜리 정리입니다. 왼쪽은 실제 화면을 단순화한 모습이고, 오른쪽은 읽는 법입니다. 위에서 아래로 읽으면 됩니다.</p>
+
+    <div class="anatomy">
+      <div class="row">
+        <div class="mock"><div><span class="sev"></span><span class="t">Our webhooks stopped working about an hour ago</span></div><div class="m">Enterprise · API · 3:08 AM</div><div style="margin-top:8px"><span class="chip chip--confirm">Confirm</span> &nbsp;<span style="color:var(--ok);font-size:13px">Briefing ready</span></div></div>
+        <div class="why"><h4>제목줄</h4><p>고객이 쓴 첫 문장, 심각도 점, 처리 등급, 그리고 "준비됨"인지 "직접 봐야 함"인지 한 줄로 알려 줍니다. 큐에서는 이 줄만 보고 순서를 정할 수 있습니다.</p></div>
+      </div>
+
+      <div class="row">
+        <div class="mock"><div class="m">WHY THIS ROUTING</div><ul><li>Enterprise customer</li><li>Severity high</li></ul></div>
+        <div class="why"><h4>왜 이 등급인지</h4><p>사람이 정한 규칙 중 어떤 것에 걸렸는지 그대로 보여 줍니다. 등급이 납득되지 않으면 이유를 보고 규칙을 고치면 됩니다.</p></div>
+      </div>
+
+      <div class="row">
+        <div class="mock"><div class="m">LIKELY CAUSES</div><div style="margin-top:4px">Errors related to code(s): API-002</div><div class="quote">02:58 ERROR API-002 webhook delivery failed: connection timed out</div></div>
+        <div class="why"><h4>가능한 원인과 근거</h4><p>원인 후보마다 <strong>어느 로그 줄</strong>과 <strong>어느 문서</strong>에서 나왔는지 접어서 보여 줍니다. 근거가 없는 가설은 올라오지 않습니다.</p></div>
+      </div>
+
+      <div class="row">
+        <div class="mock"><div class="m">DRAFT REPLY</div><div style="margin-top:4px">Thank you for reaching out. I understand your webhook deliveries are timing out…</div><div class="m" style="margin-top:6px">Sources: API-002: Webhook Delivery Failed</div></div>
+        <div class="why"><h4>답변 초안</h4><p>고쳐 쓰는 입력창입니다. 출처 문서가 함께 표시됩니다. <strong>Human-only 건에는 초안이 없습니다.</strong></p></div>
+      </div>
+
+      <div class="row">
+        <div class="mock"><div class="m">VERIFICATION</div><div style="margin-top:6px"><span class="dots"><i></i><i></i><i></i><i></i><i></i><i class="f"></i><i></i><i></i></span> &nbsp;<b>87%</b></div></div>
+        <div class="why"><h4>검증 점 8개</h4><p>점 하나가 검사 하나입니다. 빨간 점이 실패한 검사이고, 눌러서 이유를 볼 수 있습니다. 점수는 AI의 자기 평가가 아니라 <strong>통과한 검사의 비율</strong>입니다.</p></div>
+      </div>
+
+      <div class="row">
+        <div class="mock"><div class="banner"><b>Start from the raw logs.</b><br>No log evidence: ask the customer for logs</div></div>
+        <div class="why"><h4>부족할 때의 경고</h4><p>근거가 모자라면 "원본 로그부터 보세요"라고 알려 줍니다. 로그가 없으면 고객에게 요청하라는 안내가 붙습니다. 모자란 브리핑을 충분한 척하지 않습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 4. 처리 등급 ───────────── -->
+  <section id="levels">
+    <h2>사람이 끼는 정도는 3단계입니다</h2>
+    <p class="intro">모든 티켓은 규칙 파일(<code>policy.yaml</code>)에 따라 세 등급 중 하나로 분류됩니다. 등급은 AI가 정하지 않고 <strong>사람이 쓴 규칙</strong>이 정합니다. 그래서 왜 그렇게 됐는지 설명할 수 있고, 팀이 고칠 수 있습니다.</p>
+
+    <div class="spectrum">
+      <div class="level"><span class="chip chip--auto">Auto</span><h3>사람 손 없이도 되는 수준</h3><p>사용법 질문처럼 위험이 낮고, 검사 8가지를 모두 통과한 경우입니다. 예: "2단계 인증은 어떻게 켜나요?"</p><p class="who">지금은 <strong>시뮬레이션만</strong> 합니다. "자동으로 보냈다면"이라고 표시할 뿐 아무것도 발송하지 않습니다.</p></div>
+      <div class="level"><span class="chip chip--confirm">Confirm</span><h3>TSE가 읽고 승인</h3><p>대부분의 기술 문의입니다. 엔터프라이즈 고객, 심각도 High 이상, 검사 실패, 사용법 질문이 아닌 유형이 여기에 들어갑니다.</p><p class="who">TSE가 초안을 읽고 고쳐서 직접 발송합니다.</p></div>
+      <div class="level"><span class="chip chip--human">Human-only</span><h3>사람이 전담</h3><p>보안 사고 의심, 환불, 법적·개인정보 요구, 데이터 유실, 분류 불가, 심각도 Critical, 약속 문구가 섞인 초안입니다.</p><p class="who"><strong>초안을 만들지 않습니다.</strong> 근거와 관련 런북만 준비합니다. 책임은 사람이 지기 때문입니다.</p></div>
+    </div>
+    <div class="arrow-line" aria-hidden="true"><span>사람의 개입 적음</span><span>→</span><span>사람의 개입 전담</span></div>
+    <p class="intro" style="margin-top:16px">규칙은 위험한 쪽이 먼저 적용됩니다. 어떤 규칙에도 확실히 해당하지 않으면 한 단계 더 조심스러운 쪽으로 갑니다. 처리 중 오류가 나도 Human-only로 갑니다.</p>
+  </section>
+
+  <!-- ───────────── 5. 믿을 수 있나 ───────────── -->
+  <section id="trust">
+    <h2>AI가 틀릴 수 있다는 전제로 만들었습니다</h2>
+    <p class="intro">AI는 그럴듯한 답을 잘 만들지만 그것이 사실인지는 모릅니다. 그래서 AI의 초안이 나오면, <strong>AI를 전혀 쓰지 않는 규칙 검사</strong> 8가지가 따로 돌아갑니다. 검사는 "AI가 뭐라고 했나"가 아니라 "이 초안이 사실과 규칙에 맞나"를 봅니다.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>검사</th><th>무엇을 보나</th><th>잡아내는 예</th></tr></thead>
+        <tbody>
+          <tr><td>인용 존재</td><td>초안이 근거로 든 문서가 실제로 있는지</td><td>없는 문서를 출처로 적은 초안</td></tr>
+          <tr><td>인용 검색 여부</td><td>그 문서가 이번 검색에서 실제로 나온 것인지</td><td>검색하지 않은 문서를 끌어다 쓴 초안</td></tr>
+          <tr><td>에러코드 유효성</td><td>초안 속 에러코드가 문서에 있는지</td><td><code>SYNC-099</code>처럼 지어낸 코드</td></tr>
+          <tr><td>플랜 권한</td><td>고객 플랜에 없는 기능을 묻거나 안내하는지</td><td>Pro 고객에게 SSO 설정을 안내하는 초안은 Confirm으로 보냄</td></tr>
+          <tr><td>약속 문구</td><td>환불, 보상, 보장, "2시간 안에 해결" 같은 약속</td><td>발견되면 Human-only로 보냄</td></tr>
+          <tr><td>심각도 하한</td><td>규칙으로 심각도를 올림 (내리지는 않음)</td><td>엔터프라이즈 + "전 직원" 영향은 최소 High, 데이터 유실은 Critical</td></tr>
+          <tr><td>개인정보 유출</td><td>로그의 이메일, IP, 토큰이 초안에 그대로 나오는지</td><td>로그의 IP를 초안에 적은 경우</td></tr>
+          <tr><td>프로세스 단계</td><td>여러 단계 절차에서 말한 단계가 기록과 맞는지</td><td>3단계라고 했는데 기록은 2단계인 경우</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note"><strong>실제로 잡아낸 구멍.</strong> 평가용 문제 40개를 돌렸더니 "Pro 요금제에서 SSO를 쓸 수 있나요?"라는 질문이 사람 확인 없이 자동 단계로 넘어갔습니다. 초안에 SSO라는 말이 없어서 플랜 검사가 못 걸렀던 것입니다. 고객의 질문도 함께 보도록 고쳤고, 같은 실수를 막는 테스트를 남겼습니다.</div>
+  </section>
+
+  <!-- ───────────── 6. 장면별 사용법 ───────────── -->
+  <section id="scenes">
+    <h2>현업의 어떤 순간에 어떻게 쓰나</h2>
+    <p class="intro">장면마다 <strong>무슨 일이 생기는지</strong>, <strong>Support Buddy가 미리 해 둔 것</strong>, <strong>TSE가 하는 일</strong>을 나란히 적었습니다. "지금 가능"은 현재 버전에서 쓸 수 있다는 뜻입니다.</p>
+
+    <div class="scenes">
+      <article class="scene">
+        <header><h3>출근해서 밤새 쌓인 티켓을 볼 때</h3><span class="chip chip--done">지금 가능</span></header>
+        <p class="when">아침에 큐를 열면 티켓이 열 개 넘게 쌓여 있습니다. 무엇부터 봐야 할지 정해야 합니다.</p>
+        <dl>
+          <div><dt>Support Buddy가 해 둔 것</dt><dd>Linear에서 60초마다 새 티켓을 가져와 브리핑을 만들고 <strong>심각도순</strong>으로 줄을 세웠습니다. 큐는 30초마다 자동으로 갱신됩니다.</dd></div>
+          <div><dt>TSE가 하는 일</dt><dd>"Needs your eyes"부터 열어 근거와 원본 로그를 확인합니다. "Briefing ready"는 그다음에 초안을 읽고 보냅니다.</dd></div>
+          <div><dt>달라지는 점</dt><dd>티켓을 하나씩 열어 보며 순서를 정하던 시간이 줄어듭니다.</dd></div>
+        </dl>
+      </article>
+
+      <article class="scene">
+        <header><h3>자주 묻는 사용법 질문이 왔을 때</h3><span class="chip chip--done">지금 가능</span></header>
+        <p class="when">"자동 백업은 어떻게 설정하나요?", "2단계 인증은 어떻게 켜나요?" 같은 문의입니다.</p>
+        <dl>
+          <div><dt>Support Buddy가 해 둔 것</dt><dd>해당 문서를 찾아 출처가 달린 초안을 만들고, 검사 8가지를 통과하면 <strong>Auto 후보</strong>(지금은 시뮬레이션)로 분류합니다.</dd></div>
+          <div><dt>TSE가 하는 일</dt><dd>초안을 훑어보고 그대로, 또는 조금 고쳐서 보냅니다.</dd></div>
+          <div><dt>달라지는 점</dt><dd>같은 설명을 매번 쓰지 않아도 됩니다. 고친 정도는 편집 비율로 남습니다.</dd></div>
+        </dl>
+      </article>
+
+      <article class="scene">
+        <header><h3>로그가 붙은 장애 문의를 받았을 때</h3><span class="chip chip--done">지금 가능</span></header>
+        <p class="when">고객이 "동기화가 안 돼요"라며 로그 파일을 보냈습니다.</p>
+        <dl>
+          <div><dt>Support Buddy가 해 둔 것</dt><dd>로그를 읽어 오류와 느린 작업을 추리고, 에러코드를 문서와 연결해 <strong>가설 + 근거 로그 줄</strong>을 만들었습니다.</dd></div>
+          <div><dt>TSE가 하는 일</dt><dd>가설을 펼쳐 근거를 보고, 맞으면 초안을 고쳐 보냅니다. 틀려 보이면 원본 로그로 직접 조사합니다.</dd></div>
+          <div><dt>달라지는 점</dt><dd>로그를 한 줄씩 복사해 읽는 시작 단계가 줄어들고, 어디를 먼저 볼지 정해집니다.</dd></div>
+        </dl>
+      </article>
+
+      <article class="scene">
+        <header><h3>보안 사고, 환불, 법적 요구가 왔을 때</h3><span class="chip chip--done">지금 가능</span></header>
+        <p class="when">"무단 접근이 의심됩니다", "전액 환불을 요구합니다", "GDPR에 따라 삭제해 주세요" 같은 문의입니다.</p>
+        <dl>
+          <div><dt>Support Buddy가 해 둔 것</dt><dd>Human-only로 분류하고 <strong>초안은 만들지 않았습니다.</strong> 관련 런북과 보안 문서만 근거로 붙였습니다.</dd></div>
+          <div><dt>TSE가 하는 일</dt><dd>런북을 보고 직접 대응합니다. 필요하면 보안팀이나 매니저에게 올립니다.</dd></div>
+          <div><dt>달라지는 점</dt><dd>급한 마음에 약속하는 문장을 쓰는 실수를 도구가 먼저 막아 줍니다.</dd></div>
+        </dl>
+      </article>
+
+      <article class="scene">
+        <header><h3>새벽에 호출받았을 때</h3><span class="chip chip--done">지금 가능</span></header>
+        <p class="when">새벽 2시에 페이지를 받고, 노트북을 켜기까지 몇 분이 걸립니다.</p>
+        <dl>
+          <div><dt>Support Buddy가 해 둔 것</dt><dd>Linear 워처가 항상 가동 중이라 호출 전에 이미 1차 가설과 근거를 만들어 두었습니다.</dd></div>
+          <div><dt>TSE가 하는 일</dt><dd>로그인하자마자 가설이 충분한지 봅니다. 충분하면 바로 쓰고, 부족하면 평소처럼 로그부터 읽습니다.</dd></div>
+          <div><dt>달라지는 점</dt><dd>조사의 출발점이 "빈 화면"에서 "1차 가설"로 바뀝니다.</dd></div>
+        </dl>
+      </article>
+
+      <article class="scene">
+        <header><h3>신입 TSE의 첫 주</h3><span class="chip chip--done">지금 가능</span></header>
+        <p class="when">제품은 낯설고, 어떤 문서를 봐야 하는지도 모릅니다.</p>
+        <dl>
+          <div><dt>Support Buddy가 해 둔 것</dt><dd>티켓마다 확인할 항목과 근거 문서, 왜 이 등급인지의 이유를 붙여 두었습니다.</dd></div>
+          <div><dt>TSE가 하는 일</dt><dd>브리핑을 따라 확인하며 "이 유형은 이렇게 본다"는 감각을 익힙니다.</dd></div>
+          <div><dt>달라지는 점</dt><dd>선배에게 묻기 전에 스스로 확인할 수 있는 범위가 넓어집니다.</dd></div>
+        </dl>
+      </article>
+
+      <article class="scene">
+        <header><h3>팀 리드가 자동화 범위를 정할 때</h3><span class="chip chip--part">일부 가능</span></header>
+        <p class="when">"어디까지 맡겨도 되는가"를 팀이 정해야 합니다.</p>
+        <dl>
+          <div><dt>Support Buddy가 해 둔 것</dt><dd>규칙 파일에 기준이 글로 적혀 있고, 모든 판단에 이유가 남습니다. 평가용 문제로 결과를 측정할 수 있습니다.</dd></div>
+          <div><dt>리드가 하는 일</dt><dd>규칙을 읽고 고칩니다. 편집이 거의 없는 유형은 Auto 쪽으로, 자주 틀리는 유형은 Confirm으로 옮깁니다.</dd></div>
+          <div><dt>달라지는 점</dt><dd>자동화의 책임 경계가 말이 아니라 문서로 남습니다.</dd></div>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <!-- ───────────── 7. 하루 예시 ───────────── -->
+  <section id="day">
+    <h2>하루가 이렇게 흐르는 모습 (예시)</h2>
+    <p class="intro">Linear 연결까지 끝난 지금의 모습입니다. 시각은 예시입니다. 파란 점은 사람이 하는 일입니다.</p>
+
+    <ol class="timeline">
+      <li><time>02:10</time><div><b>새 티켓이 들어옵니다.</b><br><span>Linear에 고객 문의가 등록됩니다.</span></div></li>
+      <li><time>02:11</time><div><b>브리핑이 만들어집니다.</b><br><span>분류, 로그 분석, 문서 검색, 초안, 검사, 등급 결정이 끝나고 큐에 저장됩니다. 고객에게는 보이지 않습니다.</span></div></li>
+      <li class="who-human"><time>09:00</time><div><b>TSE가 출근해 큐를 엽니다.</b><br><span>심각도순으로 정렬되어 있습니다. 큐는 30초마다 자동으로 갱신됩니다.</span></div></li>
+      <li class="who-human"><time>09:03</time><div><b>"Needs your eyes"부터 봅니다.</b><br><span>근거와 원본 로그를 확인하고 직접 대응합니다.</span></div></li>
+      <li class="who-human"><time>09:20</time><div><b>"Briefing ready" 건의 초안을 고쳐 보냅니다.</b><br><span>발송은 평소 쓰던 티켓 도구에서 합니다.</span></div></li>
+      <li class="who-human"><time>09:25</time><div><b>"발송함"으로 기록합니다.</b><br><span>보낸 글과 초안을 비교해 편집 비율이 저장됩니다. 나중에는 티켓에서 자동으로 가져옵니다.</span></div></li>
+      <li class="who-human"><time>금요일</time><div><b>리드가 편집 비율을 봅니다.</b><br><span>자주 많이 고쳐지는 유형은 문서나 규칙을 보강합니다.</span></div></li>
+    </ol>
+    <div class="legend"><span><i style="background:var(--text-3)"></i>도구가 하는 일</span><span><i style="background:var(--accent)"></i>사람이 하는 일</span></div>
+  </section>
+
+  <!-- ───────────── 8. 지금 상태 ───────────── -->
+  <section id="status">
+    <h2>지금 되는 것과 아직 안 되는 것</h2>
+    <p class="intro">이 도구는 <strong>실제 Linear와 연결되어 배포 중인 프로토타입</strong>입니다. 아래가 현재 상태입니다.</p>
+
+    <div class="two">
+      <div class="panel"><h3>지금 됩니다 <span class="chip chip--done">구현됨</span></h3>
+        <ul>
+          <li>검사 8가지와 점수 계산</li>
+          <li>처리 등급 규칙 (Auto, Confirm, Human-only)</li>
+          <li>평가용 문제 40개와 측정 도구</li>
+          <li>브리핑 생성, 저장, 심각도순 큐</li>
+          <li>웹 화면: 큐, 상세, Analyze(붙여넣기), 답변 편집과 복사, "발송함" 기록</li>
+          <li>데모 데이터 모드 (API 키 없이 둘러보기)</li>
+          <li>Linear 자동 수집 (60초마다 폴링, Fly.io 상시 가동)</li>
+          <li>큐 자동 새로고침 (30초마다, 탭 숨겨지면 일시정지)</li>
+          <li>배포: Fly.io (API + Linear 워처) + Cloudflare Pages (웹 화면)</li>
+        </ul>
+      </div>
+      <div class="panel"><h3>아직 안 됩니다 <span class="chip chip--todo">예정</span></h3>
+        <ul>
+          <li><strong>추가 티켓 도구 연결</strong> (Zendesk, Jira 등). Linear는 연결 완료.</li>
+          <li><strong>Claude로 분류와 초안 작성.</strong> 지금은 키워드 방식과 템플릿입니다.</li>
+          <li>개인정보 마스킹 (AI로 보내기 전)</li>
+          <li>로그인(인증). 배포는 완료됨.</li>
+          <li>티켓 안에 내부 노트 쓰기</li>
+          <li>편집 비율 자동 측정</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>지금까지의 측정값 (평가용 문제 40개)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>지표</th><th>값</th><th>읽는 법</th></tr></thead>
+        <tbody>
+          <tr><td>위험한 건이 낮은 등급으로 간 수</td><td><strong>0건</strong></td><td>보안, 환불, 법적 요구 등 사람이 맡아야 할 건이 Auto나 Confirm으로 새지 않았습니다. 목표는 항상 0입니다.</td></tr>
+          <tr><td>처리 등급이 기대와 일치</td><td><strong>100%</strong></td><td>40개 모두 정해 둔 기대 등급과 같았습니다.</td></tr>
+          <tr><td>검사 통과 + Auto 또는 Confirm</td><td><strong>60.0%</strong></td><td>범위 안의 문의(31건)만 보면 77.4%입니다.</td></tr>
+          <tr><td>Auto만</td><td><strong>7.5%</strong></td><td>사람 없이 되는 수준은 아직 적고, 일부러 보수적으로 설계했습니다.</td></tr>
+          <tr><td>분류 정확도</td><td><strong>72.5%</strong></td><td>키워드 방식의 한계입니다. Claude 연결 후 비교할 기준선입니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><strong>이 숫자를 읽을 때 주의하세요.</strong> "답변이 맞았다"는 뜻이 아닙니다. 검사를 통과했고 안전한 등급으로 갔다는 뜻입니다. 또한 Claude를 쓴 결과는 아직 측정하지 않았고, 실제 TSE가 써 본 데이터도 아직 없습니다.</div>
+  </section>
+
+  <!-- ───────────── 9. 앞으로 ───────────── -->
+  <section id="roadmap">
+    <h2>앞으로의 순서</h2>
+    <p class="intro">실제 업무에 가깝게 가려면 이 순서로 진행합니다. 순서에는 이유가 있습니다.</p>
+
+    <ol class="steps">
+      <li><b>코어와 웹 화면</b>검사, 등급 규칙, 평가, 브리핑, 큐, 붙여넣기 화면까지 만들었습니다.</li>
+      <li><b>티켓 도구 연결(읽기)</b>어댑터 구조를 만들고 Linear 새 이슈를 자동으로 가져옵니다. Fly.io에서 60초마다 폴링 중입니다.</li>
+      <li class="now"><b>개인정보 마스킹 + Claude</b>고객 정보가 AI로 나가기 전에 가리고, 비용 상한을 건 상태로 Claude 브리핑을 연결합니다.</li>
+      <li><b>티켓에 내부 노트 쓰기</b>브리핑을 이슈 댓글과 라벨로 남깁니다. 처음에는 쓰지 않고 보여 주기만 하는 모드로 시작합니다.</li>
+      <li><b>로그인</b>여러 사람이 안전하게 쓰도록 인증을 걸고 서버에 올립니다. 공개 사이트는 데모 데이터 전용입니다.</li>
+      <li><b>Zendesk 연결과 파일럿</b>두 번째 도구를 붙여 구조가 한 도구에 묶이지 않았음을 확인하고, 2주 동안 한두 명이 써 보며 측정합니다.</li>
+    </ol>
+
+    <h3>파일럿에서 재는 것</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>지표</th><th>어떻게 재나</th><th>기준</th></tr></thead>
+        <tbody>
+          <tr><td>첫 행동까지 걸린 시간</td><td>티켓을 연 뒤 첫 유의미한 행동(질문, 조사, 답변)까지</td><td>도구를 쓴 건과 쓰지 않은 건 비교</td></tr>
+          <tr><td>초안 편집 비율</td><td>발송된 글과 초안을 자동 비교</td><td>유형별로 추세를 봄</td></tr>
+          <tr><td>에스컬레이션 정확도</td><td>올려야 할 건을 올렸는지, 안 올려도 될 건을 올렸는지</td><td>사람이 사후 확인</td></tr>
+          <tr><td>위험한 건의 누수</td><td>Human-only여야 할 건이 낮은 등급으로 갔는지</td><td><strong>0건 유지</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="intro" style="margin-top:16px">처음 2주는 TSE 한두 명에게만 보이고 티켓에는 아무것도 쓰지 않는 <strong>그림자 모드</strong>로 돌립니다. 숫자가 좋을 때만 내부 노트 쓰기를 켭니다.</p>
+  </section>
+
+  <!-- ───────────── 10. 용어와 질문 ───────────── -->
+  <section id="terms">
+    <h2>용어와 자주 나올 질문</h2>
+
+    <dl class="gloss">
+      <div><dt>브리핑</dt><dd>티켓 하나에 대해 미리 준비한 한 장 정리. 요약, 원인 가설, 근거, 초안, 검증 결과, 처리 등급이 들어 있습니다.</dd></div>
+      <div><dt>검증 레이어</dt><dd>AI를 쓰지 않고 규칙만으로 초안을 검사하는 부분. 8가지 검사로 이루어져 있습니다.</dd></div>
+      <div><dt>정책(policy)</dt><dd>어떤 문의를 어느 등급으로 보낼지 적어 둔 규칙 파일. 사람이 읽고 고칠 수 있습니다.</dd></div>
+      <div><dt>편집 비율</dt><dd>TSE가 초안을 얼마나 고쳐서 보냈는지. 0%면 그대로, 값이 클수록 많이 고친 것입니다.</dd></div>
+      <div><dt>골든셋</dt><dd>정답을 미리 정해 둔 평가용 문제 모음(현재 40개). 도구가 좋아졌는지 숫자로 확인하는 데 씁니다.</dd></div>
+      <div><dt>그림자 모드(dry-run)</dt><dd>결과를 보여 주기만 하고 티켓에는 아무것도 쓰지 않는 시험 운영 방식.</dd></div>
+      <div><dt>충분성</dt><dd>브리핑을 믿고 시작해도 되는지의 판정. 문서 근거, 로그 근거, 검증 점수가 모두 있어야 "충분"입니다.</dd></div>
+      <div><dt>데모 데이터</dt><dd>미리 계산해 둔 예시 브리핑 14건. API 키 없이 화면을 둘러볼 때 보입니다.</dd></div>
+    </dl>
+
+    <div class="faq">
+      <div><h3>고객에게 자동으로 답장이 나가나요?</h3><p>아니요. Support Buddy는 어떤 경우에도 고객에게 보내지 않습니다. "Auto" 등급도 지금은 "자동으로 보냈다면"이라고 표시만 합니다.</p></div>
+      <div><h3>AI가 틀린 내용을 쓰면 어떻게 되나요?</h3><p>지어낸 에러코드, 없는 문서 인용, 플랜에 없는 기능 안내, 약속 문구는 규칙 검사가 잡아내고 등급을 올립니다. 다만 검사가 모든 오류를 잡지는 못하므로 Confirm 이상은 사람이 읽고 보냅니다.</p></div>
+      <div><h3>고객 개인정보는 어떻게 되나요?</h3><p>AI로 보내기 전에 이메일, IP, 토큰을 가리는 단계가 필요하고, 아직 만들지 않았습니다. 그래서 실제 고객 데이터는 그 단계가 생기기 전에는 AI에 연결하지 않습니다. 공개 사이트에는 예시 데이터만 올립니다.</p></div>
+      <div><h3>Zendesk에도 AI 기능이 있는데 왜 이걸 쓰나요?</h3><p>겹치는 부분이 있습니다. 차이는 세 가지입니다. 우리 회사의 문서와 런북 기준으로 동작하고, 어디까지 맡길지를 팀이 규칙으로 정하며, 모델과 티켓 도구를 바꿔 끼울 수 있습니다. 다만 큰 벤더도 비슷한 기능을 내놓을 수 있어서, 장기적인 가치는 팀의 지식, 규칙, 평가 데이터에 있습니다.</p></div>
+      <div><h3>제 일을 대체하나요?</h3><p>아니요. 목적은 대체가 아니라 같은 사람이 더 많은 일을 하게 하는 것입니다. 발송, 에스컬레이션, 마지막 판단은 계속 TSE의 몫입니다.</p></div>
+    </div>
+  </section>
+
+  <footer>Support Buddy는 Fly.io(API + Linear 워처) + Cloudflare Pages(웹 화면)에 배포 중인 프로토타입입니다. 라이브 데모: <a href="https://support-buddy.pages.dev" style="color:var(--accent)">support-buddy.pages.dev</a>. 측정값은 2026년 10월 4일 기준 로컬 평가(키워드 방식, 40문제)이며, 현재 상태는 2026년 10월 21일 기준입니다.</footer>
+</div>
+
+</body></html>
