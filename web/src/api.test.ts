@@ -1,5 +1,13 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { ApiError, approveBriefing, createBriefing, loadBriefings } from "./api";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  ApiError,
+  approveBriefing,
+  clearAccessKey,
+  createBriefing,
+  getAccessKey,
+  loadBriefings,
+  setAccessKey,
+} from "./api";
 import { makeBriefing } from "./test/fixtures";
 
 const live = [makeBriefing({ id: "live-1" })];
@@ -106,6 +114,108 @@ describe("approveBriefing", () => {
     await expect(approveBriefing("b-9", "x")).rejects.toMatchObject({
       status: 409,
       message: expect.stringMatching(/already/i),
+    });
+  });
+});
+
+
+describe("access key", () => {
+  beforeEach(() => clearAccessKey());
+  afterEach(() => {
+    clearAccessKey();
+    vi.unstubAllGlobals();
+  });
+
+  it("is remembered for the tab and can be cleared", () => {
+    expect(getAccessKey()).toBe("");
+    setAccessKey("  abc123  ");
+    expect(getAccessKey()).toBe("abc123");
+    clearAccessKey();
+    expect(getAccessKey()).toBe("");
+  });
+
+  it("is kept in sessionStorage, which dies with the tab, never in localStorage", () => {
+    setAccessKey("abc123");
+    expect(sessionStorage.getItem("sb_access_key")).toBe("abc123");
+    expect(localStorage.length).toBe(0);
+  });
+
+  it("does not throw when storage is blocked", () => {
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+    expect(getAccessKey()).toBe("");
+    expect(() => setAccessKey("x")).not.toThrow();
+    vi.restoreAllMocks();
+  });
+
+  it("is sent as a bearer token when set, and not at all when empty", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok(live));
+    vi.stubGlobal("fetch", fetchMock);
+    await loadBriefings();
+    expect(fetchMock.mock.calls[0][1].headers).toEqual({});
+
+    setAccessKey("abc123");
+    await loadBriefings();
+    expect(fetchMock.mock.calls[1][1].headers).toEqual({ Authorization: "Bearer abc123" });
+  });
+
+  it("is never sent to the static demo file", async () => {
+    setAccessKey("abc123");
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(new TypeError("offline"))
+      .mockResolvedValueOnce(ok(demo));
+    vi.stubGlobal("fetch", fetchMock);
+    await loadBriefings();
+    expect(String(fetchMock.mock.calls[1][0])).toContain("demo/briefings.json");
+    expect(fetchMock.mock.calls[1][1]?.headers ?? {}).toEqual({});
+  });
+
+  it("is not read from a build-time variable that would ship inside the public bundle", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const source = readFileSync(resolve(__dirname, "api.ts"), "utf8");
+    expect(source).not.toContain("VITE_API_SECRET_KEY");
+  });
+});
+
+describe("locked state", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("tells the app the API is locked when it answers 401, and still shows demo data", async () => {
+    const locked = { ok: false, status: 401, json: async () => ({}) } as Response;
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(locked).mockResolvedValueOnce(ok(demo)));
+    const result = await loadBriefings();
+    expect(result).toMatchObject({ source: "demo", locked: true });
+  });
+
+  it("is not locked when the API is simply unreachable", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValueOnce(new TypeError("offline")).mockResolvedValueOnce(ok(demo)),
+    );
+    expect(await loadBriefings()).toMatchObject({ source: "demo", locked: false });
+  });
+
+  it("is not locked when the live API answers", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(ok(live)));
+    expect(await loadBriefings()).toMatchObject({ source: "api", locked: false });
+  });
+
+  it("explains 401 and 429 in plain words", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce({ ok: false, status: 401, json: async () => ({}) }));
+    await expect(createBriefing({ inquiry: "x", plan: "pro", logs: "" })).rejects.toMatchObject({
+      status: 401,
+      message: expect.stringMatching(/access key/i),
+    });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce({ ok: false, status: 429, json: async () => ({}) }));
+    await expect(createBriefing({ inquiry: "x", plan: "pro", logs: "" })).rejects.toMatchObject({
+      status: 429,
+      message: expect.stringMatching(/too many|wait/i),
     });
   });
 });

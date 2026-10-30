@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { loadArchive, loadBriefings } from "./api";
+import { clearAccessKey, getAccessKey, loadArchive, loadBriefings, setAccessKey } from "./api";
 import { AnalyzeForm } from "./components/AnalyzeForm";
 import { ArchiveList } from "./components/ArchiveList";
 import { BriefingDetail } from "./components/BriefingDetail";
 import { Logo } from "./components/Logo";
 import { QueueList } from "./components/QueueList";
+import { UnlockForm, type UnlockResult } from "./components/UnlockForm";
 import { sortQueue } from "./format";
 import { AUTONOMY_LABEL } from "./format";
 import type { Autonomy, Briefing, Source } from "./types";
@@ -12,7 +13,7 @@ import type { Autonomy, Briefing, Source } from "./types";
 type LoadState =
   | { status: "loading" }
   | { status: "error" }
-  | { status: "ready"; briefings: Briefing[]; source: Source };
+  | { status: "ready"; briefings: Briefing[]; source: Source; locked: boolean };
 
 type ArchiveState =
   | { status: "idle" }
@@ -58,11 +59,15 @@ export default function App() {
   const [route, setRoute] = useState<Route>(readRoute);
   const [filter, setFilter] = useState<Filter>("all");
   const [archiveState, setArchiveState] = useState<ArchiveState>({ status: "idle" });
+  const [unlockOpen, setUnlockOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     loadBriefings()
-      .then(({ briefings, source }) => !cancelled && setState({ status: "ready", briefings, source }))
+      .then(
+        ({ briefings, source, locked }) =>
+          !cancelled && setState({ status: "ready", briefings, source, locked }),
+      )
       .catch(() => !cancelled && setState({ status: "error" }));
     return () => {
       cancelled = true;
@@ -80,8 +85,8 @@ export default function App() {
     const refresh = () => {
       if (document.hidden) return;
       loadBriefings()
-        .then(({ briefings, source }) =>
-          setState((s) => (s.status === "ready" ? { status: "ready", briefings, source } : s)),
+        .then(({ briefings, source, locked }) =>
+          setState((s) => (s.status === "ready" ? { status: "ready", briefings, source, locked } : s)),
         )
         .catch(() => {});
     };
@@ -117,6 +122,34 @@ export default function App() {
         ? { ...s, briefings: s.briefings.map((b) => (b.id === updated.id ? updated : b)) }
         : s,
     );
+  }, []);
+
+  const unlock = useCallback(async (key: string): Promise<UnlockResult> => {
+    setAccessKey(key);
+    try {
+      const loaded = await loadBriefings();
+      if (loaded.source === "api") {
+        setState({ status: "ready", ...loaded });
+        setUnlockOpen(false);
+        return "ok";
+      }
+      clearAccessKey();
+      return loaded.locked ? "rejected" : "offline";
+    } catch {
+      clearAccessKey();
+      return "offline";
+    }
+  }, []);
+
+  const lock = useCallback(async () => {
+    clearAccessKey();
+    setUnlockOpen(false);
+    try {
+      const loaded = await loadBriefings();
+      setState({ status: "ready", ...loaded });
+    } catch {
+      setState({ status: "error" });
+    }
   }, []);
 
   const created = useCallback(
@@ -177,7 +210,23 @@ export default function App() {
             Demo data
           </span>
         )}
+        {ready?.locked && (
+          <button type="button" className="chip topbar__action" onClick={() => setUnlockOpen((v) => !v)}>
+            Unlock
+          </button>
+        )}
+        {ready?.source === "api" && getAccessKey() !== "" && (
+          <button type="button" className="chip topbar__action" onClick={lock}>
+            Lock
+          </button>
+        )}
       </header>
+
+      {ready?.locked && unlockOpen && (
+        <div className="unlock-wrap">
+          <UnlockForm onUnlock={unlock} onCancel={() => setUnlockOpen(false)} />
+        </div>
+      )}
 
       <main className="page">
         {state.status === "loading" && <Skeleton />}
