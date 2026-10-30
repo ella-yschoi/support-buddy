@@ -81,7 +81,7 @@ Paste any customer inquiry to generate a briefing on demand — no Linear ticket
 git clone https://github.com/ella-yschoi/support-buddy.git
 cd support-buddy
 
-uv sync
+uv sync --extra dev --extra knowledge   # chromadb is an optional extra; tests need it
 
 cp .env.example .env
 # Add ANTHROPIC_API_KEY and LINEAR_API_KEY to .env
