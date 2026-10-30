@@ -125,3 +125,84 @@ describe("App navigation and workflow", () => {
     expect(screen.getByText(/1 briefing prepared/i)).toBeInTheDocument();
   });
 });
+
+
+function mockRoutes(routes: { queue: unknown; archive?: unknown; deleteOk?: boolean }) {
+  const fetchMock = vi.fn((url: string, init?: RequestInit) => {
+    if (init?.method === "DELETE") {
+      const ok = routes.deleteOk ?? true;
+      return Promise.resolve({ ok, status: ok ? 204 : 500, json: async () => ({}) } as Response);
+    }
+    const body = String(url).includes("/archive") ? (routes.archive ?? []) : routes.queue;
+    return Promise.resolve({ ok: true, json: async () => body } as Response);
+  });
+  vi.stubGlobal("fetch", fetchMock);
+  return fetchMock;
+}
+
+describe("Queue filters and the Sent tab", () => {
+  it("shows a count on each autonomy filter and none on Sent", async () => {
+    mockRoutes({ queue: briefings });
+    render(<App />);
+    await screen.findByText("First briefing");
+    expect(screen.getByRole("tab", { name: /^all\s*2$/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^auto\s*0$/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^confirm\s*1$/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^human-only\s*1$/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^sent$/i })).toBeInTheDocument();
+  });
+
+  it("filters the queue by autonomy level", async () => {
+    mockRoutes({ queue: briefings });
+    render(<App />);
+    await screen.findByText("First briefing");
+    await userEvent.click(screen.getByRole("tab", { name: /^human-only/i }));
+    expect(screen.getByText("Second briefing")).toBeInTheDocument();
+    expect(screen.queryByText("First briefing")).not.toBeInTheDocument();
+  });
+
+  it("loads sent briefings only when the Sent tab is opened", async () => {
+    const sent = makeBriefing({ id: "done", inquiry_text: "Archived reply", status: "approved", approved_body: "ok" });
+    const fetchMock = mockRoutes({ queue: briefings, archive: [sent] });
+    render(<App />);
+    await screen.findByText("First briefing");
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes("/archive"))).toBe(false);
+
+    await userEvent.click(screen.getByRole("tab", { name: /^sent$/i }));
+    expect(await screen.findByText("Archived reply")).toBeInTheDocument();
+    expect(screen.queryByText("First briefing")).not.toBeInTheDocument();
+  });
+
+  it("explains an empty Sent tab", async () => {
+    mockRoutes({ queue: briefings, archive: [] });
+    render(<App />);
+    await screen.findByText("First briefing");
+    await userEvent.click(screen.getByRole("tab", { name: /^sent$/i }));
+    expect(await screen.findByText(/no archived briefings yet/i)).toBeInTheDocument();
+  });
+
+  it("deletes a sent briefing permanently and removes it from the list", async () => {
+    const sent = makeBriefing({ id: "done", inquiry_text: "Archived reply", status: "approved", approved_body: "ok" });
+    const fetchMock = mockRoutes({ queue: briefings, archive: [sent] });
+    render(<App />);
+    await screen.findByText("First briefing");
+    await userEvent.click(screen.getByRole("tab", { name: /^sent$/i }));
+    await userEvent.click(await screen.findByRole("button", { name: /delete permanently/i }));
+
+    await waitFor(() => expect(screen.queryByText("Archived reply")).not.toBeInTheDocument());
+    const deleteCall = fetchMock.mock.calls.find(([, init]) => init?.method === "DELETE");
+    expect(String(deleteCall?.[0])).toContain("/api/v1/briefings/done");
+  });
+
+  it("keeps the briefing and says so when deleting fails", async () => {
+    const sent = makeBriefing({ id: "done", inquiry_text: "Archived reply", status: "approved", approved_body: "ok" });
+    mockRoutes({ queue: briefings, archive: [sent], deleteOk: false });
+    render(<App />);
+    await screen.findByText("First briefing");
+    await userEvent.click(screen.getByRole("tab", { name: /^sent$/i }));
+    await userEvent.click(await screen.findByRole("button", { name: /delete permanently/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(/couldn.t delete/i);
+    expect(screen.getByText("Archived reply")).toBeInTheDocument();
+  });
+});
