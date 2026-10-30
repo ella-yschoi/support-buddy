@@ -7,7 +7,9 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from src.config import ANTHROPIC_API_KEY, API_SECRET_KEY, KNOWLEDGE_DIR
+from src import config
+from src.api import security
+from src.config import ANTHROPIC_API_KEY, KNOWLEDGE_DIR
 from src.core.analyzer.log_parser import LogParser
 from src.integrations.email.parser import EmailParser
 
@@ -45,15 +47,32 @@ app.add_middleware(
 )
 
 
-_PUBLIC_PATHS = {"/api/v1/health"}
-
-
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
-    if API_SECRET_KEY and request.method != "OPTIONS" and request.url.path not in _PUBLIC_PATHS:
-        auth = request.headers.get("Authorization", "")
-        if auth != f"Bearer {API_SECRET_KEY}":
-            return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+    path, method = request.url.path, request.method
+    guarded = method != "OPTIONS" and path not in security.PUBLIC_PATHS
+    ip = security.client_ip(request)
+
+    if guarded and config.API_SECRET_KEY and security.failed_auth.blocked(ip):
+        return JSONResponse(
+            status_code=429, content={"detail": "Too many failed attempts. Try again later."}
+        )
+
+    verdict = security.check_access(
+        secret=config.API_SECRET_KEY,
+        app_env=config.APP_ENV,
+        method=method,
+        path=path,
+        auth_header=request.headers.get("Authorization", ""),
+    )
+    if verdict is security.Access.MISCONFIGURED:
+        return JSONResponse(
+            status_code=503,
+            content={"detail": "Server not configured: API_SECRET_KEY is required in production."},
+        )
+    if verdict is security.Access.UNAUTHORIZED:
+        security.failed_auth.record(ip)
+        return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
     return await call_next(request)
 
 
@@ -98,6 +117,7 @@ def analyze(req: AnalyzeRequest):
     if req.use_ai:
         if not ANTHROPIC_API_KEY:
             raise HTTPException(400, "ANTHROPIC_API_KEY not configured")
+        security.consume_ai_budget()
         from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
         analyzer = AIInquiryAnalyzer(engine)
         result = analyzer.analyze(req.inquiry)
@@ -121,6 +141,7 @@ def analyze_logs(req: LogAnalyzeRequest):
     if req.use_ai:
         if not ANTHROPIC_API_KEY:
             raise HTTPException(400, "ANTHROPIC_API_KEY not configured")
+        security.consume_ai_budget()
         engine = get_engine()
         from src.core.analyzer.log_analyzer import AILogAnalyzer
         ai_analyzer = AILogAnalyzer(engine)
@@ -156,6 +177,7 @@ def analyze_logs(req: LogAnalyzeRequest):
 def draft_response(req: DraftRequest):
     if not ANTHROPIC_API_KEY:
         raise HTTPException(400, "ANTHROPIC_API_KEY not configured")
+    security.consume_ai_budget()
 
     engine = get_engine()
     from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
@@ -186,7 +208,11 @@ def search_knowledge(query: str, category: Optional[str] = None, top_k: int = 5)
 @app.post("/api/v1/knowledge/ingest")
 def ingest_knowledge(req: IngestRequest):
     engine = get_engine()
-    p = Path(req.path)
+    # resolve() follows symlinks and "..", so what is checked is where the file really is.
+    root = Path(KNOWLEDGE_DIR).resolve()
+    p = Path(req.path).resolve()
+    if p != root and root not in p.parents:
+        raise HTTPException(403, "Path must be inside the knowledge directory")
     if p.is_dir():
         count = engine.ingest_directory(p)
     elif p.is_file():
@@ -207,6 +233,7 @@ def analyze_email(req: EmailAnalyzeRequest):
         inquiry_text = parsed.to_inquiry_text()
 
         if req.use_ai and ANTHROPIC_API_KEY:
+            security.consume_ai_budget()
             from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
             analyzer = AIInquiryAnalyzer(engine)
             result = analyzer.analyze(inquiry_text)
