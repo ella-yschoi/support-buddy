@@ -77,3 +77,24 @@ def test_load_registries_empty_raises(tmp_path):
 def test_shipped_model_configs_load():
     regs = load_registries(DATA_DIR / "eval" / "model_configs.yaml")
     assert len(regs) >= 3
+
+
+def test_default_standard_model_matches_the_evaluated_balanced_config(monkeypatch):
+    """The model we ship by default is the one the eval report measured."""
+    import importlib
+
+    import dotenv
+
+    from src import config
+    from src.eval.pricing import estimate_cost
+
+    monkeypatch.setattr(dotenv, "load_dotenv", lambda *a, **k: False)
+    monkeypatch.delenv("ANTHROPIC_MODEL_STANDARD", raising=False)
+    try:
+        reloaded = importlib.reload(config)
+        evaluated = load_registries(DATA_DIR / "eval" / "model_configs.yaml")["balanced"].draft
+        assert reloaded.MODEL_STANDARD == evaluated
+        assert estimate_cost(reloaded.MODEL_STANDARD, 1_000_000, 0) is not None
+    finally:
+        monkeypatch.undo()
+        importlib.reload(config)
