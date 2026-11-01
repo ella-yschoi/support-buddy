@@ -136,6 +136,28 @@ button {
   background: var(--text);
 }
 
+.topbar__action {
+  margin-left: 12px;
+}
+
+.unlock-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px max(20px, env(safe-area-inset-right, 0px)) 0 max(20px, env(safe-area-inset-left, 0px));
+}
+
+.unlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+  margin-left: auto;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
 .badge {
   font-size: 12px;
   color: var(--text-2);

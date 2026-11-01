@@ -10,6 +10,8 @@ primary_region = 'sjc'
 
 [env]
   LOG_LEVEL = 'INFO'
+  # Without API_SECRET_KEY, production refuses to serve data (503) instead of running open.
+  APP_ENV = 'production'
   BRIEFING_DB_PATH = '/app/data/db/briefings.db'
   CHROMA_PERSIST_DIR = '/app/data/db/chroma'
 
