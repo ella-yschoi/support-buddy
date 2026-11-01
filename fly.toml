@@ -14,6 +14,8 @@ primary_region = 'sjc'
   APP_ENV = 'production'
   BRIEFING_DB_PATH = '/app/data/db/briefings.db'
   CHROMA_PERSIST_DIR = '/app/data/db/chroma'
+  # The watcher only briefs Linear issues carrying this label. Keep it on the sandbox workspace.
+  WATCH_LABEL = 'ai-triage'
 
 [[mounts]]
   source = 'support_buddy_data'
