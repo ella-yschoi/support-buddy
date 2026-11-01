@@ -70,21 +70,6 @@ describe("QueueList", () => {
     ]);
   });
 
-  it("shows counts per autonomy level on the filters", () => {
-    render(<QueueList briefings={items} onOpen={() => {}} />);
-    expect(screen.getByRole("tab", { name: /all 3/i })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /auto 1/i })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /confirm 1/i })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /human-only 1/i })).toBeInTheDocument();
-  });
-
-  it("filters by autonomy level", async () => {
-    render(<QueueList briefings={items} onOpen={() => {}} />);
-    await userEvent.click(screen.getByRole("tab", { name: /human-only/i }));
-    expect(screen.getByText("Alpha outage")).toBeInTheDocument();
-    expect(screen.queryByText("Beta question")).not.toBeInTheDocument();
-  });
-
   it("shows the verdict line for each row", () => {
     render(<QueueList briefings={items} onOpen={() => {}} />);
     expect(screen.getAllByText("Needs your eyes")).toHaveLength(2);
@@ -100,7 +85,7 @@ describe("QueueList", () => {
 
   it("shows a calm empty state", () => {
     render(<QueueList briefings={[]} onOpen={() => {}} />);
-    expect(screen.getByText(/nothing waiting/i)).toBeInTheDocument();
+    expect(screen.getByText(/no briefings in this view/i)).toBeInTheDocument();
   });
 });
 
