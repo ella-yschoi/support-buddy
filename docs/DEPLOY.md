@@ -129,4 +129,4 @@ cd web && npm run dev                            # http://localhost:5173
 - **Production fails closed.** `fly.toml` sets `APP_ENV=production`; if `API_SECRET_KEY` is missing the API answers 503 instead of running open.
 - **Key guessing is blocked.** Ten wrong keys from one address within a minute lock that address out for a minute. The address comes from the `Fly-Client-IP` header that Fly sets.
 - **AI spend is capped.** Endpoints that call Claude share a daily budget (`AI_DAILY_LIMIT`, default 100 per UTC day, `0` turns them off). Also set a monthly spend limit in the Anthropic console; code limits do not replace it.
-- **The Linear watcher reads every open issue** in the workspace unless started with `--team` and `--label`. Use a sandbox workspace only.
+- **The Linear watcher only starts when `WATCH_LABEL` is set** (`fly.toml` sets it to `support-buddy`), and then briefs only issues carrying that label. `WATCH_TEAM` narrows it further. It still has read access to the whole workspace through `LINEAR_API_KEY`, so use a sandbox workspace only.
