@@ -50,22 +50,22 @@ def test_without_a_scope_the_watcher_does_not_start(run_start):
 
 
 def test_without_a_linear_key_the_watcher_does_not_start(run_start):
-    assert watcher_calls(run_start(WATCH_TEAM="SUP", WATCH_LABEL="support-buddy")) == []
+    assert watcher_calls(run_start(WATCH_TEAM="SUP", WATCH_LABEL="ai-triage")) == []
 
 
 def test_team_and_label_are_passed_to_the_watcher(run_start):
     calls = watcher_calls(
-        run_start(LINEAR_API_KEY="k", WATCH_TEAM="SUP", WATCH_LABEL="support-buddy")
+        run_start(LINEAR_API_KEY="k", WATCH_TEAM="SUP", WATCH_LABEL="ai-triage")
     )
     assert len(calls) == 1
     assert "--team SUP" in calls[0]
-    assert "--label support-buddy" in calls[0]
+    assert "--label ai-triage" in calls[0]
 
 
 def test_a_label_alone_is_enough(run_start):
-    calls = watcher_calls(run_start(LINEAR_API_KEY="k", WATCH_LABEL="support-buddy"))
+    calls = watcher_calls(run_start(LINEAR_API_KEY="k", WATCH_LABEL="ai-triage"))
     assert len(calls) == 1
-    assert "--label support-buddy" in calls[0]
+    assert "--label ai-triage" in calls[0]
     assert "--team" not in calls[0]
 
 
