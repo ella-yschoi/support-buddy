@@ -167,6 +167,26 @@ class TestMiddleware:
         configure(monkeypatch)
         assert client.get("/api/v1/health").status_code == 200
 
+    def test_a_rejection_is_readable_by_the_browser(self, client, monkeypatch):
+        configure(monkeypatch)
+        response = client.get(
+            "/api/v1/briefings", headers={"Origin": "https://support-buddy.pages.dev"}
+        )
+        assert response.status_code == 401
+        assert (
+            response.headers.get("access-control-allow-origin")
+            == "https://support-buddy.pages.dev"
+        )
+
+    def test_a_lockout_is_readable_by_the_browser(self, client, monkeypatch):
+        configure(monkeypatch)
+        origin = {"Origin": "https://support-buddy.pages.dev"}
+        for _ in range(security.FAILED_AUTH_LIMIT):
+            client.get("/api/v1/policy", headers=origin)
+        response = client.get("/api/v1/policy", headers=origin)
+        assert response.status_code == 429
+        assert response.headers.get("access-control-allow-origin") == origin["Origin"]
+
     def test_browser_preflight_passes_without_a_key(self, client, monkeypatch):
         configure(monkeypatch)
         response = client.options(

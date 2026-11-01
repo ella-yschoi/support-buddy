@@ -39,14 +39,6 @@ app = FastAPI(
     version="0.2.0",
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://support-buddy.pages.dev", "http://localhost:5173"],
-    allow_methods=["GET", "POST", "DELETE"],
-    allow_headers=["Authorization", "Content-Type"],
-)
-
-
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
     path, method = request.url.path, request.method
@@ -75,6 +67,15 @@ async def auth_middleware(request: Request, call_next):
         return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
     return await call_next(request)
 
+
+# Added after the auth middleware so it is the outermost layer: rejections (401, 429, 503)
+# then carry CORS headers and the browser can read why it was turned away.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://support-buddy.pages.dev", "http://localhost:5173"],
+    allow_methods=["GET", "POST", "DELETE"],
+    allow_headers=["Authorization", "Content-Type"],
+)
 
 app.include_router(briefings_router)
 
