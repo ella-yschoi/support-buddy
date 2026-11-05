@@ -13,6 +13,7 @@ from src.core.ai.tools import ALL_TOOLS
 from src.core.exceptions import AIClientError
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.models import SearchResult
+from src.core.pii.redactor import PIIRedactor
 
 
 class AIClient:
@@ -35,6 +36,7 @@ class AIClient:
             raise AIClientError("ANTHROPIC_API_KEY is not set")
         self._client = anthropic.Anthropic(api_key=self._api_key)
         self._model_override = model  # If set, always use this model
+        self._redactor = PIIRedactor()
         self._input_tokens = 0
         self._output_tokens = 0
 
@@ -51,8 +53,13 @@ class AIClient:
             self._input_tokens += input_tokens
             self._output_tokens += output_tokens
 
+    def redact(self, customer_text: str) -> str:
+        """Mask PII in text a customer wrote. Call this before it goes into any prompt."""
+        return self._redactor.redact(customer_text).text
+
     def analyze_inquiry(self, inquiry_text: str) -> dict[str, Any]:
         """Analyze a customer inquiry using Claude with tool use. (Haiku)"""
+        inquiry_text = self.redact(inquiry_text)
         return self._run_with_tools(
             system_prompt=INQUIRY_ANALYSIS_PROMPT,
             user_message=(
@@ -66,6 +73,7 @@ class AIClient:
 
     def analyze_logs(self, log_summary: str) -> dict[str, Any]:
         """Analyze parsed log data using Claude. (Sonnet)"""
+        log_summary = self.redact(log_summary)
         return self._run_with_tools(
             system_prompt=LOG_ANALYSIS_PROMPT,
             user_message=(

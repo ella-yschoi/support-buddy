@@ -91,3 +91,62 @@ class TestEmailEndpoint:
         assert data["sender"] == "test@example.com"
         assert "SYNC-002" in data["error_codes"]
         assert data["analysis"]["category"] == "sync"
+
+
+class TestAIEndpointsRedactCustomerText:
+    """Every endpoint that can spend Anthropic money masks PII before the model sees it."""
+
+    EMAIL = "jane.doe@acme-corp.com"
+    IP = "10.20.30.40"
+
+    @pytest.fixture
+    def create(self):
+        from unittest.mock import MagicMock
+
+        block = MagicMock()
+        block.type = "text"
+        block.text = "{}"
+        response = MagicMock()
+        response.stop_reason = "end_turn"
+        response.content = [block]
+        with patch("src.api.server.ANTHROPIC_API_KEY", "test-key"), \
+                patch("src.core.ai.client.anthropic") as mock:
+            mock.Anthropic.return_value.messages.create.return_value = response
+            yield mock.Anthropic.return_value.messages.create
+
+    def _everything_sent(self, create) -> str:
+        return " ".join(str(c.kwargs["messages"]) for c in create.call_args_list)
+
+    def _assert_masked(self, create) -> None:
+        assert create.called
+        sent = self._everything_sent(create)
+        assert self.EMAIL not in sent
+        assert self.IP not in sent
+
+    def test_analyze(self, client, create):
+        client.post("/api/v1/analyze", json={
+            "inquiry": f"{self.EMAIL} cannot sync from {self.IP}", "use_ai": True,
+        })
+        self._assert_masked(create)
+
+    def test_draft_response(self, client, create):
+        client.post("/api/v1/draft-response", json={
+            "inquiry": f"{self.EMAIL} cannot sync from {self.IP}",
+        })
+        self._assert_masked(create)
+
+    def test_logs_analyze(self, client, create):
+        logs = (
+            '[{"timestamp": "2024-01-15T10:00:00Z", "level": "ERROR", '
+            f'"message": "auth failed for {self.EMAIL} from {self.IP}"}}]'
+        )
+        client.post("/api/v1/logs/analyze", json={"logs": logs, "use_ai": True})
+        self._assert_masked(create)
+
+    def test_email_analyze(self, client, create):
+        raw = (
+            f"From: {self.EMAIL}\nSubject: sync broken\n\n"
+            f"My client at {self.IP} cannot sync.\n"
+        )
+        client.post("/api/v1/email/analyze", json={"raw_email": raw, "use_ai": True})
+        self._assert_masked(create)
