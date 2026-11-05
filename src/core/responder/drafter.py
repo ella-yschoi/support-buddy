@@ -45,7 +45,13 @@ class ResponseDrafter:
             return self._fallback_response(inquiry_text, analysis)
 
     def _build_context(self, inquiry_text: str, analysis: InquiryResult) -> str:
-        """Build the prompt context from inquiry + analysis."""
+        """Build the prompt context from inquiry + analysis.
+
+        The inquiry and the summary (which can quote it) are customer text and are redacted.
+        Knowledge base articles are ours and go through unchanged.
+        """
+        inquiry_text = self._ai_client.redact(inquiry_text)
+        summary = self._ai_client.redact(analysis.summary)
         articles_text = ""
         if analysis.relevant_articles:
             articles_text = "\n\nRelevant knowledge base articles:\n"
@@ -60,7 +66,7 @@ class ResponseDrafter:
             f"**Analysis:**\n"
             f"- Category: {analysis.category.value}\n"
             f"- Severity: {analysis.severity.value}\n"
-            f"- Summary: {analysis.summary}\n"
+            f"- Summary: {summary}\n"
             f"- Checklist for TSE:\n{checklist_text}\n"
             f"{articles_text}\n\n"
             f"Respond with a JSON object containing:\n"
