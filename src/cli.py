@@ -10,10 +10,17 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.table import Table
 
-from src.config import ANTHROPIC_API_KEY, BRIEFING_DB_PATH, KNOWLEDGE_DIR, LINEAR_API_KEY
+from src.config import (
+    ANTHROPIC_API_KEY,
+    BRIEFING_DB_PATH,
+    KNOWLEDGE_DIR,
+    LINEAR_API_KEY,
+    WATCH_AI_DAILY_LIMIT,
+)
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
-from src.core.briefing.factory import build_local_builder
+from src.core.briefing.budget import DailyAiBudget
+from src.core.briefing.factory import build_local_builder, build_routed_builder
 from src.core.briefing.store import BriefingStore
 from src.core.briefing.watch import run_watch
 from src.core.exceptions import ConfigError, TicketSourceError
@@ -454,6 +461,11 @@ def watch_command(
     once: bool = typer.Option(False, "--once", help="Poll one time and exit"),
     dry_run: bool = typer.Option(False, "--dry-run", help="Show what would be created only"),
     include_closed: bool = typer.Option(False, "--include-closed", help="Also brief closed"),
+    builder: str = typer.Option(
+        "local",
+        envvar="WATCH_BUILDER",
+        help="local (keyword rules, free) or claude (capped per day, falls back to local)",
+    ),
 ) -> None:
     """Read new tickets from a ticket tool and prepare a briefing for each (read-only)."""
     if source not in SUPPORTED_SOURCES:
@@ -462,6 +474,12 @@ def watch_command(
         raise typer.Exit(1)
     if source == "linear" and not LINEAR_API_KEY:
         console.print("[red]LINEAR_API_KEY is not set. Put it in .env[/red]")
+        raise typer.Exit(1)
+    if builder not in ("local", "claude"):
+        console.print(f"[red]Unknown builder '{builder}'. Use local or claude.[/red]")
+        raise typer.Exit(1)
+    if builder == "claude" and not ANTHROPIC_API_KEY:
+        console.print("[red]ANTHROPIC_API_KEY is not set. The claude builder needs it.[/red]")
         raise typer.Exit(1)
 
     import tempfile
@@ -474,13 +492,21 @@ def watch_command(
         f"Watching {source} (team: {team or 'all'}, label: {label or 'any'}) "
         f"{'once' if once else f'every {interval:g}s'}{' [dry run]' if dry_run else ''}"
     )
+    if builder == "claude":
+        console.print(f"Builder: claude, at most {WATCH_AI_DAILY_LIMIT} briefings a day")
     with tempfile.TemporaryDirectory() as tmp:
         engine = KnowledgeEngine(persist_dir=tmp)
         engine.ingest_directory(KNOWLEDGE_DIR)
+        if builder == "claude":
+            briefing_builder = build_routed_builder(
+                engine, DailyAiBudget(BRIEFING_DB_PATH, WATCH_AI_DAILY_LIMIT)
+            )
+        else:
+            briefing_builder = build_local_builder(engine)
         try:
             run_watch(
                 ticket_source,
-                build_local_builder(engine),
+                briefing_builder,
                 BriefingStore(BRIEFING_DB_PATH),
                 CursorStore(BRIEFING_DB_PATH),
                 interval=interval,

@@ -70,6 +70,7 @@ class Briefing:
     approved_body: str | None = None
     edit_ratio: float | None = None  # 0.0 = sent as drafted, 1.0 = fully rewritten
     origin: Origin | None = None  # None for pasted text
+    produced_by: str = "local"  # "claude", "local", or "local (<why Claude was skipped>)"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -114,6 +115,7 @@ class Briefing:
                 if self.origin
                 else None
             ),
+            "produced_by": self.produced_by,
         }
 
     @classmethod
@@ -145,4 +147,5 @@ class Briefing:
             approved_body=d["approved_body"],
             edit_ratio=d["edit_ratio"],
             origin=Origin(**d["origin"]) if d.get("origin") else None,
+            produced_by=d.get("produced_by", "local"),
         )
