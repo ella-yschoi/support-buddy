@@ -16,6 +16,9 @@ primary_region = 'sjc'
   CHROMA_PERSIST_DIR = '/app/data/db/chroma'
   # The watcher only briefs Linear issues carrying this label. Keep it on the sandbox workspace.
   WATCH_LABEL = 'ai-triage'
+  # Claude builds the briefings, at most WATCH_AI_DAILY_LIMIT a day, then the local builder takes over.
+  WATCH_BUILDER = 'claude'
+  WATCH_AI_DAILY_LIMIT = '20'
 
 [[mounts]]
   source = 'support_buddy_data'
