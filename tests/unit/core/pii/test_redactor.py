@@ -144,3 +144,81 @@ class TestCounterReset:
         rt2 = r.redact("c@d.com")
         assert "[EMAIL_1]" in rt1.text
         assert "[EMAIL_1]" in rt2.text
+
+
+class TestCardNumbers:
+    def test_redacts_card_with_spaces(self) -> None:
+        rt = PIIRedactor().redact("Card 4242 4242 4242 4242 was declined")
+        assert "4242 4242 4242 4242" not in rt.text
+        assert "[CARD_1]" in rt.text
+
+    def test_redacts_card_with_dashes_and_plain(self) -> None:
+        rt = PIIRedactor().redact("4242-4242-4242-4242 and 4111111111111111")
+        assert "4242" not in rt.text
+        assert "4111111111111111" not in rt.text
+        assert "[CARD_2]" in rt.text
+
+    def test_leaves_digit_strings_that_fail_the_luhn_check(self) -> None:
+        text = "Reference 1234 5678 9012 3456 and order 1234567890"
+        assert PIIRedactor().redact(text).text == text
+
+
+class TestSocialSecurityNumbers:
+    def test_redacts_ssn(self) -> None:
+        rt = PIIRedactor().redact("My SSN is 123-45-6789.")
+        assert "123-45-6789" not in rt.text
+        assert "[SSN_1]" in rt.text
+
+
+class TestServiceTokens:
+    @pytest.mark.parametrize(
+        "token",
+        [
+            "AKIAIOSFODNN7EXAMPLE",
+            "ghp_abcdefghijklmnopqrstuvwxyz0123456789",
+            "sk-proj1234567890abcdefghijklmnop",
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dBjftJeZ4CVPmB92K27uhbUJU1p1r",
+        ],
+    )
+    def test_redacts_token(self, token: str) -> None:
+        rt = PIIRedactor().redact(f"We used {token} in the config")
+        assert token not in rt.text
+        assert "[API_KEY_1]" in rt.text
+
+    def test_redacts_basic_auth_credentials(self) -> None:
+        rt = PIIRedactor().redact("Authorization: Basic dXNlcjpwYXNzd29yZA==")
+        assert "dXNlcjpwYXNzd29yZA" not in rt.text
+
+
+class TestSecretAssignments:
+    def test_keeps_the_key_and_masks_the_value(self) -> None:
+        rt = PIIRedactor().redact("login failed, password=hunter2 for the account")
+        assert "hunter2" not in rt.text
+        assert "password=[SECRET_1]" in rt.text
+
+    def test_colon_and_spaces(self) -> None:
+        rt = PIIRedactor().redact("Password: hunter22")
+        assert "hunter22" not in rt.text
+        assert "Password: [SECRET_1]" in rt.text
+
+    def test_json_and_quotes(self) -> None:
+        rt = PIIRedactor().redact('{"api_key": "abcd1234efgh", "user": "jane"}')
+        assert "abcd1234efgh" not in rt.text
+        assert '"user": "jane"' in rt.text
+
+    def test_url_query_parameter_stops_at_ampersand(self) -> None:
+        rt = PIIRedactor().redact("https://app.example.com/reset?token=Zm9vYmFy&user=jane")
+        assert "Zm9vYmFy" not in rt.text
+        assert "token=[SECRET_1]&user=jane" in rt.text
+
+    def test_does_not_touch_placeholders_already_made(self) -> None:
+        rt = PIIRedactor().redact("token=lin_api_abcdefgh12345678")
+        assert rt.text == "token=[API_KEY_1]"
+
+    def test_words_without_a_value_are_untouched(self) -> None:
+        text = "The password reset email did not arrive and the token expired."
+        assert PIIRedactor().redact(text).text == text
+
+    def test_restore_round_trip(self) -> None:
+        original = "card 4242 4242 4242 4242, ssn 123-45-6789, password=hunter22"
+        assert PIIRedactor().redact(original).restore() == original
