@@ -373,7 +373,7 @@ integrations/tickets/
 | `get(external_id)` | One ticket by id |
 | `post_internal_note(external_id, body)` | Added in the write-back step; internal visibility only; dry-run by default |
 
-**Adapter order (decided):** Linear, then Zendesk. Jira and Intercom get an adapter and contract tests against recorded fixtures only and are labelled "not verified against a live workspace". Documentation and the resume claim only what was actually connected.
+**Adapter order (decided):** Linear, then Intercom. Intercom moved up because it is where customer conversations arrive: the adapter reads conversations (search by `updated_at`, tags become labels) and writes the briefing back as a private note via the reply endpoint with `message_type: note`. The client has no public-reply method at all. Zendesk and Jira get an adapter and contract tests against recorded fixtures only. Every adapter is labelled "not verified against a live workspace" until it has run against one. Documentation and the resume claim only what was actually connected.
 
 **Ingest rules**
 - Polling by `updatedAt` cursor first (works without a public URL); webhooks after deployment.

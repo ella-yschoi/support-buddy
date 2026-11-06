@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import typer
@@ -369,10 +370,16 @@ def build_source(name: str, team: str | None):  # noqa: ANN201
 
     if name == "linear":
         return LinearTicketSource(LinearClient(), team_key=team)
+    if name == "intercom":
+        from src.integrations.intercom.client import IntercomClient
+        from src.integrations.tickets.intercom import DEFAULT_APP_URL, IntercomTicketSource
+
+        app_url = os.getenv("INTERCOM_APP_URL") or DEFAULT_APP_URL
+        return IntercomTicketSource(IntercomClient(), app_url=app_url)
     raise ValueError(f"unknown ticket source: {name}")
 
 
-SUPPORTED_SOURCES = ("linear",)
+SUPPORTED_SOURCES = ("linear", "intercom")
 
 
 def make_linear_admin():  # noqa: ANN201
@@ -463,6 +470,9 @@ def watch_command(
     if source == "linear" and not LINEAR_API_KEY:
         console.print("[red]LINEAR_API_KEY is not set. Put it in .env[/red]")
         raise typer.Exit(1)
+    if source == "intercom" and not os.getenv("INTERCOM_ACCESS_TOKEN"):
+        console.print("[red]INTERCOM_ACCESS_TOKEN is not set. Put it in .env[/red]")
+        raise typer.Exit(1)
 
     import tempfile
 
@@ -496,6 +506,32 @@ def watch_command(
             raise typer.Exit(1) from exc
 
 
+def _write_back_intercom(briefing, dry_run: bool) -> None:  # noqa: ANN001
+    """Add the briefing to the Intercom conversation as a private note (never a reply)."""
+    from src.integrations.intercom.client import IntercomClient
+    from src.integrations.intercom.write_back import IntercomWriteBack
+
+    admin_id = os.getenv("INTERCOM_ADMIN_ID", "")
+    if not os.getenv("INTERCOM_ACCESS_TOKEN") or not admin_id:
+        console.print(
+            "[red]INTERCOM_ACCESS_TOKEN and INTERCOM_ADMIN_ID must both be set. "
+            "Put them in .env[/red]"
+        )
+        raise typer.Exit(1)
+
+    conversation_id = briefing.origin.external_id
+    result = IntercomWriteBack(IntercomClient(), admin_id).post_briefing_note(
+        conversation_id, briefing, dry_run=dry_run
+    )
+    if result.already_posted:
+        console.print(f"[yellow]Skipped — note for {briefing.id} already on conversation {conversation_id}[/yellow]")
+    elif dry_run:
+        console.print(f"[dim]Dry run — would add a private note to conversation {conversation_id}:[/dim]")
+        console.print(result.preview or "", markup=False)
+    else:
+        console.print(f"[green]Added private note {result.note_id} to conversation {conversation_id}[/green]")
+
+
 @app.command(name="write-back")
 def write_back_command(
     briefing_id: str = typer.Argument(help="Briefing ID from the store"),
@@ -511,8 +547,6 @@ def write_back_command(
     from src.integrations.linear.client import LinearClient
     from src.integrations.linear.write_back import LinearWriteBack
 
-    _require_linear_key()
-
     store = BriefingStore(BRIEFING_DB_PATH)
     try:
         briefing = store.get(briefing_id)
@@ -520,9 +554,15 @@ def write_back_command(
         console.print(f"[red]Briefing not found: {exc}[/red]")
         raise typer.Exit(1) from exc
 
+    if briefing.origin is not None and briefing.origin.source == "intercom":
+        _write_back_intercom(briefing, dry_run)
+        return
+
     if briefing.origin is None or briefing.origin.source != "linear":
-        console.print("[red]Briefing has no Linear origin — cannot write back.[/red]")
+        console.print("[red]Briefing has no Linear or Intercom origin — cannot write back.[/red]")
         raise typer.Exit(1)
+
+    _require_linear_key()
 
     client = LinearClient(LINEAR_API_KEY)
     wb = LinearWriteBack(client)
