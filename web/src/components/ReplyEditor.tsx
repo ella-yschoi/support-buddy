@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ApiError, approveBriefing } from "../api";
+import posthog, { isPostHogConfigured, posthogLogger } from "../posthog";
 import type { Briefing } from "../types";
 
 interface Props {
@@ -22,6 +23,13 @@ export function ReplyEditor({ briefing, readOnly, onApproved }: Props) {
   async function copy(value: string) {
     try {
       await navigator.clipboard.writeText(value);
+      if (isPostHogConfigured) {
+        posthog.capture("reply_copied", {
+          customer_plan: briefing.customer_plan,
+          autonomy: briefing.autonomy,
+          is_demo: readOnly,
+        });
+      }
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -33,7 +41,24 @@ export function ReplyEditor({ briefing, readOnly, onApproved }: Props) {
     setBusy(true);
     setError(null);
     try {
-      onApproved(await approveBriefing(briefing.id, text.trim()));
+      const approvedBriefing = await approveBriefing(briefing.id, text.trim());
+      if (isPostHogConfigured) {
+        posthog.capture("briefing_marked_sent", {
+          customer_plan: briefing.customer_plan,
+          category: briefing.category,
+          autonomy: briefing.autonomy,
+          effective_severity: briefing.effective_severity,
+          was_edited: text.trim() !== briefing.draft_body?.trim(),
+        });
+      }
+      posthogLogger.info("briefing marked sent", {
+        customer_plan: briefing.customer_plan,
+        category: briefing.category,
+        autonomy: briefing.autonomy,
+        effective_severity: briefing.effective_severity,
+        was_edited: text.trim() !== briefing.draft_body?.trim(),
+      });
+      onApproved(approvedBriefing);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "Something went wrong. Please try again.");
     } finally {

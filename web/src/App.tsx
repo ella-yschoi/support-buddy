@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { clearAccessKey, getAccessKey, loadArchive, loadBriefings, setAccessKey } from "./api";
+import posthog, { isPostHogConfigured, posthogLogger } from "./posthog";
 import { AnalyzeForm } from "./components/AnalyzeForm";
 import { ArchiveList } from "./components/ArchiveList";
 import { BriefingDetail } from "./components/BriefingDetail";
@@ -131,6 +132,8 @@ export default function App() {
       if (loaded.source === "api") {
         setState({ status: "ready", ...loaded });
         setUnlockOpen(false);
+        if (isPostHogConfigured) posthog.capture("live_data_unlocked");
+        posthogLogger.info("live data unlocked", { source: "api" });
         return "ok";
       }
       clearAccessKey();
