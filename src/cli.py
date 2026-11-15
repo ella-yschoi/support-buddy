@@ -549,13 +549,14 @@ def _write_back_intercom(briefing, dry_run: bool) -> None:  # noqa: ANN001
     result = IntercomWriteBack(IntercomClient(), admin_id).post_briefing_note(
         conversation_id, briefing, dry_run=dry_run
     )
+    where = f"conversation {conversation_id}"
     if result.already_posted:
-        console.print(f"[yellow]Skipped — note for {briefing.id} already on conversation {conversation_id}[/yellow]")
+        console.print(f"[yellow]Skipped: note for {briefing.id} already on {where}[/yellow]")
     elif dry_run:
-        console.print(f"[dim]Dry run — would add a private note to conversation {conversation_id}:[/dim]")
+        console.print(f"[dim]Dry run: would add a private note to {where}:[/dim]")
         console.print(result.preview or "", markup=False)
     else:
-        console.print(f"[green]Added private note {result.note_id} to conversation {conversation_id}[/green]")
+        console.print(f"[green]Added private note {result.note_id} to {where}[/green]")
 
 
 @app.command(name="write-back")
