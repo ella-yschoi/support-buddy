@@ -197,3 +197,17 @@ def test_delete_ready_briefing_raises(store):
     store.add(make_briefing("b1"))
     with pytest.raises(BriefingError):
         store.delete("b1")
+
+
+def test_produced_by_defaults_to_local_and_round_trips(store):
+    import dataclasses
+
+    assert make_briefing().produced_by == "local"
+    store.add(dataclasses.replace(make_briefing(id_="c1"), produced_by="claude"))
+    assert store.get("c1").produced_by == "claude"
+
+
+def test_a_briefing_saved_before_produced_by_existed_still_loads():
+    payload = make_briefing().to_dict()
+    del payload["produced_by"]
+    assert Briefing.from_dict(payload).produced_by == "local"

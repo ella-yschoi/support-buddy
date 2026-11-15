@@ -22,6 +22,8 @@ APP_ENV = os.getenv("APP_ENV", "development")
 # Calls per UTC day to endpoints that spend Anthropic money. 0 turns them off.
 AI_DAILY_LIMIT = int(os.getenv("AI_DAILY_LIMIT", "100"))
 LINEAR_API_KEY = os.getenv("LINEAR_API_KEY", "")
+# Briefings per UTC day the watcher may build with Claude. 0 keeps the watcher on the local builder.
+WATCH_AI_DAILY_LIMIT = int(os.getenv("WATCH_AI_DAILY_LIMIT", "20"))
 
 # Haiku: fast & cheap - used for classification, simple tasks
 MODEL_FAST = os.getenv("ANTHROPIC_MODEL_FAST", "claude-haiku-4-5-20251001")

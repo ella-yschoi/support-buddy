@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 from src.config import DATA_DIR, KNOWLEDGE_DIR
@@ -9,7 +10,9 @@ from src.core.ai.registry import ModelRegistry, default_registry
 from src.core.analyzer.ai_inquiry import AIInquiryAnalyzer
 from src.core.analyzer.inquiry import InquiryAnalyzer
 from src.core.analyzer.log_parser import LogParser
-from src.core.briefing.builder import BriefingBuilder
+from src.core.briefing.budget import DailyAiBudget
+from src.core.briefing.builder import AnalyzeFn, BriefingBuilder, DraftFn
+from src.core.briefing.routed import RoutedBuilder
 from src.core.knowledge.engine import KnowledgeEngine
 from src.core.knowledge.loader import KnowledgeLoader
 from src.core.models import DraftResponse, InquiryResult, LogInsight
@@ -58,17 +61,15 @@ def local_log_insight(raw_logs: str) -> LogInsight:
     )
 
 
-def build_claude_builder(
+def _claude_parts(
     engine: KnowledgeEngine,
-    api_key: str | None = None,
-    policy_path: Path = DEFAULT_POLICY_PATH,
-    knowledge_dir: Path = KNOWLEDGE_DIR,
-    registry: ModelRegistry | None = None,
-) -> BriefingBuilder:
-    """Claude-backed analysis and drafting with PII redaction before every AI call.
+    api_key: str | None,
+    registry: ModelRegistry | None,
+) -> tuple[AnalyzeFn, DraftFn, list[Callable[[], int]]]:
+    """Analyze and draft functions that redact PII first, plus a probe per AI stage.
 
-    PII (emails, IPs, API keys, phones) is stripped from the inquiry text before
-    it reaches any model.  The local builder remains available as the free default.
+    Each probe returns the tokens that stage has been billed for so far. It rises only when
+    Claude answered, because the analyzer and drafter fall back silently on API errors.
     """
     reg = registry or default_registry()
     redactor = PIIRedactor()
@@ -82,12 +83,56 @@ def build_claude_builder(
     def pii_draft(text: str, analysis: InquiryResult) -> DraftResponse:
         return ai_drafter.draft(redactor.redact(text).text, analysis)
 
+    probes = [
+        lambda: sum(ai_analyzer.token_usage),
+        lambda: sum(ai_drafter.token_usage),
+    ]
+    return pii_analyze, pii_draft, probes
+
+
+def build_claude_builder(
+    engine: KnowledgeEngine,
+    api_key: str | None = None,
+    policy_path: Path = DEFAULT_POLICY_PATH,
+    knowledge_dir: Path = KNOWLEDGE_DIR,
+    registry: ModelRegistry | None = None,
+) -> BriefingBuilder:
+    """Claude-backed analysis and drafting with PII redaction before every AI call.
+
+    PII (emails, IPs, API keys, phones) is stripped from the inquiry text before
+    it reaches any model.  The local builder remains available as the free default.
+    """
+    analyze, draft, _probes = _claude_parts(engine, api_key, registry)
     return BriefingBuilder(
-        analyze=pii_analyze,
-        draft=pii_draft,
+        analyze=analyze,
+        draft=draft,
         analyze_logs=local_log_insight,
         kb_index=build_kb_index(KnowledgeLoader().load_directory(knowledge_dir)),
         policy=load_policy(policy_path),
+    )
+
+
+def build_routed_builder(
+    engine: KnowledgeEngine,
+    budget: DailyAiBudget,
+    api_key: str | None = None,
+    policy_path: Path = DEFAULT_POLICY_PATH,
+    knowledge_dir: Path = KNOWLEDGE_DIR,
+    registry: ModelRegistry | None = None,
+) -> RoutedBuilder:
+    """Claude while the daily budget lasts, the local builder after, labelled either way."""
+    analyze, draft, probes = _claude_parts(engine, api_key, registry)
+    kb_index = build_kb_index(KnowledgeLoader().load_directory(knowledge_dir))
+    policy = load_policy(policy_path)
+    ai = BriefingBuilder(
+        analyze=analyze, draft=draft, analyze_logs=local_log_insight,
+        kb_index=kb_index, policy=policy,
+    )
+    return RoutedBuilder(
+        ai,
+        build_local_builder(engine, policy_path, knowledge_dir),
+        budget,
+        probes,
     )
 
 

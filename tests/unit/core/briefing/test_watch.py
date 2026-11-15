@@ -192,3 +192,17 @@ def test_cli_once_with_a_source_outage_exits_nonzero():
         result = runner.invoke(app, ["watch", "--source", "linear", "--once"])
     assert result.exit_code == 1
     assert "linear is down" in result.output
+
+
+def test_cli_rejects_an_unknown_builder():
+    with patch("src.cli.LINEAR_API_KEY", "lin_api_x"):
+        result = runner.invoke(app, ["watch", "--builder", "oracle", "--once"])
+    assert result.exit_code == 1
+    assert "oracle" in result.output
+
+
+def test_cli_claude_builder_needs_an_anthropic_key():
+    with patch("src.cli.LINEAR_API_KEY", "lin_api_x"), patch("src.cli.ANTHROPIC_API_KEY", ""):
+        result = runner.invoke(app, ["watch", "--builder", "claude", "--once"])
+    assert result.exit_code == 1
+    assert "ANTHROPIC_API_KEY" in result.output

@@ -72,3 +72,15 @@ def test_a_label_alone_is_enough(run_start):
 def test_a_team_alone_is_not_enough(run_start):
     """A whole team can still hold real tickets, so a label is required too."""
     assert watcher_calls(run_start(LINEAR_API_KEY="k", WATCH_TEAM="SUP")) == []
+
+
+def test_the_watcher_builds_with_the_local_builder_by_default(run_start):
+    calls = watcher_calls(run_start(LINEAR_API_KEY="k", WATCH_LABEL="ai-triage"))
+    assert "--builder local" in calls[0]
+
+
+def test_the_builder_can_be_switched_to_claude(run_start):
+    calls = watcher_calls(
+        run_start(LINEAR_API_KEY="k", WATCH_LABEL="ai-triage", WATCH_BUILDER="claude")
+    )
+    assert "--builder claude" in calls[0]
