@@ -73,7 +73,7 @@ For development and testing, we use a fictional SaaS company:
 - **FR-5.2:** Connect to GitHub to reference issues, PRs, and code
 - **FR-5.3:** Accept email input (parse email content into structured inquiry)
 - **FR-5.4:** Ticket tools connect through one `TicketSource` interface; adding a tool means writing an adapter, not changing the pipeline
-- **FR-5.5:** Adapters are connected in this order: Linear, Zendesk. Jira and Intercom ship as adapters with contract tests against recorded fixtures and are documented as not verified live
+- **FR-5.5:** Adapters are connected in this order: Linear, Intercom. Intercom is the primary pilot source: it reads customer conversations and writes the briefing back as a private note (never a public reply). Its adapter is built from Intercom's public API documentation and stays labelled "not verified live" until it has run against a real workspace. Zendesk and Jira get an adapter and contract tests against recorded fixtures only
 - **FR-5.6:** Ingestion polls by update cursor, ingests open tickets only, supports a label filter, and never briefs the same ticket twice
 - **FR-5.7:** Reading from a ticket tool never writes to it. Writing back is limited to internal notes and labels, never customer-visible, and defaults to dry-run
 - **FR-5.8:** Seed and cleanup commands operate only on labelled test tickets and require explicit confirmation
