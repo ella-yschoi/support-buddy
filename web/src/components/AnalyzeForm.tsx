@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { ApiError, createBriefing } from "../api";
+import posthog, { isPostHogConfigured, posthogLogger } from "../posthog";
 import type { Briefing, Plan } from "../types";
 
 interface Props {
@@ -29,7 +30,18 @@ export function AnalyzeForm({ readOnly, onCreated }: Props) {
     setBusy(true);
     setError(null);
     try {
-      onCreated(await createBriefing({ inquiry: inquiry.trim(), plan, logs: showLogs ? logs : "" }));
+      const briefing = await createBriefing({ inquiry: inquiry.trim(), plan, logs: showLogs ? logs : "" });
+      if (isPostHogConfigured) {
+        posthog.capture("briefing_created", {
+          customer_plan: plan,
+          includes_logs: showLogs && logs.trim() !== "",
+        });
+      }
+      posthogLogger.info("briefing created", {
+        customer_plan: plan,
+        includes_logs: showLogs && logs.trim() !== "",
+      });
+      onCreated(briefing);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "Something went wrong. Please try again.");
     } finally {

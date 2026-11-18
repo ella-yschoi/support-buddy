@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { deleteBriefing } from "../api";
+import posthog, { isPostHogConfigured } from "../posthog";
 import { SEVERITY_LABEL, capitalize, categoryLabel, displayTitle, formatTime } from "../format";
 import type { Briefing } from "../types";
 
@@ -22,6 +23,7 @@ export function ArchiveList({ briefings, onOpen, onDeleted }: Props) {
     setError(null);
     try {
       await deleteBriefing(id);
+      if (isPostHogConfigured) posthog.capture("briefing_deleted");
       onDeleted(id);
     } catch {
       setError("Couldn't delete the briefing. Try again.");
