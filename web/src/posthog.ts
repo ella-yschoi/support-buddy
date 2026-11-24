@@ -1,8 +1,29 @@
-import posthog from "posthog-js";
+import posthog, { type PostHogConfig } from "posthog-js";
 
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
 const posthogHost = import.meta.env.VITE_POSTHOG_HOST;
 export const isPostHogConfigured = Boolean(posthogKey && posthogHost);
+
+// Briefings shown after Unlock hold customer messages and draft replies, so
+// analytics may count clicks but must never carry page text or input values.
+export const posthogOptions: Partial<PostHogConfig> = {
+  defaults: "2026-08-30",
+  mask_all_text: true,
+  mask_all_element_attributes: true,
+  session_recording: {
+    maskAllInputs: true,
+    maskTextSelector: "*",
+  },
+  capture_exceptions: {
+    capture_unhandled_errors: true,
+    capture_unhandled_rejections: true,
+    capture_console_errors: false,
+  },
+  logs: {
+    serviceName: "support-buddy-web",
+    environment: import.meta.env.MODE,
+  },
+};
 
 type PostHogLogAttributes = Record<string, string | number | boolean>;
 
@@ -23,19 +44,7 @@ if (!posthogKey || !posthogHost) {
     );
   }
 } else {
-  posthog.init(posthogKey, {
-    api_host: posthogHost,
-    defaults: "2026-08-30",
-    capture_exceptions: {
-      capture_unhandled_errors: true,
-      capture_unhandled_rejections: true,
-      capture_console_errors: false,
-    },
-    logs: {
-      serviceName: "support-buddy-web",
-      environment: import.meta.env.MODE,
-    },
-  });
+  posthog.init(posthogKey, { api_host: posthogHost, ...posthogOptions });
 }
 
 export default posthog;
