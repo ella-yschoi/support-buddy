@@ -3,7 +3,7 @@
 # The watcher uses cursor-based polling so it safely resumes after machine suspend/restart.
 #
 # WATCH_BUILDER=claude makes the watcher build briefings with Claude, up to WATCH_AI_DAILY_LIMIT a
-# day (default 20), then fall back to the free local builder. The default is local.
+# day (default 8), then fall back to the free local builder. The default is local.
 #
 # The watcher only starts when it is scoped. WATCH_LABEL is required (WATCH_TEAM is an optional
 # extra filter) so it can never brief every open issue in a workspace, real ones included.
