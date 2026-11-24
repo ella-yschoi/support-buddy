@@ -18,7 +18,7 @@ primary_region = 'sjc'
   WATCH_LABEL = 'ai-triage'
   # Claude builds the briefings, at most WATCH_AI_DAILY_LIMIT a day, then the local builder takes over.
   WATCH_BUILDER = 'claude'
-  WATCH_AI_DAILY_LIMIT = '20'
+  WATCH_AI_DAILY_LIMIT = '8'
 
 [[mounts]]
   source = 'support_buddy_data'
